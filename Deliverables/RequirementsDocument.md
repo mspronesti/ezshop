@@ -26,38 +26,68 @@ Version:
 - [System design](#system-design)
 - [Deployment diagram](#deployment-diagram)
 
+
 # Essential description
 
-Small shops require a simple application to support the owner or manager. A small shop (ex a food shop) occupies 50-200 square meters, sells 500-2000 different item types, has one or a few cash registers 
+Small shops require a simple application to support the owner or manager. A small shop (ex a food shop) occupies 50-200 square meters, sells 500-2000 different item types, has one or a few cash registers.
+
 EZShop is a software application to:
 * manage sales
 * manage inventory
 * manage customers
 * support accounting
 
-
 # Stakeholders
-
 
 | Stakeholder name  | Description | 
 | ----------------- |:-----------:|
-|   Stakeholder x..     |             | 
-
+|   End User    | Uses the application to manage inventory, introduce sales, manage expenses, trace earnings        |
+| Developer | Develops and maintain the application, introduce news feature to improve usability, fixes bugs
+| ... | ... |
+| ... | ... |
 # Context Diagram and interfaces
 
 ## Context Diagram
-\<Define here Context diagram using UML use case diagram>
 
-\<actors are a subset of stakeholders>
+```plantuml
+@startuml
+skinparam packageStyle rectangle
+left to right direction
+
+actor :End User: as eu
+actor :Manager: as m
+actor :Owner: as o
+actor :Cash Register: as cr
+actor :Items' Catalogue: as ic
+actor :Developer: as dev
+
+
+m --|> eu
+o --|> m
+
+
+rectangle System{
+(EZShop) as ez	
+ez <-- dev
+cr --> ez 
+ez <-- ic
+eu -- ez
+}
+
+
+@enduml
+```
+
 
 ## Interfaces
-\<describe here each interface in the context diagram>
-
-\<GUIs will be described graphically in a separate document>
 
 | Actor | Logical Interface | Physical Interface  |
 | ------------- |:-------------:| -----:|
-|   Actor x..     |  |  |
+|   End User    | GUI  | Touch Screen|
+|  Items' Catalogue | Internet Connection | Web Services
+| Cash register |  Internet Connection | Web Services
+| Developer | | 
+
 
 # Stories and personas
 \<A Persona is a realistic impersonation of an actor. Define here a few personas and describe in plain text how a persona interacts with the system>
