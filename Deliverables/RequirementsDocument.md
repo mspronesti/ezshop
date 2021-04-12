@@ -143,10 +143,14 @@ eu -- ez
 
 | ID        | Type (efficiency, reliability, ..)           | Description  | Refers to |
 | ------------- |:-------------:| :-----:| -----:|
-|  NFR1     |   |  | |
-|  NFR2     | |  | |
-|  NFR3     | | | |
-| NFRx .. | | | | 
+|  NFR1     | Efficiency(Space) | Inventory storage at least >2000 Item types | FR2 |
+|  NFR2     | Efficiency(Performance) | Some operation shuold be executed in < 1sec | FR2.2, FR2.3 |
+|  NFR3     | Usability | Training time must take < 20min | from FR1 to FR5 |
+|  NFR4     | Usability | Trained person should take < 10sec for adding a new Item type | FR2.1 |
+|  NFR5     | Interoperability | Some info must be saved also on cloud in case a user changes device | FR2, FR3, FR5 | 
+|  NFR6     | Reliability | Manage sales function must be aviable even if no internet connection is aviable (?) | FR4 | 
+|  NFR7     | Legislative | The system must check if the return is legally doable in the current situation (date, cupon/cash) | FR4.4/FR4.5 | 
+
 
 
 # Use case diagram and use cases
