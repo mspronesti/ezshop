@@ -153,15 +153,12 @@ eu -- ez
 
 
 ## Use case diagram
-\<define here UML Use case diagram UCD summarizing all use cases, and their relationships>
-
-
-\<next describe here each use case in the UCD>
 ### Use case 1, UC1
-| Actors Involved        |  |
+use case 'Authorize and authenticate' UC1
+| Actors Involved        | End user |
 | ------------- |:-------------:| 
-|  Precondition     | \<Boolean expression, must evaluate to true before the UC can start> |  
-|  Post condition     | \<Boolean expression, must evaluate to true after UC is finished> |
+|  Precondition     | device is connected to the internet, application in ON |  
+|  Post condition     | (Existence of an account connected to the shop?) |
 |  Nominal Scenario     | \<Textual description of actions executed by the UC> |
 |  Variants     | \<other executions, ex in case of errors> |
 
@@ -175,19 +172,36 @@ eu -- ez
 
 \<only relevant scenarios should be described>
 
-| Scenario 1.1 | |
+| Scenario 1.1 | Nominal case |
 | ------------- |:-------------:| 
-|  Precondition     | \<Boolean expression, must evaluate to true before the scenario can start> |
-|  Post condition     | \<Boolean expression, must evaluate to true after scenario is finished> |
+|  Precondition     | device is connected to the internet, application in ON |
+|  Post condition     | End user is logged in |
 | Step#        | Description  |
-|  1     |  |  
-|  2     |  |
-|  ...     |  |
+|  1     | End user taps on login  |  
+|  2     | End user inserts username and password |
+|  3     | End user is logged in |
 
 ##### Scenario 1.2
 
-##### Scenario 1.x
-
+| Scenario 1.2 | first time opening the app |
+| ------------- |:-------------:| 
+|  Precondition     | device is connected to the internet, application in ON |
+|  Post condition     | End user has created an account associated to the shop he manages |
+| Step#        | Description  |
+|  1     | End user taps on sign in  |  
+|  2     | End user chooses username and password |
+|  3     | End user creates an account |
+|  4     | End user associates the new account to the shop he manages |
+##### Scenario 1.3
+| Scenario 1.3 | exception case | 
+| ------------- |:-------------:| 
+|  Precondition     | device is NOT connected to the internet, application in ON  |
+|  Post condition     | End user is not logged in |
+| Step#        | Description  |
+|  1     | End user taps on login  |  
+|  2     | End user inserts username and password |
+|  3     | Application cannot verify the validity of the account?? |
+|  4     | Application raises an error |
 ### Use case 2, UC2
 ..
 
