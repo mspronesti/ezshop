@@ -293,7 +293,36 @@ use case 'Manage Sales' UC3
 
 
 # Glossary
+```plantuml
+@startuml
+class EZShop
 
+class User {
+  + account_name
+  + account_pwd
+  + email	
+}
+
+
+class Store {
+  + name
+  + address
+  + size
+  + type  
+}
+
+note "size ranges from 50 to 200 sqm\ntype is the type of items sold" as N1
+N1 -- Store
+
+
+class Manager
+
+Manager -up-|> User
+EZShop -- "*" User
+User -- "*" Store
+EZShop -- "*" Store
+@enduml
+```
 
 
 # System Design
