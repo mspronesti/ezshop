@@ -41,10 +41,11 @@ EZShop is a software application to:
 
 | Stakeholder name  | Description | 
 | ----------------- |:-----------:|
-|   End User    | Uses the application to manage inventory, introduce sales, manage expenses, trace earnings        |
+|   Owner    | Uses the application to manage inventory, introduce sales, manage expenses, trace earnings        |
+| Manager |  Uses the application to manage inventory, introduce sales, manages expenses, trace earnings on behalf of owner|
 | Developer | Develops and maintain the application, introduce news feature to improve usability, fixes bugs
 | Cash Register | ... |
-| ... | ... |
+| Inventory | ... |
 # Context Diagram and interfaces
 
 ## Context Diagram
@@ -58,22 +59,18 @@ actor :End User: as eu
 actor :Manager: as m
 actor :Owner: as o
 actor :Cash Register: as cr
-actor :Items' Catalogue: as ic
-
-
+actor :Items' Inventory: as iv
 
 m --|> eu
 o --|> m
-
 
 rectangle System{
 (EZShop) as ez	
 
 cr --> ez 
-ez <-- ic
+ez <-- iv
 eu -- ez
 }
-
 
 @enduml
 ```
@@ -83,9 +80,9 @@ eu -- ez
 
 | Actor | Logical Interface | Physical Interface  |
 | ------------- |:-------------:| -----:|
-|   End User    | GUI  | Touch Screen|
-|  Items' Catalogue | Internet Connection | Web Services
-| Cash register |  Internet Connection | Web Services
+|   End User    | Web GUI  | Touch Screen on Smartphone,keyboard and mouse on pc|
+|  Items' Inventory |  Web Services | Internet Connection |
+| Cash register |  Web Services | Internet Connection |
  
 
 
@@ -297,9 +294,7 @@ use case 'Manage Sales' UC3
 
 # Glossary
 
-\<use UML class diagram to define important terms, or concepts in the domain of the system, and their relationships> 
 
-\<concepts are used consistently all over the document, ex in use cases, requirements etc>
 
 # System Design
 \<describe here system design>
