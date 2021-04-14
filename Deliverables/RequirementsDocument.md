@@ -195,18 +195,103 @@ use case 'Authorize and authenticate' UC1
 ##### Scenario 1.3
 | Scenario 1.3 | exception case | 
 | ------------- |:-------------:| 
-|  Precondition     | device is NOT connected to the internet, application in ON  |
-|  Post condition     | End user is not logged in |
+|  Precondition     | device is connected to the internet, application in ON  |
+|  Post condition     | End user is logged in |
 | Step#        | Description  |
 |  1     | End user taps on login  |  
-|  2     | End user inserts username and password |
-|  3     | Application cannot verify the validity of the account?? |
-|  4     | Application raises an error |
+|  2     | End user inserts wrong username and/or password |
+|  3     | Application raises an error |
+|  4     | End user retries inserting username and password |
+|  5     | End user is logged in |
 ### Use case 2, UC2
-..
 
-### Use case x, UCx
-..
+use case 'Manage Inventory' UC2
+| Actors Involved        | End user |
+| ------------- |:-------------:| 
+|  Precondition     | End user is logged in, |  
+|  Post condition     | invetory's been managed |
+|  Nominal Scenario     | end user manages inventory by adding or selecting items from it |
+|  Variants     | \<other executions, ex in case of errors> |
+
+
+| Scenario 2.1 | Nominal case |
+| ------------- |:-------------:| 
+|  Precondition     |End user is logged in |
+|  Post condition     | End user is logged in, inventory's been managed and updated |
+| Step#        | Description  |
+|  1     | End user opens the inventory |  
+|  2     | end user adds a new item |
+
+
+| Scenario 2.2 | update case |
+| ------------- |:-------------:| 
+|  Precondition     |End user is logged in |
+|  Post condition     | End user is logged in, inventory's been managed and updated |
+| Step#        | Description  |
+|  1     | End user opens the inventory |  
+|  2     | end user selects one or more items |
+|  3     | end user updates the selected items |
+
+| Scenario 2.3 | filter case |
+| ------------- |:-------------:| 
+|  Precondition     |End user is logged in |
+|  Post condition     | End user is logged in, inventory's been managed |
+| Step#        | Description  |
+|  1     | End user opens the inventory |  
+|  2     | end user reads one or more items |
+|  3     | end user filters items |
+
+| Scenario 2.4 | find case |
+| ------------- |:-------------:| 
+|  Precondition     |End user is logged in |
+|  Post condition     | End user is logged in, inventory's been managed |
+| Step#        | Description  |
+|  1     | End user opens the inventory |  
+|  2     | end user reads one or more items |
+|  3     | end user finds the selected items |
+
+| Scenario 2.5 | sort case |
+| ------------- |:-------------:| 
+|  Precondition     |End user is logged in |
+|  Post condition     | End user is logged in, inventory's been managed |
+| Step#        | Description  |
+|  1     | End user opens the inventory |  
+|  2     | end user reads one or more items |
+|  3     | end user sorts items |
+
+| Scenario 2.6 | exeption case  (there's no item to read) |
+| ------------- |:-------------:| 
+|  Precondition     |End user is logged in |
+|  Post condition     | End user is logged in, inventory's not been managed or updated |
+| Step#        | Description  |
+|  1     | End user opens the inventory |  
+|  2     | end user tries to read items |
+|  3     | app raises an error because there's no item to read telling the end user to add items first |
+
+
+### Use case 3, UC3
+use case 'Manage Sales' UC3
+| Actors Involved        | cash register (customer?)|
+| ------------- |:-------------:| 
+|  Precondition     | cash register  |  
+|  Post condition     | invetory's been managed |
+|  Nominal Scenario     | end user manages inventory by adding or selecting items from it |
+|  Variants     | \<other executions, ex in case of errors> |
+
+
+| Scenario 3.1 | Nominal case |
+| ------------- |:-------------:| 
+|  Precondition     |scan is valid |
+|  Post condition     | items has been selled, quantity of item in inventory is reduced, income has increased |
+| Step#        | Description  |
+|  1     | cashier scans item 1 |  
+|  2     | cashier scans item 2 |
+|  ..     | until last item |
+|  3     | customer pays the correct amount |
+|  4     | cashier inserts money in the cash register |
+|  5     | cash register prints the receipt |
+|  6     | cashier gives the receipt to the customer |
+|  7     | cashier provides coupon to the customer |
 
 
 
