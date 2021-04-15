@@ -295,32 +295,63 @@ use case 'Manage Sales' UC3
 # Glossary
 ```plantuml
 @startuml
+
+note "size ranges from 50 to 200 sqm" as N1
+N1 -- Store
+
 class EZShop
 
 class User {
   + account_name
   + account_pwd
   + email	
+  + phone_number
 }
-
 
 class Store {
   + name
   + address
   + size
-  + type  
 }
 
-note "size ranges from 50 to 200 sqm\ntype is the type of items sold" as N1
-N1 -- Store
-
+class CashRegister{	
+}
 
 class Manager
 
+class Customer {
+  + name
+  + surname
+  + email
+}
+
+class FidelityCard {
+  + ID
+  + n_points
+  + expiry_date	
+}
+
+class ItemType {
+ + ID
+}
+
+class Inventory {	
+}
+
+
 Manager -up-|> User
-EZShop -- "*" User
-User -- "*" Store
 EZShop -- "*" Store
+User "manages" -- "*" Store
+
+ItemType  "*" --  Inventory
+
+EZShop --"*" User
+
+Store "has" --  "1..*" CashRegister 
+FidelityCard -- Customer
+Store "has" -- "*" Customer
+Store "has"--Inventory 
+
 @enduml
 ```
 
