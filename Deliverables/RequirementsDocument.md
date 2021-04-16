@@ -44,6 +44,7 @@ EZShop is a software application to:
 |   Owner    | Uses the application to manage inventory, introduce sales, manage expenses, trace earnings        |
 | Manager |  Uses the application to manage inventory, introduce sales, manages expenses, trace earnings on behalf of owner|
 | Developer | Develops and maintain the application, introduce news feature to improve usability, fixes bugs
+| Cashier | ... |
 | Cash Register | ... |
 | Inventory | ... |
 # Context Diagram and interfaces
@@ -369,6 +370,14 @@ Store --Inventory
 \<must be consistent with Context diagram>
 
 # Deployment Diagram 
-
-\<describe here deployment diagram >
-
+```plantuml
+@startuml
+artifact "EZShop Application" as ezs
+node "server" as s
+node "PC client" as pc
+node "Mobile client" as phone
+s -- ezs
+s -- "*" pc
+s -- "*" phone
+@enduml
+```
