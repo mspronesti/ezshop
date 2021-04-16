@@ -55,13 +55,15 @@ EZShop is a software application to:
 skinparam packageStyle rectangle
 left to right direction
 
-actor :End User: as eu
+
 actor :Manager: as m
 actor :Owner: as o
 actor :Cash Register: as cr
 actor :Items' Inventory: as iv
+actor Cashier as c
 
-m --|> eu
+
+m --|> c
 o --|> m
 
 rectangle System{
@@ -69,7 +71,8 @@ rectangle System{
 
 cr --> ez 
 ez <-- iv
-eu -- ez
+c -- ez
+
 }
 
 @enduml
@@ -305,7 +308,7 @@ class User {
   + account_name
   + account_pwd
   + email	
-  + phone_number
+  + permission_level
 }
 
 class Store {
@@ -315,9 +318,11 @@ class Store {
 }
 
 class CashRegister{	
+  + acceptsCash
+  + acceptsCreditCard
 }
 
-class Manager
+class Owner
 
 class Customer {
   + name
@@ -331,26 +336,28 @@ class FidelityCard {
   + expiry_date	
 }
 
-class ItemType {
+class Item {
  + ID
+ + quantity
+ + price
 }
 
 class Inventory {	
 }
 
 
-Manager -up-|> User
+Owner -up-|> User
 EZShop -- "*" Store
-User "manages" -- "*" Store
+User  -- "*" Store
 
-ItemType  "*" --  Inventory
+Item  "*" --  Inventory
 
 EZShop --"*" User
 
-Store "has" --  "1..*" CashRegister 
-FidelityCard -- Customer
-Store "has" -- "*" Customer
-Store "has"--Inventory 
+Store  --  "1..*" CashRegister 
+FidelityCard "0..1" --  Customer
+Store  -- "*" FidelityCard
+Store --Inventory 
 
 @enduml
 ```
