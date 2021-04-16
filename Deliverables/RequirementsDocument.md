@@ -1,6 +1,6 @@
 # Requirements Document 
 
-Authors:
+Authors: Massimiliano Pronesti, Matteo Notarangelo, Davide Mammone, Umberto Pepato
 
 Date:
 
@@ -60,7 +60,7 @@ left to right direction
 actor :Manager: as m
 actor :Owner: as o
 actor :Cash Register: as cr
-actor :Items' Inventory: as iv
+actor :Inventory: as iv
 actor Cashier as c
 
 
@@ -85,7 +85,7 @@ c -- ez
 | Actor | Logical Interface | Physical Interface  |
 | ------------- |:-------------:| -----:|
 |   End User    | Web GUI  | Touch Screen on Smartphone,keyboard and mouse on pc|
-|  Items' Inventory |  Web Services | Internet Connection |
+|  Inventory |  Web Services | Internet Connection |
 | Cash register |  Web Services | Internet Connection |
  
 
