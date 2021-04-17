@@ -114,11 +114,11 @@ c -- ez
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR1.3.4 | Remove User |
 |  FR2     |  Manage Inventory |
 |  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR2.1   |  Add or modify new Item |
-|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR2.2 |  Delete Item |
-|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR3 |  Read Item |
-|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR3.1 |  Find Item |
-|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR3.2 |  Filter Item |
-|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR3.3 |  Sort Item |
+|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR2.2 |  Delete Item |
+|  FR3 |  Read Item |
+|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR3.1 |  Find Item |
+|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR3.2 |  Filter Item |
+|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR3.3 |  Sort Item |
 |  FR4     |  Manage Accounting |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR4.1 | Show daily accounting |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR4.2 | Show weekly accounting |
@@ -153,8 +153,8 @@ c -- ez
 
 ## Use case diagram
 
-### Use case 1, UC1
-use case 1, UC1 - CREATE A USER ACCOUNT
+### Use case 1, UC1 - CREATE A USER ACCOUNT
+use case 1, UC1 
 
 | Actors Involved        | End user |
 | ------------- |:-------------:| 
@@ -163,8 +163,7 @@ use case 1, UC1 - CREATE A USER ACCOUNT
 |  Nominal Scenario     | New user creates a new account U and populates its fields. |
 |  Variants     | A user can create only one account, this is checked through the email (one email, one account at most). |
 
-##### Scenario 1.1 
-
+##### Scenario 1.1
 | Scenario 1.1 | Nominal case |
 | ------------- |:-------------:| 
 |  Precondition     | device is connected to the internet, application in ON |
@@ -174,8 +173,7 @@ use case 1, UC1 - CREATE A USER ACCOUNT
 |  2     | End user inserts username and password |
 |  3     | End user is logged in |
 
-### Use case 2, UC2
-use case 2, UC2 - MODIFY USER ACCOUNT
+### Use case 2, UC2 - MODIFY USER ACCOUNT 
 
 | Actors Involved        | End user |
 | ------------- |:-------------:| 
@@ -184,9 +182,7 @@ use case 2, UC2 - MODIFY USER ACCOUNT
 |  Nominal Scenario     | User modifies one or more fields of his account |
 |  Variants     | A user can Modify only his/her account. a Manager can modify any account |
 
-### Use case 3, UC3
-
-use case 3, UC3 - REMOVE USER ACCOUNT
+### Use case 3, UC3 - REMOVE USER ACCOUNT
 
 | Actors Involved        | End user |
 | ------------- |:-------------:| 
@@ -195,8 +191,7 @@ use case 3, UC3 - REMOVE USER ACCOUNT
 |  Nominal Scenario     | User selects an account to delete |
 |  Variants     | A user can delete only his/her account. a Manager can delete any account |
 
-### Use case 4, UC4
-use case 4, UC4 - CREATE A NEW ITEM
+### Use case 4, UC4 - CREATE A NEW ITEM
 
 | Actors Involved        | End user |
 | ------------- |:-------------:| 
@@ -204,8 +199,7 @@ use case 4, UC4 - CREATE A NEW ITEM
 |  Post condition     | Item has been created |
 |  Nominal Scenario     | the user creates a new item in the system; he enters all the fields of an item |
 
-### Use case 5, UC5
-Use case 5, UC5 - UPDATE ITEM
+### Use case 5, UC5 - UPDATE ITEM 
 
 | Actors Involved        | End user |
 | ------------- |:-------------:| 
@@ -214,8 +208,7 @@ Use case 5, UC5 - UPDATE ITEM
 |  Nominal Scenario     | User modifies one or more fields of the item |
 
 
-### Use case 6, UC6
-use case 6, UC6 - DELETE ITEM
+### Use case 6, UC6 - DELETE ITEM
 
 | Actors Involved        | End user |
 | ------------- |:-------------:| 
@@ -224,8 +217,7 @@ use case 6, UC6 - DELETE ITEM
 |  Nominal Scenario     | User selects an item to delete |
 
 
-### Use case 7, UC7
-use case 7, UC7 - READ ITEM
+### Use case 7, UC7 - READ ITEM
 
 | Actors Involved        | End user |
 | ------------- |:-------------:| 
@@ -233,7 +225,7 @@ use case 7, UC7 - READ ITEM
 |  Post condition     | Item has been read |
 |  Nominal Scenario     | User selects one or more item to read |
 
-
+##### Scenario 7.1
 | Scenario 7.1 | filter case |
 | ------------- |:-------------:| 
 |  Precondition     | Items that user wants to filter exist |
@@ -242,6 +234,7 @@ use case 7, UC7 - READ ITEM
 |  1     | End user opens the inventory |  
 |  2     | End user filters items |
 
+##### Scenario 7.2
 | Scenario 7.2 | find case |
 | ------------- |:-------------:| 
 |  Precondition     | Items that user wants to find exist |
@@ -250,6 +243,7 @@ use case 7, UC7 - READ ITEM
 |  1     | End user opens the inventory |  
 |  2     | End user finds the selected items |
 
+##### Scenario 7.3
 | Scenario 7.3 | sort case |
 | ------------- |:-------------:| 
 |  Precondition     | Items that user wants to sort exist |
@@ -258,6 +252,7 @@ use case 7, UC7 - READ ITEM
 |  1     | End user opens the inventory |  
 |  2     | End user sorts items |
 
+##### Scenario 7.4
 | Scenario 7.4 | exeption case  (there's no item to read) |
 | ------------- |:-------------:| 
 |  Precondition     | Item that user wants  to read doesn't exist |
@@ -268,8 +263,8 @@ use case 7, UC7 - READ ITEM
 |  3     | App raises an error because there's no item to read telling the end user to add items first |
 
 
-### Use case 8, UC8
-Use case 8, UC8 - MANAGE SALES
+### Use case 8, UC8 - MANAGE SALES
+
 | Actors Involved        | cash register, cashier |
 | ------------- |:-------------:| 
 |  Precondition     | there's a cashier at the cash register  |  
@@ -277,7 +272,7 @@ Use case 8, UC8 - MANAGE SALES
 |  Nominal Scenario     | cashier manages the sell of one or more items |
 |  Variants     | customer can pay with cash (in case, he can have the right amount of money, or he can have less/more than needed) or with a CreditCard |
 
-
+##### Scenario 8.1
 | Scenario 8.1 | Nominal case |
 | ------------- |:-------------:| 
 |  Precondition     |scan is valid |
@@ -294,8 +289,7 @@ Use case 8, UC8 - MANAGE SALES
 |  6     | cashier gives the receipt to the customer |
 |  7     | cashier provides coupon to the customer |
 
-### Use case 9, UC9
-use case 9, UC9 - MANAGE CUSTOMER
+### Use case 9, UC9 - MANAGE CUSTOMER
 
 | Actors Involved        | Cashier |
 | ------------- |:-------------:| 
