@@ -110,33 +110,31 @@ c -- ez
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR1.3 | Sign up   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR1.3.1 | Create account |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR1.3.2 | Associate account with new store |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR1.3.3 | Add manager |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR1.3.4 | Remove manager |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR1.3.3 | Add or update User |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR1.3.4 | Remove User |
 |  FR2     |  Manage Inventory |
-|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR2.1   |  Add new Item |
-|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR2.2 | Select Item |
-|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR2.2.1 |  Remove Item |
-|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR2.2.1 |  Update Item |
-|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR2.3 |  Read Item |
-|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR2.3.1 |  Find Item |
-|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR2.3.2 |  Filter Item |
-|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR2.3.3 |  Sort Item |
-|  FR3     |  Manage Accounting |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR3.1 | Show daily accounting |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR3.2 | Show weekly accounting |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR3.3 | Show montly accounting |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR3.4 | Show annual accounting |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR3.5 | Add transaction |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR3.5.1 | Add expense |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR3.5.2 | Add income |
-|  FR4     |  Manage Sales      |
-|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR4.1 | Scan item |
-|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR4.2 | Produce receipt  |
-|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR4.3 | remove item from receipt |
-|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR4.4 | return (reso) |
-|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR4.5 | provide coupon |
-|  FR5   |  Manage Customer |
-|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.1 | fidelity card | 
+|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR2.1   |  Add or modify new Item |
+|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR2.2 |  Delete Item |
+|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR3 |  Read Item |
+|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR3.1 |  Find Item |
+|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR3.2 |  Filter Item |
+|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR3.3 |  Sort Item |
+|  FR4     |  Manage Accounting |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR4.1 | Show daily accounting |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR4.2 | Show weekly accounting |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR4.3 | Show montly accounting |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR4.4 | Show annual accounting |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR4.5 | Add transaction |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR4.5.1 | Add expense |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR4.5.2 | Add income |
+|  FR5     |  Manage Sales      |
+|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.1 | Scan item |
+|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.2 | Produce receipt  |
+|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.3 | remove item from receipt |
+|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.4 | return (reso) |
+|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.5 | provide coupon |
+|  FR6   |  Manage Customer |
+|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR6.1 | fidelity card | 
 
 ## Non Functional Requirements
 
@@ -154,24 +152,18 @@ c -- ez
 
 
 ## Use case diagram
+
 ### Use case 1, UC1
-use case 'Authorize and authenticate' UC1
+use case 1, UC1 - CREATE A USER ACCOUNT
+
 | Actors Involved        | End user |
 | ------------- |:-------------:| 
 |  Precondition     | device is connected to the internet, application in ON |  
-|  Post condition     | (Existence of an account connected to the shop?) |
-|  Nominal Scenario     | \<Textual description of actions executed by the UC> |
-|  Variants     | \<other executions, ex in case of errors> |
+|  Post condition     | Existence of an account connected to the shop |
+|  Nominal Scenario     | New user creates a new account U and populates its fields. |
+|  Variants     | A user can create only one account, this is checked through the email (one email, one account at most). |
 
 ##### Scenario 1.1 
-
-\<describe here scenarios instances of UC1>
-
-\<a scenario is a sequence of steps that corresponds to a particular execution of one use case>
-
-\<a scenario is a more formal description of a story>
-
-\<only relevant scenarios should be described>
 
 | Scenario 1.1 | Nominal case |
 | ------------- |:-------------:| 
@@ -182,117 +174,135 @@ use case 'Authorize and authenticate' UC1
 |  2     | End user inserts username and password |
 |  3     | End user is logged in |
 
-##### Scenario 1.2
-
-| Scenario 1.2 | first time opening the app |
-| ------------- |:-------------:| 
-|  Precondition     | device is connected to the internet, application in ON |
-|  Post condition     | End user has created an account associated to the shop he manages |
-| Step#        | Description  |
-|  1     | End user taps on sign in  |  
-|  2     | End user chooses username and password |
-|  3     | End user creates an account |
-|  4     | End user associates the new account to the shop he manages |
-##### Scenario 1.3
-| Scenario 1.3 | exception case | 
-| ------------- |:-------------:| 
-|  Precondition     | device is connected to the internet, application in ON  |
-|  Post condition     | End user is logged in |
-| Step#        | Description  |
-|  1     | End user taps on login  |  
-|  2     | End user inserts wrong username and/or password |
-|  3     | Application raises an error |
-|  4     | End user retries inserting username and password |
-|  5     | End user is logged in |
 ### Use case 2, UC2
+use case 2, UC2 - MODIFY USER ACCOUNT
 
-use case 'Manage Inventory' UC2
 | Actors Involved        | End user |
 | ------------- |:-------------:| 
-|  Precondition     | End user is logged in, |  
-|  Post condition     | invetory's been managed |
-|  Nominal Scenario     | end user manages inventory by adding or selecting items from it |
-|  Variants     | \<other executions, ex in case of errors> |
-
-
-| Scenario 2.1 | Nominal case |
-| ------------- |:-------------:| 
-|  Precondition     |End user is logged in |
-|  Post condition     | End user is logged in, inventory's been managed and updated |
-| Step#        | Description  |
-|  1     | End user opens the inventory |  
-|  2     | end user adds a new item |
-
-
-| Scenario 2.2 | update case |
-| ------------- |:-------------:| 
-|  Precondition     |End user is logged in |
-|  Post condition     | End user is logged in, inventory's been managed and updated |
-| Step#        | Description  |
-|  1     | End user opens the inventory |  
-|  2     | end user selects one or more items |
-|  3     | end user updates the selected items |
-
-| Scenario 2.3 | filter case |
-| ------------- |:-------------:| 
-|  Precondition     |End user is logged in |
-|  Post condition     | End user is logged in, inventory's been managed |
-| Step#        | Description  |
-|  1     | End user opens the inventory |  
-|  2     | end user reads one or more items |
-|  3     | end user filters items |
-
-| Scenario 2.4 | find case |
-| ------------- |:-------------:| 
-|  Precondition     |End user is logged in |
-|  Post condition     | End user is logged in, inventory's been managed |
-| Step#        | Description  |
-|  1     | End user opens the inventory |  
-|  2     | end user reads one or more items |
-|  3     | end user finds the selected items |
-
-| Scenario 2.5 | sort case |
-| ------------- |:-------------:| 
-|  Precondition     |End user is logged in |
-|  Post condition     | End user is logged in, inventory's been managed |
-| Step#        | Description  |
-|  1     | End user opens the inventory |  
-|  2     | end user reads one or more items |
-|  3     | end user sorts items |
-
-| Scenario 2.6 | exeption case  (there's no item to read) |
-| ------------- |:-------------:| 
-|  Precondition     |End user is logged in |
-|  Post condition     | End user is logged in, inventory's not been managed or updated |
-| Step#        | Description  |
-|  1     | End user opens the inventory |  
-|  2     | end user tries to read items |
-|  3     | app raises an error because there's no item to read telling the end user to add items first |
-
+|  Precondition     | Account user exists |  
+|  Post condition     | - |
+|  Nominal Scenario     | User modifies one or more fields of his account |
+|  Variants     | A user can Modify only his/her account. a Manager can modify any account |
 
 ### Use case 3, UC3
-use case 'Manage Sales' UC3
-| Actors Involved        | cash register (customer?)|
+
+use case 3, UC3 - REMOVE USER ACCOUNT
+
+| Actors Involved        | End user |
 | ------------- |:-------------:| 
-|  Precondition     | cash register  |  
-|  Post condition     | invetory's been managed |
-|  Nominal Scenario     | end user manages inventory by adding or selecting items from it |
-|  Variants     | \<other executions, ex in case of errors> |
+|  Precondition     | Account user exists |  
+|  Post condition     | Account user deleted from the system |
+|  Nominal Scenario     | User selects an account to delete |
+|  Variants     | A user can delete only his/her account. a Manager can delete any account |
+
+### Use case 4, UC4
+use case 4, UC4 - CREATE A NEW ITEM
+
+| Actors Involved        | End user |
+| ------------- |:-------------:| 
+|  Precondition     | End user is logged in. Item does not exist |  
+|  Post condition     | Item has been created |
+|  Nominal Scenario     | the user creates a new item in the system; he enters all the fields of an item |
+
+### Use case 5, UC5
+Use case 5, UC5 - UPDATE ITEM
+
+| Actors Involved        | End user |
+| ------------- |:-------------:| 
+|  Precondition     | End user is logged in. Item exists |  
+|  Post condition     | - |
+|  Nominal Scenario     | User modifies one or more fields of the item |
 
 
-| Scenario 3.1 | Nominal case |
+### Use case 6, UC6
+use case 6, UC6 - DELETE ITEM
+
+| Actors Involved        | End user |
+| ------------- |:-------------:| 
+|  Precondition     | Item exists |  
+|  Post condition     | Item deleted from the system |
+|  Nominal Scenario     | User selects an item to delete |
+
+
+### Use case 7, UC7
+use case 7, UC7 - READ ITEM
+
+| Actors Involved        | End user |
+| ------------- |:-------------:| 
+|  Precondition     | Items that user wants to read exist |  
+|  Post condition     | Item has been read |
+|  Nominal Scenario     | User selects one or more item to read |
+
+
+| Scenario 7.1 | filter case |
+| ------------- |:-------------:| 
+|  Precondition     | Items that user wants to filter exist |
+|  Post condition     | Items have been filtered  |
+| Step#        | Description  |
+|  1     | End user opens the inventory |  
+|  2     | End user filters items |
+
+| Scenario 7.2 | find case |
+| ------------- |:-------------:| 
+|  Precondition     | Items that user wants to find exist |
+|  Post condition     | Items have been found |
+| Step#        | Description  |
+|  1     | End user opens the inventory |  
+|  2     | End user finds the selected items |
+
+| Scenario 7.3 | sort case |
+| ------------- |:-------------:| 
+|  Precondition     | Items that user wants to sort exist |
+|  Post condition     | Items have been sorted |
+| Step#        | Description  |
+|  1     | End user opens the inventory |  
+|  2     | End user sorts items |
+
+| Scenario 7.4 | exeption case  (there's no item to read) |
+| ------------- |:-------------:| 
+|  Precondition     | Item that user wants  to read doesn't exist |
+|  Post condition     | - |
+| Step#        | Description  |
+|  1     | End user opens the inventory |  
+|  2     | End user tries to read items |
+|  3     | App raises an error because there's no item to read telling the end user to add items first |
+
+
+### Use case 8, UC8
+Use case 8, UC8 - MANAGE SALES
+| Actors Involved        | cash register, cashier |
+| ------------- |:-------------:| 
+|  Precondition     | there's a cashier at the cash register  |  
+|  Post condition     | income is increased. one or more instances of the bought items has been removed from the catalogue (depending on how many instances of the same item is bought) |
+|  Nominal Scenario     | cashier manages the sell of one or more items |
+|  Variants     | customer can pay with cash (in case, he can have the right amount of money, or he can have less/more than needed) or with a CreditCard |
+
+
+| Scenario 8.1 | Nominal case |
 | ------------- |:-------------:| 
 |  Precondition     |scan is valid |
-|  Post condition     | items has been selled, quantity of item in inventory is reduced, income has increased |
+|  Post condition     | items has been selled |
+|        |   income has increased    |
+|        |   quantity of item in inventory is reduced   |
 | Step#        | Description  |
 |  1     | cashier scans item 1 |  
 |  2     | cashier scans item 2 |
-|  ..     | until last item |
+|  ..    | until last item |
 |  3     | customer pays the correct amount |
 |  4     | cashier inserts money in the cash register |
 |  5     | cash register prints the receipt |
 |  6     | cashier gives the receipt to the customer |
 |  7     | cashier provides coupon to the customer |
+
+### Use case 9, UC9
+use case 9, UC9 - MANAGE CUSTOMER
+
+| Actors Involved        | Cashier |
+| ------------- |:-------------:| 
+|  Precondition     | Customer has a fidelity card |  
+|       | Cashier has already printed the receipt | 
+|  Post condition     | - |
+|  Nominal Scenario     | Cashier provides coupon to the customer (depending on how much he/her has spent) |
 
 
 
