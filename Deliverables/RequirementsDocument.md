@@ -161,13 +161,16 @@ Lucy is a 36 years old shop owner in Glasgow, she owns a little tailor's shop an
 
 | ID        | Type (efficiency, reliability, ..)           | Description  | Refers to |
 | ------------- |:-------------:| :-----:| -----:|
-|  NFR1     | Efficiency(Space) | Inventory storage at least >2000 Item types | FR2 |
-|  NFR2     | Efficiency(Performance) | Some operation shuold be executed in < 1sec | FR2.2, FR2.3 |
-|  NFR3     | Usability | Training time must take < 20min | from FR1 to FR5 |
+|  NFR1     | Space | Inventory should storage at least >2000 Item types | FR2 |
+|  NFR2     | Performance | All function shuold be executed in < 1sec | All FR |
+|  NFR3     | Usability | Training time should take < 20min | from FR1 to FR5 |
 |  NFR4     | Usability | Trained person should take < 10sec for adding a new Item type | FR2.1 |
-|  NFR5     | Interoperability | Some info must be saved also on cloud in case a user changes device | FR2, FR3, FR5 | 
-|  NFR6     | Reliability | Manage sales function must be aviable even if no internet connection is aviable (?) | FR4 | 
-|  NFR7     | Legislative | The system must check if the return is legally doable in the current situation (date, cupon/cash) | FR4.4/FR4.5 | 
+|  NFR5     | Interoperability | Some info should be saved also on cloud in case a user changes device | FR2, FR3, FR5 | 
+|  NFR6     | Reliability | Manage sales function should be aviable even if no internet connection is aviable | FR4 | 
+|  NFR7     | Legislative | The system should check if the return is legally doable in the current situation (date, cupon/cash) | FR4.4/FR4.5 | 
+|  NFR8     | Localisation | The currrency is Euro | All FR | 
+|  NFR9     | Privacy | Personal data of one user should not be accessed by other users and users with lower authentication level should not have access to higher authentication level function | All FR, especially FR1 | 
+|  NFR10     | Portability | The application should be accessed by PC by major OS, and by smarthphone by Android and iOS | All FR | 
 
 
 
