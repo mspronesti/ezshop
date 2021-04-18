@@ -97,6 +97,24 @@ c -- ez
 
 \<stories will be formalized later as scenarios in use cases>
 
+## Anna
+
+Anna is a 53 years old shop owner and manager. She is marryed and has a son, lives in Milan and is fond of travelling. She started her shop some years ago, but noticed she took too much time in sorting inventory and searching for what she should buy from suppliers. She then tried EZshop and even if she was not so confortable with applications, learned how to use it without much trouble. Now she doesn't only find immediatly what item her shop miss, but also check every morning the weekly account to find if sales are growing.
+
+## Mark
+
+Mark is a 28 years old shop manager in Munich. After he got his degree in economics and management he started working for a chain of small computer and electronic stores, but he doesn't own the shop. He is still new to his role as a manger and EZshop simplify a lot his work. The application helps him remember all the usual customer, the items he need to order from suppliers and which products are on sale. He will be also valued by his annual accounting, so he pays great actention in the weekly as well as the montly accounting. 
+
+## Jean
+
+Jean is a 23 years old cashier who works in a medium-size shop in Lyon. He has been foing this work for the past 2 years, but since his first day at work some thing as changed. Prior to the introduction of EZshop he used to take care of the different action related to sales mostly by himself, but nowadays the application greatly helps him. He has an account which he was given by the shop manager after a brief training on how to use the application. 
+
+## Lucy
+
+Lucy is a 36 years old shop owner in Glasgow, she owns a little tailor's shop and she is the only person working there, so she has to take care of the cash register. Because of this she is very busy and every little spare time is a great achivement, as such she uses all functions of EZshop application and especially like the inventory and sales features. 
+
+
+
 
 # Functional and non functional requirements
 
@@ -142,10 +160,17 @@ c -- ez
 
 | ID        | Type (efficiency, reliability, ..)           | Description  | Refers to |
 | ------------- |:-------------:| :-----:| -----:|
-|  NFR1     |   |  | |
-|  NFR2     | |  | |
-|  NFR3     | | | |
-| NFRx .. | | | | 
+|  NFR1     | Space | Inventory should storage at least >2000 Item types | FR2 |
+|  NFR2     | Performance | All function shuold be executed in < 1sec | All FR |
+|  NFR3     | Usability | Training time should take < 20min | from FR1 to FR5 |
+|  NFR4     | Usability | Trained person should take < 10sec for adding a new Item type | FR2.1 |
+|  NFR5     | Interoperability | Some info should be saved also on cloud in case a user changes device | FR2, FR3, FR5 | 
+|  NFR6     | Reliability | Manage sales function should be aviable even if no internet connection is aviable | FR4 | 
+|  NFR7     | Legislative | The system should check if the return is legally doable in the current situation (date, cupon/cash) | FR4.4/FR4.5 | 
+|  NFR8     | Localisation | The currrency is Euro | All FR | 
+|  NFR9     | Privacy | Personal data of one user should not be accessed by other users and users with lower authentication level should not have access to higher authentication level function | All FR, especially FR1 | 
+|  NFR10     | Portability | The application should be accessed by PC by major OS, and by smarthphone by Android and iOS | All FR | 
+
 
 
 # Use case diagram and use cases
