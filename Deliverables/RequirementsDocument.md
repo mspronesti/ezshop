@@ -375,6 +375,11 @@ class Item {
 class Inventory {	
 }
 
+class Payment{
+  + date
+  + amount
+}
+Customer -- "*" Payment
 
 Owner -up-|> User
 EZShop -- "*" Store
@@ -388,6 +393,7 @@ Store  --  "1..*" CashRegister
 FidelityCard "0..1" --  Customer
 Store  -- "*" FidelityCard
 Store --Inventory 
+
 
 @enduml
 ```
