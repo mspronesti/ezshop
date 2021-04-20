@@ -44,9 +44,10 @@ EZShop is a software application to:
 |   Owner    | Uses the application to manage inventory, introduce sales, manage expenses, trace earnings        |
 | Manager |  Uses the application to manage inventory, introduce sales, manages expenses, trace earnings on behalf of owner|
 | Developer | Develops and maintain the application, introduce news feature to improve usability, fixes bugs
-| Cashier | ... |
-| Cash Register | ... |
-| Inventory | ... |
+| Cashier | Uses the applications to scan items, produce receipt, produce coupons  |
+| Item | product sold by store |
+| Inventory | provides list of items |
+| Credit Card System | handles payments via credit cards |
 # Context Diagram and interfaces
 
 ## Context Diagram
@@ -59,10 +60,10 @@ left to right direction
 
 actor :Manager: as m
 actor :Owner: as o
-actor :Cash Register: as cr
+actor :Item: as i
 actor :Inventory: as iv
 actor Cashier as c
-
+actor :Credit card system: as ccs
 
 m --|> c
 o --|> m
@@ -70,10 +71,10 @@ o --|> m
 rectangle System{
 (EZShop) as ez	
 
-cr --> ez 
-ez <-- iv
+i -- ez 
+ez -- iv
 c -- ez
-
+ez -- ccs
 
 }
 
@@ -85,10 +86,11 @@ c -- ez
 
 | Actor | Logical Interface | Physical Interface  |
 | ------------- |:-------------:| -----:|
-|   End User    | Web GUI  | Touch Screen on Smartphone,keyboard and mouse on pc|
+|   Manager, Owner    | Web GUI  | Touch Screen on Smartphone or tablet,keyboard screen  mouse on pc|
+| Cashier | Web GUI | Touch Screen on Smartphone or tablet   |
 |  Inventory |  Web Services | Internet Connection |
-| Cash register |  Web Services | Internet Connection |
- 
+| Item |  Bar code | Laser beam |
+| Credit Card System | |
 
 
 # Stories and personas
@@ -142,17 +144,19 @@ Lucy is a 36 years old shop owner in Glasgow, she owns a little tailor's shop an
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR4.5.1 | Add expense |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR4.5.2 | Add income |
 |  FR5     |  Manage Sales      |
-|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.1 | Scan item |
-|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.2 | Produce receipt  |
-|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.3 | remove item from receipt |
-|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.4 | return (reso) |
-|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.5 | provide coupon |
+|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.1 | Scan Fidelity card (if any) |
+|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.2 | Scan item |
+|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.3 | Produce receipt  |
+|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.4 | remove item from receipt |
+|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.5 | handle item return |
+|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.6 | provide coupon |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.7  | handle payment |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.7.1 | handle cash payment |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.7.2 | handle credit card payment |
 |  FR6   |  Manage Customer |
-|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR6.1 | fidelity card | 
+|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR6.1 | produce fidelity card | 
 
 ## Non Functional Requirements
-
-\<Describe constraints on functional requirements>
 
 | ID        | Type (efficiency, reliability, ..)           | Description  | Refers to |
 | ------------- |:-------------:| :-----:| -----:|
@@ -165,7 +169,7 @@ Lucy is a 36 years old shop owner in Glasgow, she owns a little tailor's shop an
 |  NFR7     | Legislative | The system should check if the return is legally doable in the current situation (date, cupon/cash) | FR4.4/FR4.5 | 
 |  NFR8     | Localisation | The currrency is Euro | All FR | 
 |  NFR9     | Privacy | Personal data of one user should not be accessed by other users and users with lower authentication level should not have access to higher authentication level function | All FR, especially FR1 | 
-|  NFR10     | Portability | The application should be accessed by PC by major OS, and by smarthphone by Android and iOS | All FR | 
+|  NFR10     | Portability | The application should be accessed by PC on major operating systems, and by tablet or smarthphone running on Android or iOS | All FR | 
 
 
 
@@ -177,7 +181,7 @@ Lucy is a 36 years old shop owner in Glasgow, she owns a little tailor's shop an
 @startuml
 left to right direction
 
-actor :Cash register: as cr
+actor :Item: as it
 actor :User: as u
 actor :Inventory: as i
 actor :Manager: as m
@@ -186,16 +190,13 @@ actor :Owner: as o
 
 o --|> m
 m --|> u
+
 u --> (Manage sales)
 
-(Manage sales) .> (Manage customer) :include
 
 u --> (Manage user account)
 
-
-(Manage user account) .> (Create account) :include
-(Manage user account) .> (Delete account) :include
-(Manage user account) .> (Update account) :include
+u --> (Manage customer)
 
 m --> (Manage inventory)
 
@@ -213,7 +214,7 @@ m --> (Manage inventory)
 
 (Manage inventory) --> i
 
-(Manage sales) <-- cr
+(Manage sales) --> it
 (Manage accounting) <-- m
 @enduml
 ```
@@ -330,18 +331,37 @@ use case 1, UC1
 
 ### Use case 8, UC8 - MANAGE SALES
 
-| Actors Involved        | cash register, cashier |
+| Actors Involved        | item, cashier |
 | ------------- |:-------------:| 
 |  Precondition     | there's a cashier at the cash register  |  
-|  Post condition     | income is increased. one or more instances of the bought items has been removed from the catalogue (depending on how many instances of the same item is bought) |
-|  Nominal Scenario     | cashier manages the sell of one or more items |
-|  Variants     | customer can pay with cash (in case, he can have the right amount of money, or he can have less/more than needed) or with a CreditCard |
+|  Post condition     | income is increased. one or more instances of the bought items has been removed from the inventory (depending on how many instances of the same item is bought) |
+|  Nominal Scenario     | cashier manages the sale of one or more items |
+|  Variants     | customer can pay with cash (in case, he can have the right amount of money, or he can have less/more than needed) or with a Credit Card |
 
 ##### Scenario 8.1
+
 | Scenario 8.1 | Nominal case |
 | ------------- |:-------------:| 
-|  Precondition     |scan is valid |
-|  Post condition     | items has been selled |
+|  Precondition     |scan is valid, customor has fidelity card |
+|  Post condition     | items has been sold |
+|        |   income has increased    |
+|        |   quantity of item in inventory is reduced   |
+| Step#        | Description  |
+|  1     | cashier scans fidelity card |
+|  2     | cashier scans item 1 |  
+|  3     | cashier scans item 2 |
+|  ..    | until last item |
+|  4     | customer pays the correct amount |
+|  5     | cashier inserts money in the cash register |
+|  6     | cash register prints the receipt |
+|  7     | cashier gives the receipt to the customer |
+|  8     | cashier provides coupon to the customer  |
+
+##### Scenario 8.2
+| Scenario 8.2 | Nominal case |
+| ------------- |:-------------:| 
+|  Precondition     |scan is valid, customor doesn't have fidelity card |
+|  Post condition     | items has been sold |
 |        |   income has increased    |
 |        |   quantity of item in inventory is reduced   |
 | Step#        | Description  |
@@ -352,16 +372,14 @@ use case 1, UC1
 |  4     | cashier inserts money in the cash register |
 |  5     | cash register prints the receipt |
 |  6     | cashier gives the receipt to the customer |
-|  7     | cashier provides coupon to the customer |
 
 ### Use case 9, UC9 - MANAGE CUSTOMER
 
 | Actors Involved        | Cashier |
 | ------------- |:-------------:| 
-|  Precondition     | Customer has a fidelity card |  
-|       | Cashier has already printed the receipt | 
-|  Post condition     | - |
-|  Nominal Scenario     | Cashier provides coupon to the customer (depending on how much he/her has spent) |
+|  Precondition     | Customer doesn't own a fidelity card |  
+|  Post condition     | Customer has fidelity card |
+|  Nominal Scenario     | Cashier provides fidelity card to the customer |
 
 
 
@@ -440,9 +458,23 @@ Store --Inventory
 
 
 # System Design
-\<describe here system design>
+```plantuml
+@startuml
+top to bottom direction
+class Cash_register
+class Computer
+class Printer 
+class Credit_card_reader
+class EZshop 
+class BarcodeReader 
 
-\<must be consistent with Context diagram>
+Computer --o Cash_register
+BarcodeReader -- Computer
+EZshop--Computer
+Printer--o Cash_register
+Credit_card_reader --o Cash_register
+@enduml
+```
 
 # Deployment Diagram 
 ```plantuml
