@@ -74,6 +74,7 @@ cr --> ez
 ez <-- iv
 c -- ez
 
+
 }
 
 @enduml
@@ -91,11 +92,6 @@ c -- ez
 
 
 # Stories and personas
-\<A Persona is a realistic impersonation of an actor. Define here a few personas and describe in plain text how a persona interacts with the system>
-
-\<Persona is-an-instance-of actor>
-
-\<stories will be formalized later as scenarios in use cases>
 
 ## Anna
 
@@ -177,6 +173,40 @@ Lucy is a 36 years old shop owner in Glasgow, she owns a little tailor's shop an
 
 
 ## Use case diagram
+```plantuml
+@startuml
+top to bottom direction
+
+actor :Cash Register: as cr
+actor :User: as u
+actor :Inventory: as i
+
+
+
+(EZShop) .> (Manage user account) :include
+(Manage user account) <-- u
+(Manage inventory) <. (EZShop) :include
+u --> (Manage inventory)
+(Manage accounting) <. (EZShop) :include
+(Manage Sale) <. (EZShop) :include
+(Manage Customer) <. (Manage Sale) :include
+(Manage Sale) <-- cr
+
+(Manage inventory) --> i
+(Manage inventory) .> (create new item) :include 
+(Manage inventory) .> (update item) :include 
+(Manage inventory) .> (read item) :include 
+
+(read item) <. (find item) 
+(read item) <. (filter item) 
+(read item) <. (sort item) 
+
+(remove item) <. (Manage inventory):include
+
+(Manage Sale) .> (remove item) :include
+
+@enduml
+```
 
 ### Use case 1, UC1 - CREATE A USER ACCOUNT
 use case 1, UC1 
