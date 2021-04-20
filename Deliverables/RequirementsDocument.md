@@ -175,39 +175,45 @@ Lucy is a 36 years old shop owner in Glasgow, she owns a little tailor's shop an
 ## Use case diagram
 ```plantuml
 @startuml
-top to bottom direction
+left to right direction
 
-actor :Cash Register: as cr
+actor :Cash register: as cr
 actor :User: as u
 actor :Inventory: as i
+actor :Manager: as m
+actor :Owner: as o
 
 
+o --|> m
+m --|> u
+u --> (Manage sales)
 
-(EZShop) .> (Manage user account) :include
-(Manage user account) <-- u
-(Manage inventory) <. (EZShop) :include
-u --> (Manage inventory)
-(Manage accounting) <. (EZShop) :include
-(Manage Sale) <. (EZShop) :include
-(Manage Customer) <. (Manage Sale) :include
-(Manage Sale) <-- cr
+(Manage sales) .> (Manage customer) :include
+
+u --> (Manage user account)
+
+
+(Manage user account) .> (Create account) :include
+(Manage user account) .> (Delete account) :include
+(Manage user account) .> (Update account) :include
+
+m --> (Manage inventory)
+
+
+(Manage inventory) .> (Create new item) :include 
+(Manage inventory) .> (Update item) :include 
+(Manage inventory) .> (Read item) :include 
+(Manage inventory) .> (Remove item) :include
+(Remove item) <. (Manage sales) :include
+
+
+(Find item)  <. (Read item):include
+(Filter item) <. (Read item):include 
+(Sort item)  <. (Read item):include
 
 (Manage inventory) --> i
-(Manage inventory) .> (create new item) :include 
-(Manage inventory) .> (update item) :include 
-(Manage inventory) .> (read item) :include 
 
-(read item) .> (find item)  :include
-(read item) .> (filter item) :include 
-(read item) .> (sort item)  :include
-
-(remove item) <. (Manage inventory):include
-
-(Manage Sale) .> (remove item) :include
-
-(Manage user account) .> (create account) :include
-(Manage user account) .> (delete account) :include
-(Manage user account) .> (update account) :include
+(Manage sales) <-- cr
 @enduml
 ```
 
