@@ -205,6 +205,9 @@ u --> (Manage inventory)
 
 (Manage Sale) .> (remove item) :include
 
+(Manage user account) .> (create account) :include
+(Manage user account) .> (delete account) :include
+(Manage user account) .> (update account) :include
 @enduml
 ```
 
