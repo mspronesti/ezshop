@@ -214,6 +214,7 @@ m --> (Manage inventory)
 (Manage inventory) --> i
 
 (Manage sales) <-- cr
+(Manage accounting) <-- m
 @enduml
 ```
 
