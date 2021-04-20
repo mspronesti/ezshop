@@ -197,9 +197,9 @@ u --> (Manage inventory)
 (Manage inventory) .> (update item) :include 
 (Manage inventory) .> (read item) :include 
 
-(read item) <. (find item) 
-(read item) <. (filter item) 
-(read item) <. (sort item) 
+(read item) .> (find item)  :include
+(read item) .> (filter item) :include 
+(read item) .> (sort item)  :include
 
 (remove item) <. (Manage inventory):include
 
