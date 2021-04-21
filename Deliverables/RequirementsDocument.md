@@ -396,14 +396,14 @@ use case 1, UC1
 
 | Actors Involved        | Manager |
 | ------------- |:-------------:| 
-|  Precondition     | Some transaction must be added into the accounting |  
+|  Precondition     | there's at least one transaction that needs to be added into the accounting |  
 |  Post condition     | The accounting is up to date |
 |  Nominal Scenario     | The manager adds expenses and income to the accounting |
 
 #### Scenario 10.1
 | Scenario 10.1 | Nominal case |
 | ------------- |:-------------:| 
-|  Precondition     | Some transaction must be added into the accounting |
+|  Precondition     | there's at least one transaction that needs to be added into the accounting |
 |  Post condition     | The accounting is up to date |
 | Step#        | Description  |
 |  1     | The manager adds the expenses to the accounting   |  
