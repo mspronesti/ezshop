@@ -2,7 +2,7 @@
 
 Authors: Massimiliano Pronesti, Matteo Notarangelo, Davide Mammone, Umberto Pepato
 
-Date:
+Date: 21/04/2021
 
 Version:
 
@@ -186,7 +186,7 @@ actor :User: as u
 actor :Inventory: as i
 actor :Manager: as m
 actor :Owner: as o
-
+actor :Credit Card System: as ccs
 
 o --|> m
 m --|> u
@@ -200,6 +200,7 @@ u --> (Manage customer)
 
 m --> (Manage inventory)
 
+(Manage sales) --> ccs
 
 (Manage inventory) .> (Create new item) :include 
 (Manage inventory) .> (Update item) :include 
