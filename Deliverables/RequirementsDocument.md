@@ -45,9 +45,9 @@ EZShop is a software application to:
 | Manager |  Uses the application to manage inventory, introduce sales, manages expenses, trace earnings on behalf of owner|
 | Developer | Develops and maintain the application, introduce news feature to improve usability, fixes bugs
 | Cashier | Uses the applications to scan items, produce receipt, produce coupons  |
-| Item | product sold by store |
-| Inventory | provides list of items |
-| Credit Card System | handles payments via credit cards |
+| Item | Product sold by store |
+| Inventory | Provides list of items |
+| Credit Card System | Handles payments via credit cards |
 # Context Diagram and interfaces
 
 ## Context Diagram
@@ -90,7 +90,7 @@ ez -- ccs
 | Cashier | Web GUI | Touch Screen on Smartphone or tablet   |
 |  Inventory |  Web Services | Internet Connection |
 | Item |  Bar code | Laser beam |
-| Credit Card System | |
+| Credit Card System | Visa direct APIs https://developer.visa.com/capabilities/visa_direct/docs-getting-started | Credit card reader|
 
 
 # Stories and personas
@@ -147,14 +147,14 @@ Lucy is a 36 years old shop owner in Glasgow, she owns a little tailor's shop an
 |  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.1 | Scan Fidelity card (if any) |
 |  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.2 | Scan item |
 |  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.3 | Produce receipt  |
-|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.4 | remove item from receipt |
-|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.5 | handle item return |
-|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.6 | provide coupon |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.7  | handle payment |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.7.1 | handle cash payment |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.7.2 | handle credit card payment |
+|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.4 | Remove item from receipt |
+|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.5 | Handle item return |
+|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.6 | Provide coupon |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.7  | Handle payment |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.7.1 | Handle cash payment |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR5.7.2 | Handle credit card payment |
 |  FR6   |  Manage Customer |
-|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR6.1 | produce fidelity card | 
+|  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FR6.1 | Produce fidelity card | 
 
 ## Non Functional Requirements
 
@@ -164,8 +164,8 @@ Lucy is a 36 years old shop owner in Glasgow, she owns a little tailor's shop an
 |  NFR2     | Performance | All function shuold be executed in < 1sec | All FR |
 |  NFR3     | Usability | Training time should take < 20min | from FR1 to FR5 |
 |  NFR4     | Usability | Trained person should take < 10sec for adding a new Item type | FR2.1 |
-|  NFR5     | Interoperability | Some info should be saved also on cloud in case a user changes device | FR2, FR3, FR5 | 
-|  NFR6     | Reliability | Manage sales function should be aviable even if no internet connection is aviable | FR4 | 
+|  NFR5     | Interoperability | Some info should be saved also on server in case a user changes device | FR2, FR3, FR5 | 
+|  NFR6     | Reliability | Manage sales function should be aviable (even if only payment by cash is aviable) even if no internet connection is aviable | FR4 | 
 |  NFR7     | Legislative | The system should check if the return is legally doable in the current situation (date, cupon/cash) | FR4.4/FR4.5 | 
 |  NFR8     | Localisation | The currrency is Euro | All FR | 
 |  NFR9     | Privacy | Personal data of one user should not be accessed by other users and users with lower authentication level should not have access to higher authentication level function | All FR, especially FR1 | 
@@ -224,15 +224,15 @@ use case 1, UC1
 
 | Actors Involved        | End user |
 | ------------- |:-------------:| 
-|  Precondition     | device is connected to the internet, application in ON |  
+|  Precondition     | Device is connected to the internet, application in ON |  
 |  Post condition     | Existence of an account connected to the shop |
-|  Nominal Scenario     | New user creates a new account U and populates its fields. |
-|  Variants     | A user can create only one account, this is checked through the email (one email, one account at most). |
+|  Nominal Scenario     | New user creates a new account U and populates its fields |
+|  Variants     | A user can create only one account, this is checked through the email (one email, one account at most) |
 
 ##### Scenario 1.1
 | Scenario 1.1 | Nominal case |
 | ------------- |:-------------:| 
-|  Precondition     | device is connected to the internet, application in ON |
+|  Precondition     | Device is connected to the internet, application in ON |
 |  Post condition     | End user is logged in |
 | Step#        | Description  |
 |  1     | End user taps on login  |  
@@ -246,7 +246,7 @@ use case 1, UC1
 |  Precondition     | Account user exists |  
 |  Post condition     | - |
 |  Nominal Scenario     | User modifies one or more fields of his account |
-|  Variants     | A user can Modify only his/her account. a Manager can modify any account |
+|  Variants     | A user can modify only his/her account. A manager can modify any account |
 
 ### Use case 3, UC3 - REMOVE USER ACCOUNT
 
@@ -255,7 +255,7 @@ use case 1, UC1
 |  Precondition     | Account user exists |  
 |  Post condition     | Account user deleted from the system |
 |  Nominal Scenario     | User selects an account to delete |
-|  Variants     | A user can delete only his/her account. a Manager can delete any account |
+|  Variants     | A user can delete only his/her account. A manager can delete any account |
 
 ### Use case 4, UC4 - CREATE A NEW ITEM
 
@@ -263,7 +263,7 @@ use case 1, UC1
 | ------------- |:-------------:| 
 |  Precondition     | End user is logged in. Item does not exist |  
 |  Post condition     | Item has been created |
-|  Nominal Scenario     | the user creates a new item in the system; he enters all the fields of an item |
+|  Nominal Scenario     | The user creates a new item in the system; he enters all the fields of an item |
 
 ### Use case 5, UC5 - UPDATE ITEM 
 
@@ -321,7 +321,7 @@ use case 1, UC1
 ##### Scenario 7.4
 | Scenario 7.4 | exeption case  (there's no item to read) |
 | ------------- |:-------------:| 
-|  Precondition     | Item that user wants  to read doesn't exist |
+|  Precondition     | Item that user wants to read doesn't exist |
 |  Post condition     | - |
 | Step#        | Description  |
 |  1     | End user opens the inventory |  
@@ -333,45 +333,45 @@ use case 1, UC1
 
 | Actors Involved        | item, cashier |
 | ------------- |:-------------:| 
-|  Precondition     | there's a cashier at the cash register  |  
-|  Post condition     | income is increased. one or more instances of the bought items has been removed from the inventory (depending on how many instances of the same item is bought) |
-|  Nominal Scenario     | cashier manages the sale of one or more items |
-|  Variants     | customer can pay with cash (in case, he can have the right amount of money, or he can have less/more than needed) or with a Credit Card |
+|  Precondition     | There's a cashier at the cash register  |  
+|  Post condition     | Income is increased. One or more instances of the bought items has been removed from the inventory (depending on how many instances of the same item is bought) |
+|  Nominal Scenario     | Cashier manages the sale of one or more items |
+|  Variants     | Customer can pay with cash (in case, he can have the right amount of money, or he can have less/more than needed) or with a credit card |
 
 ##### Scenario 8.1
 
 | Scenario 8.1 | Nominal case |
 | ------------- |:-------------:| 
-|  Precondition     |scan is valid, customor has fidelity card |
-|  Post condition     | items has been sold |
-|        |   income has increased    |
-|        |   quantity of item in inventory is reduced   |
+|  Precondition     |Scan is valid, customor has fidelity card |
+|  Post condition     | Items has been sold |
+|        |   Income has increased    |
+|        |   Quantity of item in inventory is reduced   |
 | Step#        | Description  |
-|  1     | cashier scans fidelity card |
-|  2     | cashier scans item 1 |  
-|  3     | cashier scans item 2 |
-|  ..    | until last item |
-|  4     | customer pays the correct amount |
-|  5     | cashier inserts money in the cash register |
-|  6     | cash register prints the receipt |
-|  7     | cashier gives the receipt to the customer |
-|  8     | cashier provides coupon to the customer  |
+|  1     | Cashier scans fidelity card |
+|  2     | Cashier scans item 1 |  
+|  3     | Cashier scans item 2 |
+|  ..    | Until last item |
+|  4     | Customer pays the correct amount |
+|  5     | Cashier inserts money in the cash register |
+|  6     | Cash register prints the receipt |
+|  7     | Cashier gives the receipt to the customer |
+|  8     | Cashier provides coupon to the customer  |
 
 ##### Scenario 8.2
 | Scenario 8.2 | Nominal case |
 | ------------- |:-------------:| 
-|  Precondition     |scan is valid, customor doesn't have fidelity card |
-|  Post condition     | items has been sold |
-|        |   income has increased    |
-|        |   quantity of item in inventory is reduced   |
+|  Precondition     |Scan is valid, customor doesn't have fidelity card |
+|  Post condition     | Items has been sold |
+|        |   Income has increased    |
+|        |   !uantity of item in inventory is reduced   |
 | Step#        | Description  |
-|  1     | cashier scans item 1 |  
-|  2     | cashier scans item 2 |
-|  ..    | until last item |
-|  3     | customer pays the correct amount |
-|  4     | cashier inserts money in the cash register |
-|  5     | cash register prints the receipt |
-|  6     | cashier gives the receipt to the customer |
+|  1     | Cashier scans item 1 |  
+|  2     | Cashier scans item 2 |
+|  ..    | Until last item |
+|  3     | Customer pays the correct amount |
+|  4     | Cashier inserts money in the cash register |
+|  5     | Cash register prints the receipt |
+|  6     | Cashier gives the receipt to the customer |
 
 ### Use case 9, UC9 - MANAGE CUSTOMER
 
@@ -380,6 +380,34 @@ use case 1, UC1
 |  Precondition     | Customer doesn't own a fidelity card |  
 |  Post condition     | Customer has fidelity card |
 |  Nominal Scenario     | Cashier provides fidelity card to the customer |
+
+#### Scenario 9.1
+| Scenario 9.1 | Nominal case |
+| ------------- |:-------------:| 
+|  Precondition     | Customer doesn't own a fidelity card |
+|  Post condition     | Customer has fidelity card |
+| Step#        | Description  |
+|  1     | Cashier makes the customer fill a form with his personal data  |  
+|  2     | Cashier makes the customer sign a module |
+|  3     | Cashier gives the customer the fidelity card |
+
+### Use case 10, UC10 - MANAGE ACCOUNTING
+
+| Actors Involved        | Manager |
+| ------------- |:-------------:| 
+|  Precondition     | Some transaction must be added into the accounting |  
+|  Post condition     | The accounting is up to date |
+|  Nominal Scenario     | The manager adds expenses and income to the accounting |
+
+#### Scenario 10.1
+| Scenario 10.1 | Nominal case |
+| ------------- |:-------------:| 
+|  Precondition     | Some transaction must be added into the accounting |
+|  Post condition     | The accounting is up to date |
+| Step#        | Description  |
+|  1     | The manager adds the expenses to the accounting   |  
+|  2     | The manager adds the income to the accounting |
+|  3     | The manager check if the accounting is up to date by checking the daily accounting |
 
 
 
@@ -480,7 +508,7 @@ Credit_card_reader --o Cash_register
 ```plantuml
 @startuml
 artifact "EZShop Application" as ezs
-node "server" as s
+node "Server" as s
 node "PC client" as pc
 node "Mobile client" as phone
 s -- ezs
