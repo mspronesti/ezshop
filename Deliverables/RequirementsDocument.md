@@ -86,9 +86,9 @@ ez -- ccs
 
 | Actor | Logical Interface | Physical Interface  |
 | ------------- |:-------------:| -----:|
-|   Manager, Owner    | Web GUI  | Touch Screen on Smartphone or tablet,keyboard screen  mouse on pc|
-| Cashier | Web GUI | Touch Screen on Smartphone or tablet   |
-|  Inventory |  Web Services | Internet Connection |
+|   Manager, Owner    | Web GUI  | Touchscreen on smartphone or tablet, keyboard screen mouse on pc|
+| Cashier | Web GUI | Touchscreen on smartphone or tablet   |
+|  Inventory |  Web Services | Internet connection |
 | Item |  Bar code | Laser beam |
 | Credit Card System | Visa direct APIs https://developer.visa.com/capabilities/visa_direct/docs-getting-started | Credit card reader|
 
@@ -160,7 +160,7 @@ Lucy is a 36 years old shop owner in Glasgow, she owns a little tailor's shop an
 
 | ID        | Type (efficiency, reliability, ..)           | Description  | Refers to |
 | ------------- |:-------------:| :-----:| -----:|
-|  NFR1     | Space | Inventory should storage at least >2000 Item types | FR2 |
+|  NFR1     | Space | Inventory should storage at least > 2000 Item types | FR2 |
 |  NFR2     | Performance | All function shuold be executed in < 1sec | All FR |
 |  NFR3     | Usability | Training time should take < 20min | from FR1 to FR5 |
 |  NFR4     | Usability | Trained person should take < 10sec for adding a new Item type | FR2.1 |
@@ -363,7 +363,7 @@ use case 1, UC1
 |  Precondition     |Scan is valid, customor doesn't have fidelity card |
 |  Post condition     | Items has been sold |
 |        |   Income has increased    |
-|        |   !uantity of item in inventory is reduced   |
+|        |   Quantity of item in inventory is reduced   |
 | Step#        | Description  |
 |  1     | Cashier scans item 1 |  
 |  2     | Cashier scans item 2 |
