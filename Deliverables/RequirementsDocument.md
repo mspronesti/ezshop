@@ -225,7 +225,7 @@ use case 1, UC1
 
 | Actors Involved        | End user |
 | ------------- |:-------------:| 
-|  Precondition     | Device is connected to the internet, application in ON |  
+|  Precondition     | Device is connected to the internet, application is ON |  
 |  Post condition     | Existence of an account connected to the shop |
 |  Nominal Scenario     | New user creates a new account U and populates its fields |
 |  Variants     | A user can create only one account, this is checked through the email (one email, one account at most) |
@@ -233,7 +233,7 @@ use case 1, UC1
 ##### Scenario 1.1
 | Scenario 1.1 | Nominal case |
 | ------------- |:-------------:| 
-|  Precondition     | Device is connected to the internet, application in ON |
+|  Precondition     | Device is connected to the internet, application is ON |
 |  Post condition     | End user is logged in |
 | Step#        | Description  |
 |  1     | End user taps on login  |  
@@ -455,8 +455,22 @@ class FidelityCard {
 
 class Item {
  + ID
+ + variant
  + quantity
+}
+
+class ItemType {
+ + name
+ + tags
+ + description
+ + photo
+ + category
+ + ID
  + price
+}
+
+class Catalogue {
+
 }
 
 class Inventory {	
@@ -471,6 +485,9 @@ Customer -- "*" Payment
 Owner -up-|> User
 EZShop -- "*" Store
 User  -- "*" Store
+EZShop -- Catalogue
+Catalogue -- "*" ItemType
+ItemType -- Item
 
 Item  "*" --  Inventory
 
@@ -490,18 +507,18 @@ Store --Inventory
 ```plantuml
 @startuml
 top to bottom direction
-class Cash_register
+class CashRegister
 class Computer
 class Printer 
-class Credit_card_reader
+class CreditCardReader
 class EZshop 
 class BarcodeReader 
 
-Computer --o Cash_register
+Computer --o CashRegister
 BarcodeReader -- Computer
 EZshop--Computer
-Printer--o Cash_register
-Credit_card_reader --o Cash_register
+Printer--o CashRegister
+CreditCardReader --o CashRegister
 @enduml
 ```
 
