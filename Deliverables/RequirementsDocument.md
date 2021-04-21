@@ -476,7 +476,7 @@ class Catalogue {
 class Inventory {	
 }
 
-class Accounting{
+class Bookkeeping{
 }
 
 class SaleTransaction{
@@ -484,7 +484,7 @@ class SaleTransaction{
   + amount
 }
 ItemType "*" --o SaleTransaction
-SaleTransaction "*" -- Accounting
+SaleTransaction "*" -- Bookkeeping
 
 Owner -up-|> User
 EZShop -- "*" Store
