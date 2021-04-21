@@ -101,11 +101,11 @@ Anna is a 53 years old shop owner and manager. She is marryed and has a son, liv
 
 ## Mark
 
-Mark is a 28 years old shop manager in Munich. After he got his degree in economics and management he started working for a chain of small computer and electronic stores, but he doesn't own the shop. He is still new to his role as a manger and EZshop simplify a lot his work. The application helps him remember all the usual customer, the items he need to order from suppliers and which products are on sale. He will be also valued by his annual accounting, so he pays great actention in the weekly as well as the montly accounting. 
+Mark is a 28 years old shop manager in Munich. After he got his degree in economics and management he started working for a chain of small computer and electronic stores, but he doesn't own the shop. He is still new to his role as a manger and EZshop simplify a lot his work. The application helps him remember all the usual customer, the items he need to order from suppliers and which products are on sale. He will be also valued by his annual accounting, so he pays great attention in the weekly as well as the montly accounting. 
 
 ## Jean
 
-Jean is a 23 years old cashier who works in a medium-size shop in Lyon. He has been foing this work for the past 2 years, but since his first day at work some thing as changed. Prior to the introduction of EZshop he used to take care of the different action related to sales mostly by himself, but nowadays the application greatly helps him. He has an account which he was given by the shop manager after a brief training on how to use the application. 
+Jean is a 23 years old cashier who works in a medium-size shop in Lyon. He has been doing this work for the past 2 years, but since his first day at work some things have changed. Prior to the introduction of EZshop he used to take care of the different action related to sales mostly by himself, but nowadays the application greatly helps him. He has an account which he was given by the shop manager after a brief training on how to use the application. 
 
 ## Lucy
 
