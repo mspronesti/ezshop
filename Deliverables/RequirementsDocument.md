@@ -483,7 +483,7 @@ class SaleTransaction{
   + date
   + amount
 }
-ItemType "*" --<> SaleTransaction
+ItemType "*" --o SaleTransaction
 SaleTransaction "*" -- Accounting
 
 Owner -up-|> User
