@@ -80,9 +80,9 @@ Version:
 |Validation| 25 |
 
 
-#Gantt chart
+# Gantt chart
 
-@startuml
+@startuml Gantt
 [Requirements] lasts 1 days
 then [Architecture and Design] lasts 1 days
 then [Coding] lasts 4 days
