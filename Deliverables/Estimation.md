@@ -82,7 +82,7 @@ Version:
 
 # Gantt chart
 
-@startuml Gantt
+@startuml
 [Requirements] lasts 1 days
 then [Architecture and Design] lasts 1 days
 then [Coding] lasts 4 days
