@@ -67,11 +67,24 @@ Version:
 | S = Estimated size of project, in LOC (= NC * A) | 2090 |
 | E = Estimated effort, in person hours (here use productivity 10 LOC per person hour)  |             209                         |   
 | C = Estimated cost, in euro (here use 1 person hour cost = 30 euro) | 6270 | 
-| Estimated calendar time, in calendar weeks (Assume team of 4 people, 8 hours per day, 5 days per week ) |         2            |               
+| Estimated calendar time, in calendar weeks (Assume team of 4 people, 8 hours per day, 5 days per week ) |         1.3            |               
 # Estimate by activity decomposition
 ### 
 |         Activity name    | Estimated effort (person hours)   |             
 | ----------- | ------------------------------- | 
-| | |
-###
-Insert here Gantt chart with above activities
+|Requirements | 30 |
+|Architecture | 10|
+|Design | 20 |
+|Coding| 130 |
+|Integration| 25 |
+|Validation| 25 |
+
+
+#Gantt chart
+@startuml
+[Requirements] lasts 1 days
+then [Architecture and Design] lasts 1 days
+then [Coding] lasts 4 days
+then [Integration] lasts 1 days
+then [Validation] lasts 1 days
+@enduml
