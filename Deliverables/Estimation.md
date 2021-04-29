@@ -50,8 +50,10 @@
 50
 51
 # Project Estimation  
-Authors:
-Date:
+Authors: Massimiliano Pronesti, Umberto Pepato, Matteo Notarangelo, Davide Mammone
+
+Date: 29/04/2021
+
 Version:
 # Contents
 - [Estimate by product decomposition]
