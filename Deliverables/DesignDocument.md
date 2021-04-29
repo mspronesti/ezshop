@@ -43,6 +43,17 @@ The design must satisfy the Official Requirements document, notably functional a
 
 # Verification traceability matrix
 
+
+| FR Code | AccountBook | CreditCardCircuit | Customer | BalanceOperation | LoyalityCard | Order | ProductTYpe|Position|ReturnTransaction|ProductQuantityAndDiscount| SaleTransaction | Shop | User |
+| :--------:|:---:|:-----------:|:---------:|:----------------:| :---------------: | :------: | :--------: |:---:|:-----------:|:---------:|:----------------:| :--------: |:---:|
+| FR1   | | | | |   |   |   | | | | |  X |X| 
+| FR3   | | | | |   |   | X | | | | |  X | |  
+| FR4   | | | | |   | X | X |X| |X| |  X | |  
+| FR5   | | |X| | X |   |   | | | | |  X | |  
+| FR6   | | | | | X |   | X | |X|X|X|  X | |  
+| FR7   | |X| | |   |   |   | | | |X|  X | | 
+| FR8   |X| | |X|   |   |   | | | | |  X | |  
+
 \<for each functional requirement from the requirement document, list which classes concur to implement it>
 
 
