@@ -81,7 +81,7 @@ Version:
 
 
 # Gantt chart
-
+```plantuml
 @startuml
 [Requirements] lasts 1 days
 then [Architecture and Design] lasts 1 days
@@ -89,3 +89,4 @@ then [Coding] lasts 4 days
 then [Integration] lasts 1 days
 then [Validation] lasts 1 days
 @enduml
+```
