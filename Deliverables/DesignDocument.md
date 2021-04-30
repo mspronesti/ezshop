@@ -44,7 +44,7 @@ The design must satisfy the Official Requirements document, notably functional a
 # Verification traceability matrix
 
 
-| FR Code | AccountBook | CreditCardCircuit | CustomerRepository | BalanceOperationRepository | LoyalityCard | OrderRepository | ProductTypeRepository|Position|TransactionRepository|TransactionItem| Shop | User |
+| FR Code | AccountBook | CreditCardCircuit | CustomerRepository | BalanceOperationRepository | LoyalityCard | OrderRepository | ProductTypeRepository|Position|TransactionRepository|TransactionItem| Shop | UserRepository |
 | :--------:|:---:|:-----------:|:---------:|:----------------:| :---------------: | :------: | :--------: |:---:|:-----------:|:---------:|:----------------:| :--------: |
 | FR1   | | | | |   |   |   | | | |  X |X| 
 | FR3   | | | | |   |   | X | | | |  X | |  
