@@ -45,7 +45,7 @@ The design must satisfy the Official Requirements document, notably functional a
 
 
 | FR Code | AccountBook | CreditCardCircuit | CustomerRepository | BalanceOperationRepository | LoyalityCard | OrderRepository | ProductTypeRepository|Position|TransactionRepository|TransactionItem| Shop | User |
-| :--------:|:---:|:-----------:|:---------:|:----------------:| :---------------: | :------: | :--------: |:---:|:-----------:|:---------:|:----------------:| :--------: |:---:|
+| :--------:|:---:|:-----------:|:---------:|:----------------:| :---------------: | :------: | :--------: |:---:|:-----------:|:---------:|:----------------:| :--------: |
 | FR1   | | | | |   |   |   | | | |  X |X| 
 | FR3   | | | | |   |   | X | | | |  X | |  
 | FR4   | | | | |   | X | X |X|X| |  X | |  
