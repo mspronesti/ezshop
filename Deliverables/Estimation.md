@@ -56,8 +56,8 @@ Date: 29/04/2021
 
 Version: 1.0 
 # Contents
-- [Estimate by product decomposition](estimate-by-product-decomposition)
-- [Estimate by activity decomposition ](estimate-by-activity-decomposition)
+- [Estimate by product decomposition](#estimate-by-product-decomposition)
+- [Estimate by activity decomposition ](#estimate-by-activity-decomposition)
 # Estimation approach
 <Consider the EZGas  project as described in YOUR requirement document, assume that you are going to develop the project INDEPENDENT of the deadlines of the course>
 # Estimate by product decomposition
