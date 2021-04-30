@@ -1,12 +1,10 @@
 # Design Document 
 
+Authors: Massimiliano Pronesti, Matteo Notarangelo, Davide Mammone, Umberto Pepato 
 
-Authors: 
+Date: 30/04/2021
 
-Date:
-
-Version:
-
+Version: 1.0
 
 # Contents
 
@@ -45,186 +43,6 @@ application -- data
 ```plantuml
 @startuml
 left to right direction
-
-package data {
-
-    interface Repository<T> {
-        +List<T> findAll()
-        +T find(Integer id)
-        +boolean create(T entity)
-        +T update(T entity)
-        +boolean delete(T entity)
-    }
-
-    class User {
-        Integer id
-        String role
-        String password
-        String username
-    }
-    note left: Persistent class
-
-    class UserRepository implements Repository {
-        +List<User> findAll()
-        +User find(Integer id)
-        +boolean create(User user)
-        +User update(User user)
-        +boolean delete(User user)
-    }
-
-    User -- UserRepository
-
-    class Customer {
-        Integer id
-        String name
-        LoyaltyCard card
-    }
-    note left: Persistent class
-
-    class CustomerRepository implements Repository {
-        +List<Customer> findAll()
-        +Customer find(Integer id)
-        +boolean create(Customer user)
-        +Customer update(Customer user)
-        +boolean delete(Customer user)
-    }
-
-    Customer -- CustomerRepository
-
-    class BalanceOperation {
-        description
-        amount
-        date
-    }
-    note left: Persistent class
-
-    class Credit extends BalanceOperation {
-
-    }
-
-    class Debit extends BalanceOperation {
-
-    }
-
-    class BalanceOperationRepository implements Repository {
-        +List<BalanceOperation> findAll()
-        +BalanceOperation find(Integer id)
-        +boolean create(BalanceOperation user)
-        +BalanceOperation update(BalanceOperation user)
-        +boolean delete(BalanceOperation user)
-    }
-
-    BalanceOperation -- BalanceOperationRepository
-
-    class LoyaltyCard {
-        String id
-        Integer points
-    }
-
-    class Order {
-        Integer id
-        String productCode
-        double pricePerUnit
-        Integer quantity
-        String status
-    }
-    note left: Persistent class
-
-    class OrderRepository implements Repository {
-        +List<Order> findAll()
-        +Order find(Integer id)
-        +boolean create(Order user)
-        +Order update(Order user)
-        +boolean delete(Order user)
-    }
-
-    Order -- OrderRepository
-
-    class ProductType {
-        Integer id
-        String productCode
-        String description
-        double pricePerUnit
-        String note
-        Integer quantity
-        Position position
-    }
-    note left: Persistent class
-
-    class ProductTypeRepository implements Repository {
-        +List<ProductType> findAll()
-        +ProductType find(Integer id)
-        +boolean create(ProductType user)
-        +ProductType update(ProductType user)
-        +boolean delete(ProductType user)
-    }
-
-    ProductType -- ProductTypeRepository
-
-    class Position {
-        String aisleID
-        String rackID
-        String levelID
-    }
-
-    class Transaction {
-    }
-    note left: Persistent class
-
-    class TransactionRepository implements Repository {
-        +List<Transaction> findAll()
-        +Transaction find(Integer id)
-        +boolean create(Transaction user)
-        +Transaction update(Transaction user)
-        +boolean delete(Transaction user)
-    }
-
-    Transaction -- TransactionRepository
-
-    class ReturnTransaction extends Transaction {
-        Integer id
-        Integer returnId
-        Map<ProductType, Integer> productAndAmount
-        boolean commit
-    }
-
-    class TransactionItem {
-        Integer quantity
-        double discountRate
-        ProductType product
-    }
-
-    class SaleTransaction extends Transaction {
-        Integer id
-        List<TransactionItem> products
-        String date
-        String time
-        double cost
-        String paymentType
-        String status
-        double discountRate
-    }
-
-    Order --|> Debit
-    Order "*" - ProductType
-
-    SaleTransaction - "*" ProductType
-
-    LoyaltyCard "0..1" --> Customer
-
-    SaleTransaction "*" -- "0..1" LoyaltyCard
-
-    ProductType - "0..1" Position
-
-    ReturnTransaction "*" - SaleTransaction
-    ReturnTransaction "*" - ProductType
-
-    TransactionItem -- SaleTransaction
-    TransactionItem -- ProductType
-
-    SaleTransaction --|> Credit
-    ReturnTransaction --|> Debit
-}
 
 package application {
 
@@ -294,7 +112,7 @@ package application {
         List<BalanceOperation> operations
 
         boolean recordBalanceUpdate(double toBeAdded)
-        double computeBalance()
+        double getBalance()
         List<BalanceOperation> getCreditsAndDebits(LocalDate from, LocalDate to)
     }
     
@@ -317,16 +135,198 @@ package application {
         boolean returnPayment(String creditCard, double requiredBalance)
     }
 }
+@enduml
+```
 
+```plantuml
+@startuml
+package data {
+
+    interface Repository<T> {
+        +List<T> findAll()
+        +T find(Integer id)
+        +boolean create(T entity)
+        +T update(T entity)
+        +boolean delete(T entity)
+    }
+
+    class User <<Persistent>> {
+        Integer id
+        String role
+        String password
+        String username
+    }
+
+    class UserRepository implements Repository {
+        +List<User> findAll()
+        +User find(Integer id)
+        +boolean create(User user)
+        +User update(User user)
+        +boolean delete(User user)
+    }
+
+    User -- UserRepository
+
+    class Customer <<Persistent>> {
+        Integer id
+        String name
+        LoyaltyCard card
+    }
+
+    class CustomerRepository implements Repository {
+        +List<Customer> findAll()
+        +Customer find(Integer id)
+        +boolean create(Customer user)
+        +Customer update(Customer user)
+        +boolean delete(Customer user)
+    }
+
+    Customer -- CustomerRepository
+
+    class BalanceOperation <<Persistent>> {
+        description
+        amount
+        date
+    }
+
+    class Credit extends BalanceOperation {
+
+    }
+
+    class Debit extends BalanceOperation {
+
+    }
+
+    class BalanceOperationRepository implements Repository {
+        +List<BalanceOperation> findAll()
+        +BalanceOperation find(Integer id)
+        +boolean create(BalanceOperation user)
+        +BalanceOperation update(BalanceOperation user)
+        +boolean delete(BalanceOperation user)
+    }
+
+    BalanceOperation -- BalanceOperationRepository
+
+    class LoyaltyCard {
+        String id
+        Integer points
+    }
+
+    class Order <<Persistent>> {
+        Integer id
+        String productCode
+        double pricePerUnit
+        Integer quantity
+        String status
+    }
+
+    class OrderRepository implements Repository {
+        +List<Order> findAll()
+        +Order find(Integer id)
+        +boolean create(Order user)
+        +Order update(Order user)
+        +boolean delete(Order user)
+    }
+
+    Order -- OrderRepository
+
+    class ProductType <<Persistent>> {
+        Integer id
+        String productCode
+        String description
+        double pricePerUnit
+        String note
+        Integer quantity
+        Position position
+    }
+
+    class ProductTypeRepository implements Repository {
+        +List<ProductType> findAll()
+        +ProductType find(Integer id)
+        +boolean create(ProductType user)
+        +ProductType update(ProductType user)
+        +boolean delete(ProductType user)
+    }
+
+    ProductType -- ProductTypeRepository
+
+    class Position {
+        String aisleID
+        String rackID
+        String levelID
+    }
+
+    class Transaction <<Persistent>> {
+    }
+
+    class TransactionRepository implements Repository {
+        +List<Transaction> findAll()
+        +Transaction find(Integer id)
+        +boolean create(Transaction user)
+        +Transaction update(Transaction user)
+        +boolean delete(Transaction user)
+    }
+
+    Transaction -- TransactionRepository
+
+    class ReturnTransaction extends Transaction {
+        Integer id
+        Integer returnId
+        Map<ProductType, Integer> productAndAmount
+        boolean commit
+    }
+
+    class TransactionItem {
+        Integer quantity
+        double discountRate
+        ProductType product
+    }
+
+    class SaleTransaction extends Transaction {
+        Integer id
+        List<TransactionItem> products
+        String date
+        String time
+        double cost
+        String paymentType
+        String status
+        double discountRate
+    }
+
+    Order --|> Debit
+    Order "*" - ProductType
+
+    SaleTransaction - "*" ProductType
+
+    LoyaltyCard "0..1" --> Customer
+
+    SaleTransaction "*" -- "0..1" LoyaltyCard
+
+    ProductType - "0..1" Position
+
+    ReturnTransaction "*" - SaleTransaction
+    ReturnTransaction "*" - ProductType
+
+    TransactionItem -- SaleTransaction
+    TransactionItem -- ProductType
+
+    SaleTransaction --|> Credit
+    ReturnTransaction --|> Debit
+}
+
+@enduml
+```
+
+
+```plantuml
+@startuml
 package view {
-
+note: TBD
 }
 @enduml
-
 ```
 
 # Verification traceability matrix
-
 
 | FR Code | AccountBook | CreditCardCircuit | CustomerRepository | BalanceOperationRepository | LoyalityCard | OrderRepository | ProductTypeRepository|Position|TransactionRepository|TransactionItem| Shop | UserRepository |
 | :--------:|:---:|:-----------:|:---------:|:----------------:| :---------------: | :------: | :--------: |:---:|:-----------:|:---------:|:----------------:| :--------: |
