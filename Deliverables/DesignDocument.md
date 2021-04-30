@@ -140,9 +140,12 @@ package application {
 
 ```plantuml
 @startuml
+left to right direction
+
 package data {
 
     interface Repository<T> {
+        +EntityManager getEntityManager()
         +List<T> findAll()
         +T find(Integer id)
         +boolean create(T entity)
@@ -214,7 +217,7 @@ package data {
 
     class Order <<Persistent>> {
         Integer id
-        String productCode
+        String barcode
         double pricePerUnit
         Integer quantity
         String status
@@ -232,7 +235,7 @@ package data {
 
     class ProductType <<Persistent>> {
         Integer id
-        String productCode
+        String barcode
         String description
         double pricePerUnit
         String note
@@ -243,6 +246,7 @@ package data {
     class ProductTypeRepository implements Repository {
         +List<ProductType> findAll()
         +ProductType find(Integer id)
+        +ProductType findByBarcode(String barcode)
         +boolean create(ProductType user)
         +ProductType update(ProductType user)
         +boolean delete(ProductType user)
@@ -317,7 +321,6 @@ package data {
 @enduml
 ```
 
-
 ```plantuml
 @startuml
 package view {
@@ -338,45 +341,181 @@ note: TBD
 | FR7   | |X| | |   |   |   | | |X|  X | | 
 | FR8   |X| | |X|   |   |   | | | |  X | |  
 
-# Verification sequence diagrams 
-\<select key scenarios from the requirement document. For each of them define a sequence diagram showing that the scenario can be implemented by the classes and methods in the design>
+# Verification sequence diagrams
 
 ## Scenario 1-1
+
 ```plantuml
 @startuml
 actor Administrator
+    Shop -> ProductTypeRepository: createProductType
+    activate ProductTypeRepository
+
+    ProductTypeRepository -> EntityManager: create
+    activate EntityManager
+
+    EntityManager --> ProductTypeRepository
+    deactivate EntityManager
+
+    ProductTypeRepository --> Shop
+    deactivate ProductTypeRepository
 @enduml
 ```
+
 ## Scenario 2-1
 ```plantuml
 @startuml
 actor Administrator
+    Shop -> UserRepository: createUser
+    activate UserRepository
+
+    UserRepository -> EntityManager: create
+    activate EntityManager
+
+    EntityManager --> UserRepository
+    deactivate EntityManager
+
+    UserRepository --> Shop
+    deactivate UserRepository
 @enduml
 ```
+
 ## Scenario 3-2
 ```plantuml
 @startuml
-actor ShopManager
+    actor Administrator
+    Shop -> OrderRepository: payOrder
+    activate OrderRepository
+
+    OrderRepository -> EntityManager: find
+    activate EntityManager
+
+    EntityManager --> OrderRepository
+    deactivate EntityManager
+
+    OrderRepository -> EntityManager: update
+    activate EntityManager
+
+    EntityManager --> OrderRepository
+    deactivate EntityManager
+
+    OrderRepository --> Shop
+    deactivate OrderRepository
 @enduml
 ```
+
 ## Scenario 4-2
 ```plantuml
 @startuml
-actor Cashier
+    actor Cashier
+    Shop -> Shop: createCard
+    Shop -> CustomerRepository: attachCardToCustomer
+    activate CustomerRepository
+
+    CustomerRepository -> EntityManager: find
+    activate EntityManager
+
+    EntityManager --> CustomerRepository
+    deactivate EntityManager
+
+    CustomerRepository -> EntityManager: update
+    activate EntityManager
+
+    EntityManager --> CustomerRepository
+    deactivate EntityManager
+
+    CustomerRepository --> Shop
+    deactivate CustomerRepository
 @enduml
 ```
-## Scenario 6-1
+
+## Scenario 6-5
 ```plantuml
 @startuml
-actor Cashier
+    actor Cashier
+    Shop -> TransactionRepository: startSaleTransaction
+    activate TransactionRepository
+    
+    TransactionRepository -> EntityManager: create
+    activate EntityManager
+    
+    EntityManager --> TransactionRepository
+    deactivate EntityManager
+    
+    TransactionRepository --> Shop
+    deactivate TransactionRepository
+    
+    Shop -> ProductTypeRepository: getProductTypeByBarCode
+    activate ProductTypeRepository
+    
+    ProductTypeRepository -> EntityManager: findByBarcode
+    activate EntityManager
+    
+    EntityManager --> ProductTypeRepository
+    deactivate EntityManager
+    
+    ProductTypeRepository --> Shop
+    deactivate ProductTypeRepository
+    
+    Shop -> ProductTypeRepository: addProductToSale
+    activate ProductTypeRepository
+    
+    ProductTypeRepository -> EntityManager: update
+    activate EntityManager
+    
+    EntityManager --> ProductTypeRepository
+    deactivate EntityManager
+    
+    ProductTypeRepository --> TransactionRepository
+    deactivate TransactionRepository
+    
+    TransactionRepository -> EntityManager: update
+    activate EntityManager
+    
+    EntityManager --> TransactionRepository
+    deactivate EntityManager
+    
+    TransactionRepository --> Shop
+    deactivate TransactionRepository
+    
+    Shop -> TransactionRepository: endSaleTransaction
+    activate TransactionRepository
+    
+    TransactionRepository -> EntityManager: update
+    activate EntityManager
+    
+    EntityManager --> TransactionRepository
+    deactivate EntityManager
+    
+    TransactionRepository --> Shop
+    deactivate ProductTypeRepository
+    
+    Shop -> UI: askPaymentType
+    activate UI
+    
+    UI --> Shop
+    deactivate UI
+    
+    Shop -> TransactionRepository: deleteSaleTransaction
+    
+    TransactionRepository -> EntityManager: delete
+    activate EntityManager
+    
+    EntityManager --> TransactionRepository
+    deactivate EntityManager
+    
+    TransactionRepository --> Shop
+    deactivate TransactionRepository
 @enduml
 ```
+
 ## Scenario 7-4
 ```plantuml
 @startuml
 actor Cashier
 @enduml
 ```
+
 ## Scenario 9-1
 ```plantuml
 @startuml
