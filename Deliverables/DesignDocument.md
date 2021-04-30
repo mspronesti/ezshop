@@ -512,13 +512,42 @@ actor Administrator
 ## Scenario 7-4
 ```plantuml
 @startuml
-actor Cashier
+    actor Cashier
+    Shop -> TransactionRepository: receiveCashPayment
+    activate TransactionRepository
+
+    TransactionRepository --> EntityManager: find
+    activate EntityManager
+
+    EntityManager --> TransactionRepository
+    deactivate EntityManager
+
+    TransactionRepository --> Shop
+    deactivate TransactionRepository
+
 @enduml
 ```
 
 ## Scenario 9-1
 ```plantuml
 @startuml
-actor ShopManager
+    actor ShopManager
+    Shop -> AccountBook: getCreditsAndDebits
+    activate AccountBook
+
+    AccountBook -> BalanceOperationRepository: getCreditsAndDebits
+    activate BalanceOperationRepository
+
+    BalanceOperationRepository --> EntityManager: find
+    activate EntityManager
+
+    EntityManager --> BalanceOperationRepository
+    deactivate EntityManager
+
+    BalanceOperationRepository --> AccountBook
+    deactivate BalanceOperationRepository
+
+    AccountBook --> Shop
+    deactivate AccountBook
 @enduml
 ```
