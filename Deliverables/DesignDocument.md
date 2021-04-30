@@ -208,6 +208,7 @@ package data {
 
     class BalanceOperationRepository implements Repository {
         +List<BalanceOperation> findAll()
+        +List<BalanceOperation> findAllBetweenDates(Date from, Date to)
         +BalanceOperation find(Integer id)
         +boolean create(BalanceOperation user)
         +BalanceOperation update(BalanceOperation user)
@@ -544,7 +545,7 @@ actor Administrator
     AccountBook -> BalanceOperationRepository: getCreditsAndDebits
     activate BalanceOperationRepository
 
-    BalanceOperationRepository --> EntityManager: find
+    BalanceOperationRepository --> EntityManager: findAllBetweenDates
     activate EntityManager
 
     EntityManager --> BalanceOperationRepository
