@@ -208,7 +208,7 @@ package data {
 
     class BalanceOperationRepository implements Repository {
         +List<BalanceOperation> findAll()
-        +List<BalanceOperation> findAllBetweenDates(Date from, Date to)
+        +List<BalanceOperation> findAllBetweenDates(LocalDate from, LocalDate to)
         +BalanceOperation find(Integer id)
         +boolean create(BalanceOperation user)
         +BalanceOperation update(BalanceOperation user)
