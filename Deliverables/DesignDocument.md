@@ -338,52 +338,48 @@ package view {
 | FR7   | |X| | |   |   |   | | |X|  X | | 
 | FR8   |X| | |X|   |   |   | | | |  X | |  
 
-\<for each functional requirement from the requirement document, list which classes concur to implement it>
-
-
-
-
-
-
-
-
-
-
-
 # Verification sequence diagrams 
 \<select key scenarios from the requirement document. For each of them define a sequence diagram showing that the scenario can be implemented by the classes and methods in the design>
 
 ## Scenario 1-1
+```plantuml
 @startuml
 actor Administrator
 @enduml
-
+```
 ## Scenario 2-1
+```plantuml
 @startuml
 actor Administrator
 @enduml
-
+```
 ## Scenario 3-2
+```plantuml
 @startuml
 actor ShopManager
 @enduml
-
+```
 ## Scenario 4-2
+```plantuml
 @startuml
 actor Cashier
 @enduml
-
+```
 ## Scenario 6-1
+```plantuml
 @startuml
 actor Cashier
 @enduml
-
+```
 ## Scenario 7-4
+```plantuml
 @startuml
 actor Cashier
 @enduml
-
+```
 ## Scenario 9-1
+```plantuml
 @startuml
 actor ShopManager
 @enduml
+```
