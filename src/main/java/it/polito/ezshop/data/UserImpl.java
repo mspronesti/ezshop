@@ -8,14 +8,14 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 public class UserImpl implements User {
 
+    @Id
+    @GeneratedValue(generator="increment")
+    @GenericGenerator(name="increment", strategy = "increment")
     private Integer id;
     private String username;
     private String password;
     private String role;
 
-    @Id
-    @GeneratedValue(generator="increment")
-    @GenericGenerator(name="increment", strategy = "increment")
     @Override
     public Integer getId() {
         return this.id;
