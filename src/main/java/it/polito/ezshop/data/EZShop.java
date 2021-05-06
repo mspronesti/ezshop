@@ -8,6 +8,11 @@ import java.util.List;
 
 public class EZShop implements EZShopInterface {
 
+    private final UserRepository userRepository;
+
+    public EZShop() {
+        this.userRepository = new UserRepository();
+    }
 
     @Override
     public void reset() {
@@ -16,7 +21,11 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public Integer createUser(String username, String password, String role) throws InvalidUsernameException, InvalidPasswordException, InvalidRoleException {
-        return null;
+        User user = new UserImpl();
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setRole(role);
+        return userRepository.create(user);
     }
 
     @Override
