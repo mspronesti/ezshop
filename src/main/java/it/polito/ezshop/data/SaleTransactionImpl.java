@@ -1,45 +1,57 @@
 package it.polito.ezshop.data;
 
+import org.hibernate.annotations.GenericGenerator;
+import javax.persistence.*;
 import java.util.List;
 
 public class SaleTransactionImpl implements SaleTransaction {
+
+    @Id
+    @GeneratedValue(generator = "increment")
+    @GenericGenerator(name = "increment", strategy = "increment")
+    private Integer id;
+    @ElementCollection
+    private List<TicketEntry> entries;
+    private Double discountRate;
+    private Double price;
+
     @Override
     public Integer getTicketNumber() {
-        return null;
+        return id;
     }
 
     @Override
     public void setTicketNumber(Integer ticketNumber) {
-
+        this.id = ticketNumber;
     }
 
     @Override
     public List<TicketEntry> getEntries() {
-        return null;
+        return entries;
     }
 
     @Override
     public void setEntries(List<TicketEntry> entries) {
-
+        this.entries = entries;
     }
 
     @Override
     public double getDiscountRate() {
-        return 0;
+        return discountRate;
     }
 
     @Override
     public void setDiscountRate(double discountRate) {
-
+        this.discountRate = discountRate;
     }
 
     @Override
     public double getPrice() {
-        return 0;
+        return price;
     }
 
     @Override
     public void setPrice(double price) {
-
+        this.price = price;
     }
 }

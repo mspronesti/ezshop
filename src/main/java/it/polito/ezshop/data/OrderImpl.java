@@ -1,63 +1,71 @@
 package it.polito.ezshop.data;
 
 public class OrderImpl implements Order {
-    @Override
-    public Integer getBalanceId() {
-        return null;
-    }
 
-    @Override
-    public void setBalanceId(Integer balanceId) {
-
-    }
-
-    @Override
-    public String getProductCode() {
-        return null;
-    }
-
-    @Override
-    public void setProductCode(String productCode) {
-
-    }
-
-    @Override
-    public double getPricePerUnit() {
-        return 0;
-    }
-
-    @Override
-    public void setPricePerUnit(double pricePerUnit) {
-
-    }
-
-    @Override
-    public int getQuantity() {
-        return 0;
-    }
-
-    @Override
-    public void setQuantity(int quantity) {
-
-    }
-
-    @Override
-    public String getStatus() {
-        return null;
-    }
-
-    @Override
-    public void setStatus(String status) {
-
-    }
+    private Integer id;
+    private Integer balanceId;
+    private String status;
+    private String productCode;
+    private Double pricePerUnit;
+    private Integer quantity;
 
     @Override
     public Integer getOrderId() {
-        return null;
+        return id;
     }
 
     @Override
     public void setOrderId(Integer orderId) {
+        this.id = orderId;
+    }
 
+    @Override
+    public Integer getBalanceId() {
+        return balanceId;
+    }
+
+    @Override
+    public void setBalanceId(Integer balanceId) {
+        this.balanceId = balanceId;
+    }
+
+    @Override
+    public String getStatus() {
+        return status;
+    }
+
+    @Override
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    @Override
+    public String getProductCode() {
+        return productCode;
+    }
+
+    @Override
+    public void setProductCode(String productCode) {
+        this.productCode = productCode;
+    }
+
+    @Override
+    public double getPricePerUnit() {
+        return pricePerUnit;
+    }
+
+    @Override
+    public void setPricePerUnit(double pricePerUnit) {
+        this.pricePerUnit = pricePerUnit;
+    }
+
+    @Override
+    public int getQuantity() {
+        return quantity;
+    }
+
+    @Override
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }

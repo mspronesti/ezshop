@@ -1,7 +1,6 @@
 package it.polito.ezshop.data;
 
 public interface Customer {
-
     String getCustomerName();
 
     void setCustomerName(String customerName);

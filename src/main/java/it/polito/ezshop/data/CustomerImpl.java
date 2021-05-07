@@ -1,43 +1,61 @@
 package it.polito.ezshop.data;
 
+import org.hibernate.annotations.GenericGenerator;
+import javax.persistence.*;
+
 public class CustomerImpl implements Customer {
-    @Override
-    public String getCustomerName() {
-        return null;
+
+    @Embeddable
+    private static class LoyaltyCard {
+        String code;
+        Integer points;
     }
 
-    @Override
-    public void setCustomerName(String customerName) {
-
-    }
-
-    @Override
-    public String getCustomerCard() {
-        return null;
-    }
-
-    @Override
-    public void setCustomerCard(String customerCard) {
-
-    }
+    @Id
+    @GeneratedValue(generator = "increment")
+    @GenericGenerator(name = "increment", strategy = "increment")
+    private Integer id;
+    private String name;
+    @ElementCollection
+    private final LoyaltyCard loyaltyCard = new LoyaltyCard();
 
     @Override
     public Integer getId() {
-        return null;
+        return id;
     }
 
     @Override
     public void setId(Integer id) {
+        this.id = id;
+    }
 
+    @Override
+    public String getCustomerName() {
+        return name;
+    }
+
+    @Override
+    public void setCustomerName(String customerName) {
+        this.name = customerName;
+    }
+
+    @Override
+    public String getCustomerCard() {
+        return this.loyaltyCard.code;
+    }
+
+    @Override
+    public void setCustomerCard(String customerCard) {
+        this.loyaltyCard.code = customerCard;
     }
 
     @Override
     public Integer getPoints() {
-        return null;
+        return this.loyaltyCard.points;
     }
 
     @Override
     public void setPoints(Integer points) {
-
+        this.loyaltyCard.points = points;
     }
 }
