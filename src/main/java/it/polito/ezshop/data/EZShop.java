@@ -1,6 +1,7 @@
 package it.polito.ezshop.data;
 
 import it.polito.ezshop.exceptions.*;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,7 +24,7 @@ public class EZShop implements EZShopInterface {
     public Integer createUser(String username, String password, String role) throws InvalidUsernameException, InvalidPasswordException, InvalidRoleException {
         User user = new UserImpl();
         user.setUsername(username);
-        user.setPassword(password);
+        user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
         user.setRole(role);
         return userRepository.create(user);
     }
@@ -50,7 +51,14 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public User login(String username, String password) throws InvalidUsernameException, InvalidPasswordException {
-        return null;
+        User user = this.userRepository.findByUsername(username);
+        if (user == null) {
+            throw new InvalidUsernameException();
+        }
+        if (!BCrypt.checkpw(password, user.getPassword())) {
+            throw new InvalidPasswordException();
+        }
+        return user;
     }
 
     @Override
