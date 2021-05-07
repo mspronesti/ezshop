@@ -9,10 +9,20 @@ import java.util.List;
 
 public class EZShop implements EZShopInterface {
 
+    private final BalanceOperationRepository balanceOperationRepository;
+    private final CustomerRepository customerRepository;
+    private final OrderRepository orderRepository;
+    private final ProductTypeRepository productTypeRepository;
+    private final SaleTransactionRepository saleTransactionRepository;
     private final UserRepository userRepository;
 
     public EZShop() {
-        this.userRepository = new UserRepository();
+        balanceOperationRepository = new BalanceOperationRepository();
+        customerRepository = new CustomerRepository();
+        orderRepository = new OrderRepository();
+        productTypeRepository = new ProductTypeRepository();
+        saleTransactionRepository = new SaleTransactionRepository();
+        userRepository = new UserRepository();
     }
 
     @Override
