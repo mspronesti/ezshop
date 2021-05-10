@@ -1,8 +1,8 @@
 package it.polito.ezshop.data;
 
-import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 
+@Entity
 public class CustomerImpl implements Customer {
 
     @Embeddable
@@ -12,11 +12,10 @@ public class CustomerImpl implements Customer {
     }
 
     @Id
-    @GeneratedValue(generator = "increment")
-    @GenericGenerator(name = "increment", strategy = "increment")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private String name;
-    @ElementCollection
+    @Embedded
     private final LoyaltyCard loyaltyCard = new LoyaltyCard();
 
     @Override

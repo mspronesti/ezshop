@@ -1,8 +1,8 @@
 package it.polito.ezshop.data;
 
-import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 
+@Entity
 public class ProductTypeImpl implements ProductType {
 
     @Embeddable
@@ -26,8 +26,7 @@ public class ProductTypeImpl implements ProductType {
     }
 
     @Id
-    @GeneratedValue(generator = "increment")
-    @GenericGenerator(name = "increment", strategy = "increment")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private Integer quantity;
     private String note;

@@ -1,7 +1,11 @@
 package it.polito.ezshop.data;
 
-public class OrderImpl implements Order {
+import javax.persistence.*;
 
+@Entity
+public class OrderImpl implements Order {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private Integer balanceId;
     private String status;

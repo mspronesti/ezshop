@@ -1,14 +1,13 @@
 package it.polito.ezshop.data;
 
-import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 public class SaleTransactionImpl implements SaleTransaction {
-
     @Id
-    @GeneratedValue(generator = "increment")
-    @GenericGenerator(name = "increment", strategy = "increment")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     @ElementCollection
     private List<TicketEntry> entries;
