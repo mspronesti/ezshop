@@ -30,6 +30,11 @@
         <property name="hbm2ddl.auto">create</property>
 
         <!-- Names the annotated entity class -->
+        <mapping class="it.polito.ezshop.data.BalanceOperationImpl"/>
+        <mapping class="it.polito.ezshop.data.CustomerImpl"/>
+        <mapping class="it.polito.ezshop.data.OrderImpl"/>
+        <mapping class="it.polito.ezshop.data.ProductTypeImpl"/>
+        <mapping class="it.polito.ezshop.data.SaleTransactionImpl"/>
         <mapping class="it.polito.ezshop.data.UserImpl"/>
 
     </session-factory>
