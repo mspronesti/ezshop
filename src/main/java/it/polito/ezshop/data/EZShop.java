@@ -5,6 +5,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class EZShop implements EZShopInterface {
@@ -32,7 +33,10 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public Integer createUser(String username, String password, String role) throws InvalidUsernameException, InvalidPasswordException, InvalidRoleException {
-        User user = new UserImpl();
+        // exceptions checks
+    	// ...
+    	
+    	User user = new UserImpl();
         user.setUsername(username);
         user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
         user.setRole(role);
@@ -41,27 +45,56 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public boolean deleteUser(Integer id) throws InvalidUserIdException, UnauthorizedException {
-        return false;
-    }
+    	if(id < 0 || id == null) { 
+    		throw new InvalidUserIdException();
+    	}
+//    	if() {
+//    		throw new UnauthorizedException();
+//    	}
+    	
+    	User user = this.userRepository.find(id);
+    	if(user != null) {
+        	this.userRepository.delete(user);
+        	return true;
+        }
+    	
+    	return false;    
+}
 
     @Override
     public List<User> getAllUsers() throws UnauthorizedException {
-        return null;
+    	return userRepository.findAll().stream().collect(Collectors.toList());
     }
 
     @Override
     public User getUser(Integer id) throws InvalidUserIdException, UnauthorizedException {
-        return null;
+    	if(id < 0 || id == null) { 
+    		throw new InvalidUserIdException();
+    	}
+//    	if() {
+//		throw new UnauthorizedException();
+//   	}
+  	
+    	return this.userRepository.find(id);
     }
 
     @Override
     public boolean updateUserRights(Integer id, String role) throws InvalidUserIdException, InvalidRoleException, UnauthorizedException {
-        return false;
+    	// exceptions check
+    	// ...
+    	
+    	User user = this.userRepository.find(id); 
+    	if (user != null) {
+        	user.setRole(role);
+        	return true;
+        }
+     
+    	return false;
     }
 
     @Override
     public User login(String username, String password) throws InvalidUsernameException, InvalidPasswordException {
-        User user = this.userRepository.findByUsername(username);
+    	User user = this.userRepository.findByUsername(username);
         if (user == null) {
             throw new InvalidUsernameException();
         }
@@ -143,7 +176,12 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public Integer defineCustomer(String customerName) throws InvalidCustomerNameException, UnauthorizedException {
-        return null;
+        if(customerName == null || customerName.isEmpty())
+        	throw new InvalidCustomerNameException();
+        
+        Customer customer = new CustomerImpl();
+        customer.setCustomerName(customerName);
+        return customerRepository.create(customer);
     }
 
     @Override
@@ -153,17 +191,40 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public boolean deleteCustomer(Integer id) throws InvalidCustomerIdException, UnauthorizedException {
-        return false;
+    	if(id < 0 || id == null) { 
+    		throw new InvalidCustomerIdException();
+    	}
+//    	if() {
+//    		throw new UnauthorizedException();
+//    	}
+    	
+    	Customer customer = this.customerRepository.find(id);
+    	if(customer != null) {
+        	this.customerRepository.delete(customer);
+        	return true;
+        }
+    	
+    	return false;    
     }
 
     @Override
     public Customer getCustomer(Integer id) throws InvalidCustomerIdException, UnauthorizedException {
-        return null;
+    	if(id < 0 || id == null) { 
+    		throw new InvalidCustomerIdException();
+    	}
+//    	if() {
+//		throw new UnauthorizedException();
+//   	}
+  	
+    	return this.customerRepository.find(id);
     }
 
     @Override
     public List<Customer> getAllCustomers() throws UnauthorizedException {
-        return null;
+//    	if() {
+//		throw new UnauthorizedException();
+//   	}
+        return this.customerRepository.findAll().stream().collect(Collectors.toList());
     }
 
     @Override
