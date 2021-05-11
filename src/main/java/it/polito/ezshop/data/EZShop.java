@@ -174,7 +174,7 @@ public class EZShop implements EZShopInterface {
         if(!isValidId(productId)) {
         	throw new InvalidProductIdException();
         }
-        if(!isValidRole(loggedUser.getRole())) {
+        if(!isAuthorized(loggedUser.getRole())) {
         	throw new UnauthorizedException();
         }
         
