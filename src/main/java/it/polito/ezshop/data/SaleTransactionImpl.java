@@ -1,17 +1,16 @@
 package it.polito.ezshop.data;
 
-import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 public class SaleTransactionImpl implements SaleTransaction {
-
     @Id
-    @GeneratedValue(generator = "increment")
-    @GenericGenerator(name = "increment", strategy = "increment")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     @ElementCollection
-    private List<TicketEntry> entries;
+    private List<TicketEntryImpl> entries;
     private Double discountRate;
     private Double price;
 
@@ -26,13 +25,15 @@ public class SaleTransactionImpl implements SaleTransaction {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<TicketEntry> getEntries() {
-        return entries;
+        return (List<TicketEntry>)(Object)entries;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void setEntries(List<TicketEntry> entries) {
-        this.entries = entries;
+        this.entries = (List<TicketEntryImpl>)(Object)entries;
     }
 
     @Override

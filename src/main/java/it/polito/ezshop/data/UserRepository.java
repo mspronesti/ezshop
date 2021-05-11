@@ -24,7 +24,6 @@ public class UserRepository extends Repository<User> {
         session.getTransaction().commit();
         return user;
     }
-    
 
     @Override
     List<? extends User> findAll() {

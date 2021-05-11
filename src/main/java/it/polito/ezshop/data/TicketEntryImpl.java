@@ -4,8 +4,6 @@ import javax.persistence.*;
 
 @Embeddable
 public class TicketEntryImpl implements TicketEntry {
-
-    @Id
     private String barcode;
     private String productDescription;
     private Integer amount;

@@ -27,9 +27,14 @@
         <property name="format_sql">true</property>
 
         <!-- Drop and re-create the database schema on startup -->
-        <property name="hbm2ddl.auto">create</property>
+        <property name="hbm2ddl.auto">update</property>
 
         <!-- Names the annotated entity class -->
+        <mapping class="it.polito.ezshop.data.BalanceOperationImpl"/>
+        <mapping class="it.polito.ezshop.data.CustomerImpl"/>
+        <mapping class="it.polito.ezshop.data.OrderImpl"/>
+        <mapping class="it.polito.ezshop.data.ProductTypeImpl"/>
+        <mapping class="it.polito.ezshop.data.SaleTransactionImpl"/>
         <mapping class="it.polito.ezshop.data.UserImpl"/>
 
     </session-factory>

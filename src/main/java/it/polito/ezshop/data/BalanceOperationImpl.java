@@ -1,57 +1,55 @@
 package it.polito.ezshop.data;
 
-import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.time.LocalDate;
 
+@Entity
 public class BalanceOperationImpl implements BalanceOperation {
-
     @Id
-    @GeneratedValue(generator = "increment")
-    @GenericGenerator(name = "increment", strategy = "increment")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    @Temporal(TemporalType.TIMESTAMP)
+   // @Temporal(TemporalType.TIMESTAMP)
     private LocalDate date;
     private Double money;
     private String type;
 
     @Override
     public int getBalanceId() {
-        return 0;
+        return this.id;
     }
 
     @Override
     public void setBalanceId(int balanceId) {
-
+        this.id = balanceId;
     }
 
     @Override
     public LocalDate getDate() {
-        return null;
+        return date;
     }
 
     @Override
     public void setDate(LocalDate date) {
-
+        this.date = date;
     }
 
     @Override
     public double getMoney() {
-        return 0;
+        return money;
     }
 
     @Override
     public void setMoney(double money) {
-
+        this.money = money;
     }
 
     @Override
     public String getType() {
-        return null;
+        return type;
     }
 
     @Override
     public void setType(String type) {
-
+        this.type = type;
     }
 }
