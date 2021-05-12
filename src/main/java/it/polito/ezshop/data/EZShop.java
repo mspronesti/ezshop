@@ -4,7 +4,10 @@ import it.polito.ezshop.exceptions.*;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 
 public class EZShop implements EZShopInterface {
@@ -15,6 +18,7 @@ public class EZShop implements EZShopInterface {
     private final ProductTypeRepository productTypeRepository;
     private final SaleTransactionRepository saleTransactionRepository;
     private final UserRepository userRepository;
+    private User loggedUser;
 
     public EZShop() {
         balanceOperationRepository = new BalanceOperationRepository();
@@ -23,6 +27,7 @@ public class EZShop implements EZShopInterface {
         productTypeRepository = new ProductTypeRepository();
         saleTransactionRepository = new SaleTransactionRepository();
         userRepository = new UserRepository();
+        loggedUser = null;
     }
 
     @Override
@@ -32,7 +37,17 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public Integer createUser(String username, String password, String role) throws InvalidUsernameException, InvalidPasswordException, InvalidRoleException {
-        User user = new UserImpl();
+    	if(username == null || username.isEmpty()) {
+    		throw new InvalidUsernameException();
+    	}
+    	if(password == null || password.isEmpty()) {
+    		throw new InvalidPasswordException();
+    	}
+    	if(!isValidRole(role)) { 
+    		throw new InvalidRoleException();
+    	}
+    	
+    	User user = new UserImpl();
         user.setUsername(username);
         user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
         user.setRole(role);
@@ -41,44 +56,83 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public boolean deleteUser(Integer id) throws InvalidUserIdException, UnauthorizedException {
-        return false;
-    }
+    	if(!isValidId(id)) { 
+    		throw new InvalidUserIdException();
+    	}
+    	if(!isAuthorized(loggedUser.getRole())) {
+			throw new UnauthorizedException();
+    	}
+    	
+    	User user = this.userRepository.find(id);
+    	if(user != null) {
+        	this.userRepository.delete(user);
+        	return true;
+        }
+    	
+    	return false;    
+}
 
     @Override
     public List<User> getAllUsers() throws UnauthorizedException {
-        return null;
+    	return userRepository.findAll().stream().collect(Collectors.toList());
     }
 
     @Override
     public User getUser(Integer id) throws InvalidUserIdException, UnauthorizedException {
-        return null;
+    	if(!isValidId(id)) { 
+    		throw new InvalidUserIdException();
+    	}
+    	if(!isAuthorized(loggedUser.getRole())) {
+			throw new UnauthorizedException();
+    	}
+  	
+    	return this.userRepository.find(id);
     }
 
     @Override
     public boolean updateUserRights(Integer id, String role) throws InvalidUserIdException, InvalidRoleException, UnauthorizedException {
-        return false;
+    	if(!isValidId(id)) {
+    		throw new InvalidUserIdException();
+    	}
+    	if(!isValidRole(role)) {
+    		throw new InvalidRoleException();
+    	}
+    	if(!isAuthorized(loggedUser.getRole())) {
+			throw new UnauthorizedException();
+    	}
+    	
+    	User user = this.userRepository.find(id); 
+    	if (user != null) {
+        	user.setRole(role);
+        	return true;
+        }
+     
+    	return false;
     }
 
     @Override
     public User login(String username, String password) throws InvalidUsernameException, InvalidPasswordException {
-        User user = this.userRepository.findByUsername(username);
+    	User user = this.userRepository.findByUsername(username);
         if (user == null) {
             throw new InvalidUsernameException();
         }
         if (!BCrypt.checkpw(password, user.getPassword())) {
             throw new InvalidPasswordException();
         }
+        
+        loggedUser = user;
         return user;
     }
 
     @Override
     public boolean logout() {
+    	// loggedUser = null;
         return false;
     }
 
     @Override
     public Integer createProductType(String description, String productCode, double pricePerUnit, String note) throws InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException {
-        return null;
+        return null; // lascio per dopo: devo vedere la validazione del bar code al link mandato su slack
     }
 
     @Override
@@ -88,12 +142,19 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public boolean deleteProductType(Integer id) throws InvalidProductIdException, UnauthorizedException {
+    	if(!isValidId(id)) {
+    		throw new InvalidProductIdException();
+    	}
+    	// se non c'è nessuno loggato, come ho accesso qui ?
+    	if(loggedUser == null || !isAuthorized(loggedUser.getRole())) { 
+    		throw new UnauthorizedException();
+    	}
         return false;
     }
 
     @Override
     public List<ProductType> getAllProductTypes() throws UnauthorizedException {
-        return null;
+        return productTypeRepository.findAll().stream().collect(Collectors.toList());
     }
 
     @Override
@@ -103,16 +164,51 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public List<ProductType> getProductTypesByDescription(String description) throws UnauthorizedException {
-        return null;
+        return productTypeRepository.findAll().stream()
+        		.filter(t -> t.getProductDescription().contains(description))
+        		.collect(Collectors.toList());
     }
 
     @Override
     public boolean updateQuantity(Integer productId, int toBeAdded) throws InvalidProductIdException, UnauthorizedException {
-        return false;
+        if(!isValidId(productId)) {
+        	throw new InvalidProductIdException();
+        }
+        if(!isAuthorized(loggedUser.getRole())) {
+        	throw new UnauthorizedException();
+        }
+        
+        ProductType product = this.productTypeRepository.find(productId);
+        int newQuantity = product.getQuantity() + toBeAdded;
+        
+        if(newQuantity >= 0 && !product.getLocation().isEmpty()) { 
+        	product.setQuantity(newQuantity);
+        	return true;
+        }
+        
+    	return false;
     }
 
     @Override
     public boolean updatePosition(Integer productId, String newPos) throws InvalidProductIdException, InvalidLocationException, UnauthorizedException {
+        if(!isValidId(productId)) {
+        	throw new InvalidProductIdException();
+        }
+        if(!isAuthorized(loggedUser.getRole())) {
+        	throw new UnauthorizedException();
+        }
+        if(!Pattern.matches("^[0-9]+-[A-Za-z]-[0-9]*$", newPos)) {
+        	throw new InvalidLocationException();
+        }
+        
+        ProductType product = this.productTypeRepository.find(productId);
+    	
+        if(product != null && !isAssignedPosition(newPos)) {
+        	// resets or sets position
+    		product.setLocation(newPos.isEmpty() || newPos == null ? "" : newPos);
+    		return true;
+    	}
+        
         return false;
     }
 
@@ -143,7 +239,12 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public Integer defineCustomer(String customerName) throws InvalidCustomerNameException, UnauthorizedException {
-        return null;
+        if(customerName == null || customerName.isEmpty())
+        	throw new InvalidCustomerNameException();
+        
+        Customer customer = new CustomerImpl();
+        customer.setCustomerName(customerName);
+        return customerRepository.create(customer);
     }
 
     @Override
@@ -153,17 +254,40 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public boolean deleteCustomer(Integer id) throws InvalidCustomerIdException, UnauthorizedException {
-        return false;
+    	if(!isValidId(id)) { 
+    		throw new InvalidCustomerIdException();
+    	}
+    	if(!isAuthorized(loggedUser.getRole())) {
+    		throw new UnauthorizedException();
+    	}
+    	
+    	Customer customer = this.customerRepository.find(id);
+    	if(customer != null) {
+        	this.customerRepository.delete(customer);
+        	return true;
+        }
+    	
+    	return false;    
     }
 
     @Override
     public Customer getCustomer(Integer id) throws InvalidCustomerIdException, UnauthorizedException {
-        return null;
+    	if(!isValidId(id)) { 
+    		throw new InvalidCustomerIdException();
+    	}
+    	if(!isAuthorized(loggedUser.getRole())) {
+			throw new UnauthorizedException();
+    	}
+  	
+    	return this.customerRepository.find(id);
     }
 
     @Override
     public List<Customer> getAllCustomers() throws UnauthorizedException {
-        return null;
+    	if(!isAuthorized(loggedUser.getRole())) {
+			throw new UnauthorizedException();
+    	}
+        return this.customerRepository.findAll().stream().collect(Collectors.toList());
     }
 
     @Override
@@ -279,5 +403,45 @@ public class EZShop implements EZShopInterface {
     @Override
     public double computeBalance() throws UnauthorizedException {
         return 0;
+    }
+    
+    /**
+     * This method checks whether a provided role is valid
+     * @param role: the role to check
+     * @return true if valid role, false otherwise
+     */
+    private boolean isValidRole(String role) {
+    	List<String> roles = new ArrayList<>(List.of("Administrator", "Cashier", "ShopManager"));
+    	return role != null && !role.isEmpty() && roles.contains(role);
+    }
+    
+    /**
+     * 
+     * @param role
+     * @return
+     */
+    private boolean isAuthorized(String role) {
+    	return role.equals("Administrator") || role.equals("ShopManager");
+    	// oppure !role.equals("Cashier") ma lo trovo meno leggibile
+    }
+    
+    /**
+     * This methods checks whether a provided id is
+     * not null and greater than 0
+     * @param id: id to check
+     * @return true if valid, false otherwise
+     */
+    private boolean isValidId(Integer id) {
+    	return id != null && id >= 0;
+    }
+    
+    /**
+     * This methods checks whether a given location
+     * is already used for some product inside store
+     * @param location to check
+     * @return true if used, false otherwise
+     */
+    private boolean isAssignedPosition(String location) {
+    	return this.productTypeRepository.findAll().stream().anyMatch(p -> p.getLocation().equals(location));
     }
 }
