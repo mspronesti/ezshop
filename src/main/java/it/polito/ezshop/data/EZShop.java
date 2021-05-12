@@ -1,11 +1,14 @@
 package it.polito.ezshop.data;
 
 import it.polito.ezshop.exceptions.*;
+
+import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -292,17 +295,57 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public String createCard() throws UnauthorizedException {
+    	
         return null;
     }
 
     @Override
     public boolean attachCardToCustomer(String customerCard, Integer customerId) throws InvalidCustomerIdException, InvalidCustomerCardException, UnauthorizedException {
+        if(!isValidId(customerId)) {
+        	throw new InvalidCustomerIdException();
+        }
+        if(!Pattern.matches("^\\d{10}$", customerCard)) {
+        	throw new InvalidCustomerCardException();
+        }
+        
+        try {
+        	Customer customer = this.customerRepository.find(customerId);
+	    	if(customer != null && !isAssignedCardId(customerCard)) {
+	    		customer.setCustomerCard(customerCard);
+	    		return true;
+	    	}
+        } catch(JDBCConnectionException e) {
+        	// unreachable db
+        	return false;
+        }
+        
         return false;
     }
 
     @Override
     public boolean modifyPointsOnCard(String customerCard, int pointsToBeAdded) throws InvalidCustomerCardException, UnauthorizedException {
-        return false;
+	   if(!Pattern.matches("^\\d{10}$", customerCard)) {
+       		throw new InvalidCustomerCardException();
+       }
+	   try {
+		   Customer customer = this.customerRepository.findAll().stream()
+			   			.map(Customer.class::cast)
+			   			.filter(c -> c.getCustomerCard().equals(customerCard))
+			   			.findFirst()
+			   			.orElseGet(null);
+		   
+		   if(customer != null && pointsToBeAdded >= 0) {
+			   int oldPoints = customer.getPoints();
+			   customer.setPoints(pointsToBeAdded + oldPoints);
+			   return true;
+		   }
+	    	   
+	   }catch(JDBCConnectionException e){ 
+		   // unreachable db
+		   return false;
+	   }
+	   
+	   return false;
     }
 
     @Override
@@ -443,5 +486,15 @@ public class EZShop implements EZShopInterface {
      */
     private boolean isAssignedPosition(String location) {
     	return this.productTypeRepository.findAll().stream().anyMatch(p -> p.getLocation().equals(location));
+    }
+    
+    /**
+     * This method checks whether a given card Id
+     * is already associated to some customer
+     * @param cardId
+     * @return true if cardId in use, false otherwise
+     */
+    private boolean isAssignedCardId(String customerCard) {
+    	return this.customerRepository.findAll().stream().anyMatch(p -> p.getCustomerCard().equals(customerCard));
     }
 }
