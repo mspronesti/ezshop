@@ -2,16 +2,13 @@ package it.polito.ezshop.data;
 
 import org.hibernate.Session;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class UserRepository extends Repository<User> {
     @Override
-    User find(Integer id) {
-        Session session = getSession();
-        session.beginTransaction();
-        User user = session.get(UserImpl.class, id);
-        session.getTransaction().commit();
-        return user;
+    User find(Serializable id) {
+        return _find(UserImpl.class, id);
     }
 
     User findByUsername(String username) {
@@ -26,39 +23,22 @@ public class UserRepository extends Repository<User> {
     }
 
     @Override
-    List<? extends User> findAll() {
-        Session session = getSession();
-        session.beginTransaction();
-        List<? extends User> users = session
-                .createQuery("FROM UserImpl", UserImpl.class)
-                .list();
-        session.getTransaction().commit();
-        return users;
+    List<User> findAll() {
+        return _findAll(UserImpl.class);
     }
 
     @Override
     Integer create(User user) {
-        Session session = getSession();
-        session.beginTransaction();
-        Integer id = (Integer) session.save(user);
-        session.getTransaction().commit();
-        return id;
+        return (Integer) _create(user);
     }
 
     @Override
     User update(User user) {
-        Session session = getSession();
-        session.beginTransaction();
-        User updatedUser = (User) session.merge(user);
-        session.getTransaction().commit();
-        return updatedUser;
+        return _update(user);
     }
 
     @Override
     void delete(User user) {
-        Session session = getSession();
-        session.beginTransaction();
-        session.delete(user);
-        session.getTransaction().commit();
+        _delete(user);
     }
 }

@@ -2,16 +2,13 @@ package it.polito.ezshop.data;
 
 import org.hibernate.Session;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class ProductTypeRepository extends Repository<ProductType> {
     @Override
-    ProductType find(Integer id) {
-        Session session = getSession();
-        session.beginTransaction();
-        ProductType productType = session.get(ProductTypeImpl.class, id);
-        session.getTransaction().commit();
-        return productType;
+    ProductType find(Serializable id) {
+        return _find(ProductTypeImpl.class, id);
     }
 
     ProductType findByBarcode(String barcode) {
@@ -26,39 +23,22 @@ public class ProductTypeRepository extends Repository<ProductType> {
     }
 
     @Override
-    List<? extends ProductType> findAll() {
-        Session session = getSession();
-        session.beginTransaction();
-        List<? extends ProductType> productTypes = session
-                .createQuery("FROM ProductTypeImpl", ProductTypeImpl.class)
-                .list();
-        session.getTransaction().commit();
-        return productTypes;
+    List<ProductType> findAll() {
+        return _findAll(ProductTypeImpl.class);
     }
 
     @Override
     Integer create(ProductType productType) {
-        Session session = getSession();
-        session.beginTransaction();
-        Integer id = (Integer) session.save(productType);
-        session.getTransaction().commit();
-        return id;
+        return (Integer) _create(productType);
     }
 
     @Override
     ProductType update(ProductType productType) {
-        Session session = getSession();
-        session.beginTransaction();
-        ProductType updatedProductType = (ProductType) session.merge(productType);
-        session.getTransaction().commit();
-        return updatedProductType;
+        return _update(productType);
     }
 
     @Override
     void delete(ProductType productType) {
-        Session session = getSession();
-        session.beginTransaction();
-        session.delete(productType);
-        session.getTransaction().commit();
+        _delete(productType);
     }
 }
