@@ -4,19 +4,14 @@ import javax.persistence.*;
 
 @Entity
 public class CustomerImpl implements Customer {
-
-    @Embeddable
-    private static class LoyaltyCard {
-        String code;
-        Integer points;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private String name;
-    @Embedded
-    private final LoyaltyCard loyaltyCard = new LoyaltyCard();
+    @OneToOne
+    public LoyaltyCardImpl loyaltyCard;
+    @Transient
+    private final LoyaltyCardRepository loyaltyCardRepository = new LoyaltyCardRepository();
 
     @Override
     public Integer getId() {
@@ -40,21 +35,24 @@ public class CustomerImpl implements Customer {
 
     @Override
     public String getCustomerCard() {
-        return this.loyaltyCard.code;
+        return this.loyaltyCard.getId();
     }
 
     @Override
     public void setCustomerCard(String customerCard) {
-        this.loyaltyCard.code = customerCard;
+        LoyaltyCard card = loyaltyCardRepository.find(customerCard);
+        if (card != null && card.getCustomer() == null) {
+            this.loyaltyCard = (LoyaltyCardImpl) card;
+        }
     }
 
     @Override
     public Integer getPoints() {
-        return this.loyaltyCard.points;
+        return this.loyaltyCard.getPoints();
     }
 
     @Override
     public void setPoints(Integer points) {
-        this.loyaltyCard.points = points;
+        this.loyaltyCard.setPoints(points);
     }
 }

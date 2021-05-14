@@ -1,53 +1,31 @@
 package it.polito.ezshop.data;
 
-import org.hibernate.Session;
-
+import java.io.Serializable;
 import java.util.List;
 
 public class CustomerRepository extends Repository<Customer> {
     @Override
-    Customer find(Integer id) {
-        Session session = getSession();
-        session.beginTransaction();
-        Customer customer = session.get(CustomerImpl.class, id);
-        session.getTransaction().commit();
-        return customer;
+    Customer find(Serializable id) {
+        return _find(CustomerImpl.class, id);
     }
 
     @Override
-    List<? extends Customer> findAll() {
-        Session session = getSession();
-        session.beginTransaction();
-        List<? extends Customer> customers = session
-                .createQuery("FROM CustomerImpl", CustomerImpl.class)
-                .list();
-        session.getTransaction().commit();
-        return customers;
+    List<Customer> findAll() {
+        return _findAll(CustomerImpl.class);
     }
 
     @Override
     Integer create(Customer customer) {
-        Session session = getSession();
-        session.beginTransaction();
-        Integer id = (Integer) session.save(customer);
-        session.getTransaction().commit();
-        return id;
+        return (Integer) _create(customer);
     }
 
     @Override
     Customer update(Customer customer) {
-        Session session = getSession();
-        session.beginTransaction();
-        Customer updatedCustomer = (Customer) session.merge(customer);
-        session.getTransaction().commit();
-        return updatedCustomer;
+        return _update(customer);
     }
 
     @Override
     void delete(Customer customer) {
-        Session session = getSession();
-        session.beginTransaction();
-        session.delete(customer);
-        session.getTransaction().commit();
+        _delete(customer);
     }
 }
