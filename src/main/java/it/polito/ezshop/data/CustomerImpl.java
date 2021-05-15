@@ -35,7 +35,7 @@ public class CustomerImpl implements Customer {
 
     @Override
     public String getCustomerCard() {
-        return this.loyaltyCard.getId();
+        return loyaltyCard != null ? loyaltyCard.getId() : "";
     }
 
     @Override
@@ -48,7 +48,7 @@ public class CustomerImpl implements Customer {
 
     @Override
     public Integer getPoints() {
-        return this.loyaltyCard.getPoints();
+        return loyaltyCard != null ? loyaltyCard.getPoints() : null;
     }
 
     @Override
