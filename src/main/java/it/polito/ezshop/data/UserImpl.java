@@ -5,7 +5,6 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 public class UserImpl implements User {
-
     @Id
     @GeneratedValue(generator = "increment")
     @GenericGenerator(name = "increment", strategy = "increment")

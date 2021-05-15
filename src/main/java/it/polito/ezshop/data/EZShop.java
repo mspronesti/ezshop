@@ -2,28 +2,24 @@ package it.polito.ezshop.data;
 
 import it.polito.ezshop.exceptions.*;
 
+import jakarta.validation.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import jakarta.validation.executable.ExecutableValidator;
 import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
+import java.lang.reflect.Method;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 
 public class EZShop implements EZShopInterface {
-
-    private final BalanceOperationRepository balanceOperationRepository = new BalanceOperationRepository();
-    private final CustomerRepository customerRepository = new CustomerRepository();
-    private final LoyaltyCardRepository loyaltyCardRepository = new LoyaltyCardRepository();
-    private final OrderRepository orderRepository = new OrderRepository();
-    private final ProductTypeRepository productTypeRepository = new ProductTypeRepository();
-    private final SaleTransactionRepository saleTransactionRepository = new SaleTransactionRepository();
-    private final UserRepository userRepository = new UserRepository();
-    private User loggedUser = null;
+    private final EZShopController controller = EZShopControllerFactory.create();
 
     @Override
     public void reset() {
@@ -32,456 +28,241 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public Integer createUser(String username, String password, String role) throws InvalidUsernameException, InvalidPasswordException, InvalidRoleException {
-        if (username == null || username.isEmpty()) {
-            throw new InvalidUsernameException();
-        }
-        if (password == null || password.isEmpty()) {
-            throw new InvalidPasswordException();
-        }
-        if (!isValidRole(role)) {
-            throw new InvalidRoleException();
-        }
-
-        User user = new UserImpl();
-        user.setUsername(username);
-        user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
-        user.setRole(role);
-        return userRepository.create(user);
+        return controller.createUser(username, password, role);
     }
 
     @Override
     public boolean deleteUser(Integer id) throws InvalidUserIdException, UnauthorizedException {
-        if (!isValidId(id)) {
-            throw new InvalidUserIdException();
-        }
-        if (!isAuthorized(loggedUser.getRole())) {
-            throw new UnauthorizedException();
-        }
-
-        User user = this.userRepository.find(id);
-        if (user != null) {
-            this.userRepository.delete(user);
-            return true;
-        }
-
-        return false;
+        return controller.deleteUser(id);
     }
 
     @Override
     public List<User> getAllUsers() throws UnauthorizedException {
-        return userRepository.findAll();
+        return controller.getAllUsers();
     }
 
     @Override
     public User getUser(Integer id) throws InvalidUserIdException, UnauthorizedException {
-        if (!isValidId(id)) {
-            throw new InvalidUserIdException();
-        }
-        if (!isAuthorized(loggedUser.getRole())) {
-            throw new UnauthorizedException();
-        }
-
-        return this.userRepository.find(id);
+        return controller.getUser(id);
     }
 
     @Override
     public boolean updateUserRights(Integer id, String role) throws InvalidUserIdException, InvalidRoleException, UnauthorizedException {
-        if (!isValidId(id)) {
-            throw new InvalidUserIdException();
-        }
-        if (!isValidRole(role)) {
-            throw new InvalidRoleException();
-        }
-        if (!isAuthorized(loggedUser.getRole())) {
-            throw new UnauthorizedException();
-        }
-
-        User user = this.userRepository.find(id);
-        if (user != null) {
-            user.setRole(role);
-            return true;
-        }
-
-        return false;
+        return controller.updateUserRights(id, role);
     }
 
     @Override
     public User login(String username, String password) throws InvalidUsernameException, InvalidPasswordException {
-        User user = this.userRepository.findByUsername(username);
-        if (user == null) {
-            throw new InvalidUsernameException();
-        }
-        if (!BCrypt.checkpw(password, user.getPassword())) {
-            throw new InvalidPasswordException();
-        }
-
-        loggedUser = user;
-        return user;
+        return this.controller.login(username, password);
     }
 
     @Override
     public boolean logout() {
-        // loggedUser = null;
-        return false;
+        return controller.logout();
     }
 
     @Override
     public Integer createProductType(String description, String productCode, double pricePerUnit, String note) throws InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException {
-        return null; // lascio per dopo: devo vedere la validazione del bar code al link mandato su slack
+        return controller.createProductType(description, productCode, pricePerUnit, note);
     }
 
     @Override
     public boolean updateProduct(Integer id, String newDescription, String newCode, double newPrice, String newNote) throws InvalidProductIdException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException {
-        return false;
+        return controller.updateProduct(id, newDescription, newCode, newPrice, newNote);
     }
 
     @Override
     public boolean deleteProductType(Integer id) throws InvalidProductIdException, UnauthorizedException {
-        if (!isValidId(id)) {
-            throw new InvalidProductIdException();
-        }
-        // se non c'è nessuno loggato, come ho accesso qui ?
-        if (loggedUser == null || !isAuthorized(loggedUser.getRole())) {
-            throw new UnauthorizedException();
-        }
-        return false;
+        return controller.deleteProductType(id);
     }
 
     @Override
     public List<ProductType> getAllProductTypes() throws UnauthorizedException {
-        return productTypeRepository.findAll();
+        return controller.getAllProductTypes();
     }
 
     @Override
     public ProductType getProductTypeByBarCode(String barCode) throws InvalidProductCodeException, UnauthorizedException {
-        return null;
+        return controller.getProductTypeByBarCode(barCode);
     }
 
     @Override
     public List<ProductType> getProductTypesByDescription(String description) throws UnauthorizedException {
-        return productTypeRepository.findAll().stream()
-                .filter(t -> t.getProductDescription().contains(description))
-                .collect(Collectors.toList());
+        return controller.getProductTypesByDescription(description);
     }
 
     @Override
     public boolean updateQuantity(Integer productId, int toBeAdded) throws InvalidProductIdException, UnauthorizedException {
-        if (!isValidId(productId)) {
-            throw new InvalidProductIdException();
-        }
-        if (!isAuthorized(loggedUser.getRole())) {
-            throw new UnauthorizedException();
-        }
-
-        ProductType product = this.productTypeRepository.find(productId);
-        int newQuantity = product.getQuantity() + toBeAdded;
-
-        if (newQuantity >= 0 && !product.getLocation().isEmpty()) {
-            product.setQuantity(newQuantity);
-            return true;
-        }
-
-        return false;
+        return controller.updateQuantity(productId, toBeAdded);
     }
 
     @Override
     public boolean updatePosition(Integer productId, String newPos) throws InvalidProductIdException, InvalidLocationException, UnauthorizedException {
-        if (!isValidId(productId)) {
-            throw new InvalidProductIdException();
-        }
-        if (!isAuthorized(loggedUser.getRole())) {
-            throw new UnauthorizedException();
-        }
-        if (!Pattern.matches("^[0-9]+-[A-Za-z]-[0-9]*$", newPos)) {
-            throw new InvalidLocationException();
-        }
-
-        ProductType product = this.productTypeRepository.find(productId);
-
-        if (product != null && !isAssignedPosition(newPos)) {
-            // resets or sets position
-            product.setLocation(newPos.isEmpty() || newPos == null ? "" : newPos);
-            return true;
-        }
-
-        return false;
+        return controller.updatePosition(productId, newPos);
     }
 
     @Override
     public Integer issueOrder(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
-        return null;
+        return controller.issueOrder(productCode, quantity, pricePerUnit);
     }
 
     @Override
     public Integer payOrderFor(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
-        return null;
+        return controller.payOrderFor(productCode, quantity, pricePerUnit);
     }
 
     @Override
     public boolean payOrder(Integer orderId) throws InvalidOrderIdException, UnauthorizedException {
-        return false;
+        return controller.payOrder(orderId);
     }
 
     @Override
     public boolean recordOrderArrival(Integer orderId) throws InvalidOrderIdException, UnauthorizedException, InvalidLocationException {
-        return false;
+        return controller.recordOrderArrival(orderId);
     }
 
     @Override
     public List<Order> getAllOrders() throws UnauthorizedException {
-        return null;
+        return controller.getAllOrders();
     }
 
     @Override
     public Integer defineCustomer(String customerName) throws InvalidCustomerNameException, UnauthorizedException {
-        if (customerName == null || customerName.isEmpty())
-            throw new InvalidCustomerNameException();
-
-        Customer customer = new CustomerImpl();
-        customer.setCustomerName(customerName);
-        return customerRepository.create(customer);
+        return controller.defineCustomer(customerName);
     }
 
     @Override
     public boolean modifyCustomer(Integer id, String newCustomerName, String newCustomerCard) throws InvalidCustomerNameException, InvalidCustomerCardException, InvalidCustomerIdException, UnauthorizedException {
-        return false;
+        return controller.modifyCustomer(id, newCustomerName, newCustomerCard);
     }
 
     @Override
     public boolean deleteCustomer(Integer id) throws InvalidCustomerIdException, UnauthorizedException {
-        if (!isValidId(id)) {
-            throw new InvalidCustomerIdException();
-        }
-        if (!isAuthorized(loggedUser.getRole())) {
-            throw new UnauthorizedException();
-        }
-
-        Customer customer = this.customerRepository.find(id);
-        if (customer != null) {
-            this.customerRepository.delete(customer);
-            return true;
-        }
-
-        return false;
+        return controller.deleteCustomer(id);
     }
 
     @Override
     public Customer getCustomer(Integer id) throws InvalidCustomerIdException, UnauthorizedException {
-        if (!isValidId(id)) {
-            throw new InvalidCustomerIdException();
-        }
-        if (!isAuthorized(loggedUser.getRole())) {
-            throw new UnauthorizedException();
-        }
-
-        return this.customerRepository.find(id);
+        return controller.getCustomer(id);
     }
 
     @Override
     public List<Customer> getAllCustomers() throws UnauthorizedException {
-        if (!isAuthorized(loggedUser.getRole())) {
-            throw new UnauthorizedException();
-        }
-        return this.customerRepository.findAll();
+        return controller.getAllCustomers();
     }
 
     @Override
     public String createCard() throws UnauthorizedException {
-        LoyaltyCard loyaltyCard = new LoyaltyCardImpl();
-        return this.loyaltyCardRepository.create(loyaltyCard);
+        return controller.createCard();
     }
 
     @Override
     public boolean attachCardToCustomer(String customerCard, Integer customerId) throws InvalidCustomerIdException, InvalidCustomerCardException, UnauthorizedException {
-        if (!isValidId(customerId)) {
-            throw new InvalidCustomerIdException();
-        }
-        if (!Pattern.matches("^\\d{10}$", customerCard)) {
-            throw new InvalidCustomerCardException();
-        }
-
-        try {
-            Customer customer = this.customerRepository.find(customerId);
-            if (customer != null) {
-                customer.setCustomerCard(customerCard);
-                this.customerRepository.update(customer);
-                return true;
-            }
-        } catch (JDBCConnectionException e) {
-            // unreachable db
-            return false;
-        }
-
-        return false;
+        return controller.attachCardToCustomer(customerCard, customerId);
     }
 
     @Override
     public boolean modifyPointsOnCard(String customerCard, int pointsToBeAdded) throws InvalidCustomerCardException, UnauthorizedException {
-        if (!Pattern.matches("^\\d{10}$", customerCard)) {
-            throw new InvalidCustomerCardException();
-        }
-        try {
-            LoyaltyCard loyaltyCard = this.loyaltyCardRepository.find(customerCard);
-            loyaltyCard.setPoints(loyaltyCard.getPoints() + pointsToBeAdded);
-            this.loyaltyCardRepository.update(loyaltyCard);
-        } catch (JDBCConnectionException e) {
-            // unreachable db
-            return false;
-        }
-
-        return false;
+        return controller.modifyPointsOnCard(customerCard, pointsToBeAdded);
     }
 
     @Override
     public Integer startSaleTransaction() throws UnauthorizedException {
-        return null;
+        return controller.startSaleTransaction();
     }
 
     @Override
     public boolean addProductToSale(Integer transactionId, String productCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
-        return false;
+        return controller.addProductToSale(transactionId, productCode, amount);
     }
 
     @Override
     public boolean deleteProductFromSale(Integer transactionId, String productCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
-        return false;
+        return controller.deleteProductFromSale(transactionId, productCode, amount);
     }
 
     @Override
     public boolean applyDiscountRateToProduct(Integer transactionId, String productCode, double discountRate) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidDiscountRateException, UnauthorizedException {
-        return false;
+        return controller.applyDiscountRateToProduct(transactionId, productCode, discountRate);
     }
 
     @Override
     public boolean applyDiscountRateToSale(Integer transactionId, double discountRate) throws InvalidTransactionIdException, InvalidDiscountRateException, UnauthorizedException {
-        return false;
+        return controller.applyDiscountRateToSale(transactionId, discountRate);
     }
 
     @Override
     public int computePointsForSale(Integer transactionId) throws InvalidTransactionIdException, UnauthorizedException {
-        return 0;
+        return controller.computePointsForSale(transactionId);
     }
 
     @Override
     public boolean endSaleTransaction(Integer transactionId) throws InvalidTransactionIdException, UnauthorizedException {
-        return false;
+        return controller.endSaleTransaction(transactionId);
     }
 
     @Override
     public boolean deleteSaleTransaction(Integer saleNumber) throws InvalidTransactionIdException, UnauthorizedException {
-        return false;
+        return controller.deleteSaleTransaction(saleNumber);
     }
 
     @Override
     public SaleTransaction getSaleTransaction(Integer transactionId) throws InvalidTransactionIdException, UnauthorizedException {
-        return null;
+        return controller.getSaleTransaction(transactionId);
     }
 
     @Override
     public Integer startReturnTransaction(Integer saleNumber) throws /*InvalidTicketNumberException,*/InvalidTransactionIdException, UnauthorizedException {
-        return null;
+        return controller.startReturnTransaction(saleNumber);
     }
 
     @Override
     public boolean returnProduct(Integer returnId, String productCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
-        return false;
+        return controller.returnProduct(returnId, productCode, amount);
     }
 
     @Override
     public boolean endReturnTransaction(Integer returnId, boolean commit) throws InvalidTransactionIdException, UnauthorizedException {
-        return false;
+        return controller.endReturnTransaction(returnId, commit);
     }
 
     @Override
     public boolean deleteReturnTransaction(Integer returnId) throws InvalidTransactionIdException, UnauthorizedException {
-        return false;
+        return controller.deleteReturnTransaction(returnId);
     }
 
     @Override
     public double receiveCashPayment(Integer ticketNumber, double cash) throws InvalidTransactionIdException, InvalidPaymentException, UnauthorizedException {
-        return 0;
+        return controller.receiveCashPayment(ticketNumber, cash);
     }
 
     @Override
     public boolean receiveCreditCardPayment(Integer ticketNumber, String creditCard) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException {
-        return false;
+        return controller.receiveCreditCardPayment(ticketNumber, creditCard);
     }
 
     @Override
     public double returnCashPayment(Integer returnId) throws InvalidTransactionIdException, UnauthorizedException {
-        return 0;
+        return controller.returnCashPayment(returnId);
     }
 
     @Override
     public double returnCreditCardPayment(Integer returnId, String creditCard) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException {
-        return 0;
+        return controller.returnCreditCardPayment(returnId, creditCard);
     }
 
     @Override
     public boolean recordBalanceUpdate(double toBeAdded) throws UnauthorizedException {
-        return false;
+        return controller.recordBalanceUpdate(toBeAdded);
     }
 
     @Override
     public List<BalanceOperation> getCreditsAndDebits(LocalDate from, LocalDate to) throws UnauthorizedException {
-        return null;
+        return controller.getCreditsAndDebits(from, to);
     }
 
     @Override
     public double computeBalance() throws UnauthorizedException {
-        return 0;
-    }
-
-    /**
-     * This method checks whether a provided role is valid
-     *
-     * @param role: the role to check
-     * @return true if valid role, false otherwise
-     */
-    private boolean isValidRole(String role) {
-        List<String> roles = Arrays.asList("Administrator", "Cashier", "ShopManager");
-        return role != null && !role.isEmpty() && roles.contains(role);
-    }
-
-    /**
-     * @param role
-     * @return
-     */
-    private boolean isAuthorized(String role) {
-        return role.equals("Administrator") || role.equals("ShopManager");
-        // oppure !role.equals("Cashier") ma lo trovo meno leggibile
-    }
-
-    /**
-     * This methods checks whether a provided id is
-     * not null and greater than 0
-     *
-     * @param id: id to check
-     * @return true if valid, false otherwise
-     */
-    private boolean isValidId(Integer id) {
-        return id != null && id >= 0;
-    }
-
-    /**
-     * This methods checks whether a given location
-     * is already used for some product inside store
-     *
-     * @param location to check
-     * @return true if used, false otherwise
-     */
-    private boolean isAssignedPosition(String location) {
-        return this.productTypeRepository.findAll().stream().anyMatch(p -> p.getLocation().equals(location));
-    }
-
-    /**
-     * This method checks whether a given card Id
-     * is already associated to some customer
-     *
-     * @param customerCard
-     * @return true if cardId in use, false otherwise
-     */
-    private boolean isAssignedCardId(String customerCard) {
-        return this.customerRepository.findAll().stream().anyMatch(p -> p.getCustomerCard().equals(customerCard));
+        return controller.computeBalance();
     }
 }
