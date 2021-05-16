@@ -1,6 +1,8 @@
 package it.polito.ezshop.data;
 
 import it.polito.ezshop.annotations.*;
+import it.polito.ezshop.data.ProductType;
+import it.polito.ezshop.data.ProductTypeImpl;
 import it.polito.ezshop.exceptions.*;
 import jakarta.validation.*;
 import jakarta.validation.executable.ExecutableValidator;
@@ -13,6 +15,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class EZShopControllerImpl implements EZShopController {
@@ -78,14 +82,35 @@ public class EZShopControllerImpl implements EZShopController {
     }
 
     public Integer createProductType(String description, String productCode, double pricePerUnit, String note) throws InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException {
-        return null; // TODO(@elle) lascio per dopo: devo vedere la validazione del bar code al link mandato su slack
+    	 if(!isValidGTIN(productCode)) {
+         	throw new InvalidProductCodeException();
+         }
+    	
+    	ProductType product = new ProductTypeImpl();
+        product.setProductDescription(description);
+        product.setPricePerUnit(pricePerUnit);
+        product.setNote(note);
+    	
+    	return productTypeRepository.create(product);
     }
 
     public boolean updateProduct(Integer id, String newDescription, String newCode, double newPrice, String newNote) throws InvalidProductIdException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException {
-        return false;
+        if(!isValidGTIN(newCode)) {
+        	throw new InvalidProductCodeException();
+        }
+        
+    	ProductType product = productTypeRepository.find(id);
+    	if(product != null) {
+    		product.setProductDescription(newDescription);
+    		product.setBarCode(newCode);
+    		product.setPricePerUnit(newPrice);
+    		product.setNote(newNote);
+    		return true;
+    	}
+    	return false;
     }
 
-    public boolean deleteProductType(Integer id) throws InvalidProductIdException, UnauthorizedException {
+    public boolean deleteProductType(Integer id) throws InvalidProductIdException, UnauthorizedException {   	 
         ProductType productType = productTypeRepository.find(id);
         if (productType != null) {
             productTypeRepository.delete(productType);
@@ -97,9 +122,13 @@ public class EZShopControllerImpl implements EZShopController {
     public List<ProductType> getAllProductTypes() throws UnauthorizedException {
         return productTypeRepository.findAll();
     }
-
+    
     public ProductType getProductTypeByBarCode(String barCode) throws InvalidProductCodeException, UnauthorizedException {
-        return null;
+    	 if(!isValidGTIN(barCode)) {
+         	throw new InvalidProductCodeException();
+        }
+    	 
+    	return productTypeRepository.findByBarcode(barCode);
     }
 
     public List<ProductType> getProductTypesByDescription(String description) throws UnauthorizedException {
@@ -109,7 +138,7 @@ public class EZShopControllerImpl implements EZShopController {
     }
 
     public boolean updateQuantity(Integer productId, int toBeAdded) throws InvalidProductIdException, UnauthorizedException {
-        ProductType product = this.productTypeRepository.find(productId);
+    	ProductType product = this.productTypeRepository.find(productId);
         int newQuantity = product.getQuantity() + toBeAdded;
         if (newQuantity >= 0 && !product.getLocation().isEmpty()) {
             product.setQuantity(newQuantity);
@@ -131,7 +160,15 @@ public class EZShopControllerImpl implements EZShopController {
     }
 
     public Integer issueOrder(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
-        return null;
+    	if(!isValidGTIN(productCode)) {
+          throw new InvalidProductCodeException();
+        }
+    	 
+    	Order order = new OrderImpl();
+        order.setPricePerUnit(pricePerUnit);
+        order.setQuantity(quantity);
+        order.setProductCode(productCode);
+    	return orderRepository.create(order);
     }
 
     public Integer payOrderFor(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
@@ -147,7 +184,7 @@ public class EZShopControllerImpl implements EZShopController {
     }
 
     public List<Order> getAllOrders() throws UnauthorizedException {
-        return null;
+        return orderRepository.findAll();
     }
 
     public Integer defineCustomer(String customerName) throws InvalidCustomerNameException, UnauthorizedException {
@@ -157,6 +194,19 @@ public class EZShopControllerImpl implements EZShopController {
     }
 
     public boolean modifyCustomer(Integer id, String newCustomerName, String newCustomerCard) throws InvalidCustomerNameException, InvalidCustomerCardException, InvalidCustomerIdException, UnauthorizedException {
+        try {
+        	Customer customer = customerRepository.find(id);
+        	if(customer != null) {
+        		customer.setCustomerCard(newCustomerCard); // se null/empty reset/keep ? 
+        		customer.setCustomerName(newCustomerName);
+        		return true;
+        	}
+        }
+        catch(JDBCConnectionException exception){
+        	// db unreachable
+        	return false;
+        }
+        
         return false;
     }
 
@@ -195,8 +245,8 @@ public class EZShopControllerImpl implements EZShopController {
     public boolean modifyPointsOnCard(String customerCard, int pointsToBeAdded) throws InvalidCustomerCardException, UnauthorizedException {
         LoyaltyCard loyaltyCard = this.loyaltyCardRepository.find(customerCard);
         if (loyaltyCard != null) {
-            loyaltyCard.setPoints(loyaltyCard.getPoints() + pointsToBeAdded);
-            this.loyaltyCardRepository.update(loyaltyCard);
+            loyaltyCard.setPoints( loyaltyCard.getPoints() + pointsToBeAdded);
+        	this.loyaltyCardRepository.update(loyaltyCard);
             return true;
         }
         return false;
@@ -420,4 +470,33 @@ public class EZShopControllerImpl implements EZShopController {
     private boolean isAssignedCardId(String customerCard) {
         return this.customerRepository.findAll().stream().anyMatch(p -> p.getCustomerCard().equals(customerCard));
     }
+    
+    /**
+     * Checks wether a provided string of digits corresponds to a valid 
+     * GTIN bar code
+     * @param string to check
+     * @return true if gtin, false otherwise
+     */
+    private boolean isValidGTIN (String gtin) {
+    	if(!Pattern.matches("^\\d{12,14}$", gtin)) 
+    		return false;
+    	
+    	AtomicInteger index = new AtomicInteger();
+    	
+    	// create string from input excluding last digit
+    	String code = gtin.substring(0, gtin.length() - 1);
+    	// extracting last digit 
+    	int checkDigit = gtin.charAt(gtin.length() - 1) ^ '0';
+    	
+    	// fill with appropriate number of initial zeros
+    	code = String.format("%0" + (17 - code.length() )+"d%s",0 , code);	
+		// compute sum of the digits after processing 
+    	int sum = Integer.valueOf(code.chars()
+					     			  .map(p -> p ^ '0') // char to int 
+					     			  .map(p -> index.getAndIncrement() % 2 == 0 ? p * 3 : p)
+					     			  .sum());
+		
+    	return (sum + 9)/10 * 10 - sum == checkDigit;
+    }
+    	
 }
