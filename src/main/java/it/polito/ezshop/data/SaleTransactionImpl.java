@@ -1,11 +1,13 @@
 package it.polito.ezshop.data;
 
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@DynamicInsert
 public class SaleTransactionImpl implements SaleTransaction {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

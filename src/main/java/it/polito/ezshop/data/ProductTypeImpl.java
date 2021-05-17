@@ -1,10 +1,13 @@
 package it.polito.ezshop.data;
 
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+
 import javax.persistence.*;
 
 @Entity
+@DynamicInsert
 public class ProductTypeImpl implements ProductType {
-
     @Embeddable
     private static class Position {
         private static final String SEPARATOR = "-";
@@ -28,13 +31,18 @@ public class ProductTypeImpl implements ProductType {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+    @ColumnDefault("0")
     private Integer quantity;
+    @ColumnDefault("''")
     private String note;
+    @ColumnDefault("''")
     private String description;
+    @ColumnDefault("''")
     private String barcode;
+    @ColumnDefault("0")
     private Double pricePerUnit;
     @Embedded
-    private Position position = new Position();
+    private Position position;
 
     @Override
     public Integer getId() {
@@ -58,7 +66,7 @@ public class ProductTypeImpl implements ProductType {
 
     @Override
     public String getLocation() {
-        return position.toString();
+        return position != null ? position.toString() : null;
     }
 
     @Override

@@ -1,11 +1,11 @@
 package it.polito.ezshop.data;
 
-import javax.persistence.JoinColumn;
+import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 
+@Entity
 public class ReturnTransactionImpl extends SaleTransactionImpl {
     @OneToOne
-    @JoinColumn(name = "saleTransaction_id")
     private SaleTransactionImpl saleTransaction;
 
     public SaleTransactionImpl getSaleTransaction() {

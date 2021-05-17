@@ -2,11 +2,13 @@ package it.polito.ezshop.data;
 
 import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
 @Entity
+@DynamicInsert
 public class LoyaltyCardImpl implements LoyaltyCard {
     @Id
     @GeneratedValue(generator = "uuid")

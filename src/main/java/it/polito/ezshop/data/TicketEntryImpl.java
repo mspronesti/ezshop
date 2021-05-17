@@ -6,9 +6,13 @@ import javax.persistence.*;
 
 @Embeddable
 public class TicketEntryImpl implements TicketEntry {
+    @ColumnDefault("''")
     private String barcode;
+    @ColumnDefault("''")
     private String productDescription;
+    @ColumnDefault("0")
     private Integer amount;
+    @ColumnDefault("0")
     private Double pricePerUnit;
     @ColumnDefault("0")
     private Double discountRate;

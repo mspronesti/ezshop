@@ -1,12 +1,17 @@
 package it.polito.ezshop.data;
 
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+
 import javax.persistence.*;
 
 @Entity
+@DynamicInsert
 public class CustomerImpl implements Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+    @ColumnDefault("''")
     private String name;
     @OneToOne
     public LoyaltyCardImpl loyaltyCard;
@@ -42,7 +47,7 @@ public class CustomerImpl implements Customer {
     public void setCustomerCard(String customerCard) {
         LoyaltyCard card = loyaltyCardRepository.find(customerCard);
         if (card != null && card.getCustomer() == null) {
-            this.loyaltyCard = (LoyaltyCardImpl) card;
+            loyaltyCard = (LoyaltyCardImpl) card;
         }
     }
 
@@ -53,6 +58,6 @@ public class CustomerImpl implements Customer {
 
     @Override
     public void setPoints(Integer points) {
-        this.loyaltyCard.setPoints(points);
+        loyaltyCard.setPoints(points);
     }
 }
