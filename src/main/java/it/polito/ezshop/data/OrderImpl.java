@@ -4,6 +4,12 @@ import javax.persistence.*;
 
 @Entity
 public class OrderImpl implements Order {
+	public enum Status{
+		ISSUED,
+		PAYED,
+		COMPLETED
+	}
+	
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
@@ -12,7 +18,7 @@ public class OrderImpl implements Order {
     private String productCode;
     private Double pricePerUnit;
     private Integer quantity;
-
+    
     @Override
     public Integer getOrderId() {
         return id;
@@ -42,7 +48,7 @@ public class OrderImpl implements Order {
     public void setStatus(String status) {
         this.status = status;
     }
-
+    
     @Override
     public String getProductCode() {
         return productCode;
@@ -72,4 +78,5 @@ public class OrderImpl implements Order {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+    
 }
