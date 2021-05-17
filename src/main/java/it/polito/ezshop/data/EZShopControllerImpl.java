@@ -91,6 +91,7 @@ public class EZShopControllerImpl implements EZShopController {
         product.setProductDescription(description);
         product.setPricePerUnit(pricePerUnit);
         product.setNote(note);
+        product.setBarCode(productCode);
     	
     	return productTypeRepository.create(product);
     }
