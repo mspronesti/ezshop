@@ -66,16 +66,11 @@ public class EZShopControllerImpl implements EZShopController {
     }
 
     public User login(String username, String password) throws InvalidUsernameException, InvalidPasswordException {
-    	try {
-    		User user = userRepository.findByUsername(username);
-	        if (user != null && BCrypt.checkpw(password, user.getPassword())) {
-	            loggedUser = user;
-	            return user;
-	        }
-    	}catch(Exception e) {
-    		return null;
-    	}
-        
+        User user = userRepository.findByUsername(username);
+        if (user != null && BCrypt.checkpw(password, user.getPassword())) {
+            loggedUser = user;
+            return user;
+        }
         return null;
     }
 
@@ -88,38 +83,38 @@ public class EZShopControllerImpl implements EZShopController {
     }
 
     public Integer createProductType(String description, String productCode, double pricePerUnit, String note) throws InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException {
-    	 if(!isValidGTIN(productCode)) {
-     		// TODO: move inside custom annotation
-         	throw new InvalidProductCodeException();
-         }
-    	
-    	ProductType product = new ProductTypeImpl();
+        if (!isValidGTIN(productCode)) {
+            // TODO: move inside custom annotation
+            throw new InvalidProductCodeException();
+        }
+
+        ProductType product = new ProductTypeImpl();
         product.setProductDescription(description);
         product.setPricePerUnit(pricePerUnit);
         product.setNote(note);
         product.setBarCode(productCode);
-    	
-    	return productTypeRepository.create(product);
+
+        return productTypeRepository.create(product);
     }
 
     public boolean updateProduct(Integer id, String newDescription, String newCode, double newPrice, String newNote) throws InvalidProductIdException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException {
-        if(!isValidGTIN(newCode)) {
-    		// TODO: move inside custom annotation
-        	throw new InvalidProductCodeException();
+        if (!isValidGTIN(newCode)) {
+            // TODO: move inside custom annotation
+            throw new InvalidProductCodeException();
         }
-        
-    	ProductType product = productTypeRepository.find(id);
-    	if(product != null) {
-    		product.setProductDescription(newDescription);
-    		product.setBarCode(newCode);
-    		product.setPricePerUnit(newPrice);
-    		product.setNote(newNote);
-    		return true;
-    	}
-    	return false;
+
+        ProductType product = productTypeRepository.find(id);
+        if (product != null) {
+            product.setProductDescription(newDescription);
+            product.setBarCode(newCode);
+            product.setPricePerUnit(newPrice);
+            product.setNote(newNote);
+            return true;
+        }
+        return false;
     }
 
-    public boolean deleteProductType(Integer id) throws InvalidProductIdException, UnauthorizedException {   	 
+    public boolean deleteProductType(Integer id) throws InvalidProductIdException, UnauthorizedException {
         ProductType productType = productTypeRepository.find(id);
         if (productType != null) {
             productTypeRepository.delete(productType);
@@ -131,14 +126,14 @@ public class EZShopControllerImpl implements EZShopController {
     public List<ProductType> getAllProductTypes() throws UnauthorizedException {
         return productTypeRepository.findAll();
     }
-    
+
     public ProductType getProductTypeByBarCode(String barCode) throws InvalidProductCodeException, UnauthorizedException {
-    	 if(!isValidGTIN(barCode)) {
-     		// TODO: move inside custom annotation
-         	throw new InvalidProductCodeException();
+        if (!isValidGTIN(barCode)) {
+            // TODO: move inside custom annotation
+            throw new InvalidProductCodeException();
         }
-    	 
-    	return productTypeRepository.findByBarcode(barCode);
+
+        return productTypeRepository.findByBarcode(barCode);
     }
 
     public List<ProductType> getProductTypesByDescription(String description) throws UnauthorizedException {
@@ -148,7 +143,7 @@ public class EZShopControllerImpl implements EZShopController {
     }
 
     public boolean updateQuantity(Integer productId, int toBeAdded) throws InvalidProductIdException, UnauthorizedException {
-    	ProductType product = this.productTypeRepository.find(productId);
+        ProductType product = this.productTypeRepository.find(productId);
         int newQuantity = product.getQuantity() + toBeAdded;
         if (newQuantity >= 0 && !product.getLocation().isEmpty()) {
             product.setQuantity(newQuantity);
@@ -170,89 +165,75 @@ public class EZShopControllerImpl implements EZShopController {
     }
 
     public Integer issueOrder(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
-    	if(!isValidGTIN(productCode)) {
-    		// TODO: move inside custom annotation
-          throw new InvalidProductCodeException();
+        if (!isValidGTIN(productCode)) {
+            // TODO: move inside custom annotation
+            throw new InvalidProductCodeException();
         }
-    	
-		try {
-			ProductType product = this.productTypeRepository.findByBarcode(productCode);
-			if(product == null) {
-				// can't order an unexisting product
-				return -1;
-			}
-			
-			Order order = new OrderImpl();
-		    order.setPricePerUnit(pricePerUnit);
-		    order.setQuantity(quantity);
-		    order.setProductCode(productCode);
-		    order.setStatus(OrderImpl.Status.ISSUED.name());
-			return orderRepository.create(order);
-    	}catch(Exception exception) {
-    		// db unreachable
-    		return -1;
-    	}
+        ProductType product = this.productTypeRepository.findByBarcode(productCode);
+        if (product == null) {
+            // can't order an unexisting product
+            return -1;
+        }
+        Order order = new OrderImpl();
+        order.setPricePerUnit(pricePerUnit);
+        order.setQuantity(quantity);
+        order.setProductCode(productCode);
+        order.setStatus(OrderImpl.Status.ISSUED.name());
+        return orderRepository.create(order);
     }
 
     public Integer payOrderFor(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
-    	if(!isValidGTIN(productCode)) {
-    		// TODO: move inside custom annotation
+        if (!isValidGTIN(productCode)) {
+            // TODO: move inside custom annotation
             throw new InvalidProductCodeException();
         }
-    	
-    	try {
-    		ProductType product = this.productTypeRepository.findByBarcode(productCode);
-			double expense = pricePerUnit * quantity;
-    		if(product == null || computeBalance() > expense) {
-				// can't order an unexisting product or perform and order
-    			// without enough money
-				return -1;
-			}
-			// TODO: create the order (duplicate code from payOrder?)
-			
-        	// TODO: update balance
-        }catch(JDBCConnectionException exception) {
-        	// db unreachable
-    		return -1;
+        ProductType product = this.productTypeRepository.findByBarcode(productCode);
+        double expense = pricePerUnit * quantity;
+        if (product == null || computeBalance() > expense) {
+            // can't order an unexisting product or perform and order
+            // without enough money
+            return -1;
         }
-        
-    	return null;
+        // TODO: create the order (duplicate code from payOrder?)
+
+        // TODO: update balance
+        return null;
     }
 
     public boolean payOrder(Integer orderId) throws InvalidOrderIdException, UnauthorizedException {
         Order order = orderRepository.find(orderId);
-        if(order != null) { 
-        	String status = order.getStatus();
-        	if(status.equals(OrderImpl.Status.ISSUED.name()) || status.equals(OrderImpl.Status.PAYED.name())) {
-        	    // set payed
-        		order.setStatus(OrderImpl.Status.PAYED.name());
-        		
-        		// update balance
-        		recordBalanceUpdate(-1 * order.getPricePerUnit()*order.getQuantity());
-        		return true;
-        	}
+        if (order != null) {
+            String status = order.getStatus();
+            if (status.equals(OrderImpl.Status.ISSUED.name()) || status.equals(OrderImpl.Status.PAYED.name())) {
+                // set payed
+                order.setStatus(OrderImpl.Status.PAYED.name());
+
+                // update balance
+                recordBalanceUpdate(-1 * order.getPricePerUnit() * order.getQuantity());
+                return true;
+            }
         }
-    	return false;
+        return false;
     }
 
     public boolean recordOrderArrival(Integer orderId) throws InvalidOrderIdException, UnauthorizedException, InvalidLocationException {
-    	Order order = orderRepository.find(orderId);
-        if(order != null) {
-        	String status = order.getStatus();
-        	
-        	if(status.equals(OrderImpl.Status.COMPLETED.name()))
-        		return true;
-        	
-        	if(status.equals(OrderImpl.Status.ISSUED.name())) {	
-	        	order.setStatus(OrderImpl.Status.COMPLETED.name());
-	        	ProductType product = productTypeRepository.findByBarcode(order.getProductCode());
-	        	if(product != null) {
-	        		product.setQuantity(product.getQuantity() + order.getQuantity());
-	        		return true;
-	        	}
-        	}
+        Order order = orderRepository.find(orderId);
+        if (order != null) {
+            String status = order.getStatus();
+
+            if (status.equals(OrderImpl.Status.COMPLETED.name()))
+                return true;
+
+            if (status.equals(OrderImpl.Status.ISSUED.name())) {
+                order.setStatus(OrderImpl.Status.COMPLETED.name());
+                ProductType product = productTypeRepository.findByBarcode(order.getProductCode());
+                if (product != null) {
+                    product.setQuantity(product.getQuantity() + order.getQuantity());
+                    return true;
+                }
+            }
         }
-    	return false;
+        return false;
     }
 
     public List<Order> getAllOrders() throws UnauthorizedException {
@@ -266,19 +247,13 @@ public class EZShopControllerImpl implements EZShopController {
     }
 
     public boolean modifyCustomer(Integer id, String newCustomerName, String newCustomerCard) throws InvalidCustomerNameException, InvalidCustomerCardException, InvalidCustomerIdException, UnauthorizedException {
-        try {
-        	Customer customer = customerRepository.find(id);
-        	if(customer != null) {
-        		customer.setCustomerCard(newCustomerCard); // se null/empty reset/keep ? 
-        		customer.setCustomerName(newCustomerName);
-        		return true;
-        	}
+        Customer customer = customerRepository.find(id);
+        if (customer != null) {
+            customer.setCustomerCard(newCustomerCard); // se null/empty reset/keep ?
+            customer.setCustomerName(newCustomerName);
+            customerRepository.update(customer);
+            return true;
         }
-        catch(JDBCConnectionException exception){
-        	// db unreachable
-        	return false;
-        }
-        
         return false;
     }
 
@@ -317,8 +292,8 @@ public class EZShopControllerImpl implements EZShopController {
     public boolean modifyPointsOnCard(String customerCard, int pointsToBeAdded) throws InvalidCustomerCardException, UnauthorizedException {
         LoyaltyCard loyaltyCard = this.loyaltyCardRepository.find(customerCard);
         if (loyaltyCard != null) {
-            loyaltyCard.setPoints( loyaltyCard.getPoints() + pointsToBeAdded);
-        	this.loyaltyCardRepository.update(loyaltyCard);
+            loyaltyCard.setPoints(loyaltyCard.getPoints() + pointsToBeAdded);
+            this.loyaltyCardRepository.update(loyaltyCard);
             return true;
         }
         return false;
@@ -609,26 +584,25 @@ public class EZShopControllerImpl implements EZShopController {
         BalanceOperationImpl operation = new BalanceOperationImpl();
         operation.setDate(LocalDate.now());
         operation.setType(toBeAdded > 0 ? BalanceOperationImpl.Type.CREDIT : BalanceOperationImpl.Type.DEBIT);
-        operation.setMoney(toBeAdded);
+        operation.setMoney(Math.abs(toBeAdded));
         balanceOperationRepository.create(operation);
         return true;
     }
 
     public List<BalanceOperation> getCreditsAndDebits(LocalDate from, LocalDate to) throws UnauthorizedException {
-//        LocalDate startDate = from,
-//                  endDate = to;
-//        if (from.isAfter(to)) {
-//            startDate = to;
-//            endDate = from;
-//        }
-//        return balanceOperationRepository.findAllBetweenDates(startDate, endDate);
-    	return null;
+        LocalDate startDate = from,
+                endDate = to;
+        if (from.isAfter(to)) {
+            startDate = to;
+            endDate = from;
+        }
+        return balanceOperationRepository.findAllBetweenDates(startDate, endDate);
     }
 
     public double computeBalance() throws UnauthorizedException {
         return balanceOperationRepository.findAll()
                 .stream()
-                .mapToDouble(bo ->1f * bo.getMoney())
+                .mapToDouble(BalanceOperation::getMoney)
                 .sum();
     }
 
@@ -737,36 +711,37 @@ public class EZShopControllerImpl implements EZShopController {
      * @return true if cardId in use, false otherwise
      */
     private boolean isAssignedCardId(String customerCard) {
-    	// TODO: remove or keep and remove LoyaltyCard entity
+        // TODO: remove or keep and remove LoyaltyCard entity
         return customerRepository.findAll().stream().anyMatch(p -> p.getCustomerCard().equals(customerCard));
     }
-    
+
     /**
-     * Checks wether a provided string of digits corresponds to a valid 
+     * Checks wether a provided string of digits corresponds to a valid
      * GTIN bar code
+     *
      * @param gtin to check
      * @return true if gtin, false otherwise
      */
-    private boolean isValidGTIN (String gtin) {
-    	if(!Pattern.matches("^\\d{12,14}$", gtin)) 
-    		return false;
-    	
-    	AtomicInteger index = new AtomicInteger();
-    	
-    	// create string from input excluding last digit
-    	String code = gtin.substring(0, gtin.length() - 1);
-    	// extracting last digit 
-    	int checkDigit = gtin.charAt(gtin.length() - 1) ^ '0';
-    	
-    	// fill with appropriate number of initial zeros
-    	code = String.format("%0" + (17 - code.length() )+"d%s",0 , code);	
-		// compute sum of the digits after processing 
-    	int sum = code.chars()
-                	  .map(p -> p ^ '0') // char to int
-                	  .map(p -> index.getAndIncrement() % 2 == 0 ? p * 3 : p)
-                	  .sum();
-		
-    	return (sum + 9)/10 * 10 - sum == checkDigit;
+    private boolean isValidGTIN(String gtin) {
+        if (!Pattern.matches("^\\d{12,14}$", gtin))
+            return false;
+
+        AtomicInteger index = new AtomicInteger();
+
+        // create string from input excluding last digit
+        String code = gtin.substring(0, gtin.length() - 1);
+        // extracting last digit
+        int checkDigit = gtin.charAt(gtin.length() - 1) ^ '0';
+
+        // fill with appropriate number of initial zeros
+        code = String.format("%0" + (17 - code.length()) + "d%s", 0, code);
+        // compute sum of the digits after processing
+        int sum = code.chars()
+                .map(p -> p ^ '0') // char to int
+                .map(p -> index.getAndIncrement() % 2 == 0 ? p * 3 : p)
+                .sum();
+
+        return (sum + 9) / 10 * 10 - sum == checkDigit;
     }
-    	
+
 }

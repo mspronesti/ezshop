@@ -23,23 +23,27 @@ public class BalanceOperationRepository extends Repository<BalanceOperation> {
 
     @SuppressWarnings("unchecked")
     List<BalanceOperation> findAllBetweenDates(LocalDate from, LocalDate to) {
-        Session session = getSession();
-        session.beginTransaction();
-        CriteriaBuilder cb = session.getCriteriaBuilder();
-        CriteriaQuery<BalanceOperationImpl> cr = cb.createQuery(BalanceOperationImpl.class);
-        Root<BalanceOperationImpl> root = cr.from(BalanceOperationImpl.class);
-        cr.select(root);
-        if (from != null) {
-            ParameterExpression<LocalDate> fromDate = cb.parameter(LocalDate.class, "fromDate");
-            cr.where(cb.greaterThanOrEqualTo(root.get("date"), fromDate));
+        try {
+            Session session = getSession();
+            session.beginTransaction();
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<BalanceOperationImpl> cr = cb.createQuery(BalanceOperationImpl.class);
+            Root<BalanceOperationImpl> root = cr.from(BalanceOperationImpl.class);
+            cr.select(root);
+            if (from != null) {
+                ParameterExpression<LocalDate> fromDate = cb.parameter(LocalDate.class, "fromDate");
+                cr.where(cb.greaterThanOrEqualTo(root.get("date"), fromDate));
+            }
+            if (to != null) {
+                ParameterExpression<LocalDate> toDate = cb.parameter(LocalDate.class, "toDate");
+                cr.where(cb.lessThanOrEqualTo(root.get("date"), toDate));
+            }
+            List<BalanceOperation> balanceOperations = (List<BalanceOperation>)(Object) session.createQuery(cr).list();
+            session.getTransaction().commit();
+            return balanceOperations;
+        } catch (Exception exception) {
+            return null;
         }
-        if (to != null) {
-            ParameterExpression<LocalDate> toDate = cb.parameter(LocalDate.class, "toDate");
-            cr.where(cb.lessThanOrEqualTo(root.get("date"), toDate));
-        }
-        List<BalanceOperation> balanceOperations = (List<BalanceOperation>)(Object) session.createQuery(cr).list();
-        session.getTransaction().commit();
-        return balanceOperations;
     }
 
     @Override

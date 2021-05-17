@@ -12,14 +12,18 @@ public class UserRepository extends Repository<User> {
     }
 
     User findByUsername(String username) {
-        Session session = getSession();
-        session.beginTransaction();
-        User user = session
-                .createQuery("FROM UserImpl WHERE username = :username", UserImpl.class)
-                .setParameter("username", username)
-                .getSingleResult();
-        session.getTransaction().commit();
-        return user;
+        try {
+            Session session = getSession();
+            session.beginTransaction();
+            User user = session
+                    .createQuery("FROM UserImpl WHERE username = :username", UserImpl.class)
+                    .setParameter("username", username)
+                    .getSingleResult();
+            session.getTransaction().commit();
+            return user;
+        } catch (Exception exception) {
+            return null;
+        }
     }
 
     @Override

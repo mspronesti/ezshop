@@ -12,14 +12,18 @@ public class ProductTypeRepository extends Repository<ProductType> {
     }
 
     ProductType findByBarcode(String barcode) {
-        Session session = getSession();
-        session.beginTransaction();
-        ProductType productType = session
-                .createQuery("FROM ProductTypeImpl WHERE barcode = :barcode", ProductTypeImpl.class)
-                .setParameter("barcode", barcode)
-                .getSingleResult();
-        session.getTransaction().commit();
-        return productType;
+        try {
+            Session session = getSession();
+            session.beginTransaction();
+            ProductType productType = session
+                    .createQuery("FROM ProductTypeImpl WHERE barcode = :barcode", ProductTypeImpl.class)
+                    .setParameter("barcode", barcode)
+                    .getSingleResult();
+            session.getTransaction().commit();
+            return productType;
+        } catch (Exception exception) {
+            return null;
+        }
     }
 
     @Override
