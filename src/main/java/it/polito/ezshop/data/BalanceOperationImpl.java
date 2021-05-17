@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 @Entity
 public class BalanceOperationImpl implements BalanceOperation {
-    public static enum Type {
+    public enum Type {
         CREDIT,
         DEBIT
     }
@@ -57,6 +57,7 @@ public class BalanceOperationImpl implements BalanceOperation {
         this.type = type;
     }
 
+    @Transient
     public void setType(Type type) {
         this.type = type.name();
     }

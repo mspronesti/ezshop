@@ -17,7 +17,6 @@ public class SaleTransactionImpl implements SaleTransaction {
     @ColumnDefault("0")
     private Double price;
     @OneToOne
-    @JoinColumn(name = "payment_id")
     private BalanceOperationImpl payment;
 
     @Override
