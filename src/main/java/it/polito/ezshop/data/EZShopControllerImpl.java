@@ -412,6 +412,7 @@ public class EZShopControllerImpl implements EZShopController {
         returnEntry.setDiscountRate(entry.getDiscountRate());
         returnEntry.setPricePerUnit(entry.getPricePerUnit());
         returnTransaction.getEntries().add(returnEntry);
+        returnTransaction.updatePrice();
         return true;
     }
 
@@ -451,9 +452,35 @@ public class EZShopControllerImpl implements EZShopController {
 
     public boolean deleteReturnTransaction(Integer returnId) throws InvalidTransactionIdException, UnauthorizedException {
         ReturnTransactionImpl returnTransaction = returnTransactionRepository.find(returnId);
-        if (returnTransaction == null) {
+        if (returnTransaction == null || returnTransaction.getPayment() != null) {
             return false;
         }
+        SaleTransactionImpl saleTransaction = returnTransaction.getSaleTransaction();
+        if (saleTransaction == null) {
+            return false;
+        }
+        for (TicketEntry returnEntry : returnTransaction.getEntries()) {
+            TicketEntry saleEntry = saleTransaction.getEntryByBarcode(returnEntry.getBarCode());
+            if (saleEntry == null) {
+                saleEntry = new TicketEntryImpl();
+                saleEntry.setAmount(returnEntry.getAmount());
+                saleEntry.setDiscountRate(returnEntry.getDiscountRate());
+                saleEntry.setBarCode(returnEntry.getBarCode());
+                saleEntry.setPricePerUnit(returnEntry.getPricePerUnit());
+                saleTransaction.getEntries().add(saleEntry);
+            } else {
+                saleEntry.setAmount(saleEntry.getAmount() + returnEntry.getAmount());
+            }
+            ProductType product = productTypeRepository.findByBarcode(returnEntry.getBarCode());
+            if (product == null) {
+                return false;
+            }
+            product.setQuantity(product.getQuantity() + returnEntry.getAmount());
+            productTypeRepository.update(product);
+        }
+        saleTransaction.updatePrice();
+        saleTransactionRepository.update(saleTransaction);
+        returnTransactionRepository.delete(returnTransaction);
         return true;
     }
 
@@ -477,27 +504,62 @@ public class EZShopControllerImpl implements EZShopController {
     }
 
     public boolean receiveCreditCardPayment(Integer transactionId, String creditCard) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException {
+        // TODO(@umbo) waiting for an answer about creditcards.txt
         return false;
     }
 
     public double returnCashPayment(Integer returnId) throws InvalidTransactionIdException, UnauthorizedException {
-        return 0;
+        ReturnTransactionImpl returnTransaction = returnTransactionRepository.find(returnId);
+        if (returnTransaction == null || returnTransaction.getPayment() != null) {
+            return -1;
+        }
+        BalanceOperationImpl payment = new BalanceOperationImpl();
+        payment.setDate(LocalDate.now());
+        payment.setType(BalanceOperationImpl.Type.DEBIT);
+        // TODO(@umbo) waiting for an answer about a preliminary balance check
+        double price = returnTransaction.getPrice();
+        payment.setMoney(price);
+        balanceOperationRepository.create(payment);
+        returnTransaction.setPayment(payment);
+        returnTransactionRepository.update(returnTransaction);
+        return price;
     }
 
     public double returnCreditCardPayment(Integer returnId, String creditCard) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException {
+        // TODO(@umbo) waiting for an answer about creditcards.txt
         return 0;
     }
 
     public boolean recordBalanceUpdate(double toBeAdded) throws UnauthorizedException {
-        return false;
+        double currentBalance = computeBalance();
+        if (currentBalance + toBeAdded < 0) {
+            return false;
+        }
+        BalanceOperationImpl operation = new BalanceOperationImpl();
+        operation.setDate(LocalDate.now());
+        operation.setType(toBeAdded > 0 ? BalanceOperationImpl.Type.CREDIT : BalanceOperationImpl.Type.DEBIT);
+        operation.setMoney(toBeAdded);
+        balanceOperationRepository.create(operation);
+        return true;
     }
 
     public List<BalanceOperation> getCreditsAndDebits(LocalDate from, LocalDate to) throws UnauthorizedException {
-        return null;
+        LocalDate startDate = from,
+                  endDate = to;
+        if (from.isAfter(to)) {
+            startDate = to;
+            endDate = from;
+        }
+        return balanceOperationRepository.findAllBetweenDates(startDate, endDate);
     }
 
     public double computeBalance() throws UnauthorizedException {
-        return 0;
+        return balanceOperationRepository.findAll()
+                .stream()
+                .mapToDouble(bo ->
+                        (bo.getType().equals(BalanceOperationImpl.Type.CREDIT.name()) ? 1f : -1f) * bo.getMoney()
+                )
+                .sum();
     }
 
     private static final ValidatorFactory validatorFactory = Validation.byDefaultProvider()
