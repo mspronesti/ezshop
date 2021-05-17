@@ -1,5 +1,7 @@
 package it.polito.ezshop.data;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.*;
 
 @Embeddable
@@ -8,6 +10,7 @@ public class TicketEntryImpl implements TicketEntry {
     private String productDescription;
     private Integer amount;
     private Double pricePerUnit;
+    @ColumnDefault("0")
     private Double discountRate;
 
     @Override

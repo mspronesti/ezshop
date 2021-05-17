@@ -133,7 +133,7 @@ public interface EZShopController {
     @AcceptRoles({ Role.Administrator, Role.ShopManager, Role.Cashier })
     @FallbackBooleanValue
     public boolean modifyCustomer(
-            @NotNull @Min(1) @Throw(InvalidCustomerIdException.class) Integer id, // TODO missing in interface
+            @NotNull @Min(1) @Throw(InvalidCustomerIdException.class) Integer id, // TODO(@umbo) missing in interface
             @NotNull @NotEmpty @Throw(InvalidCustomerNameException.class) String newCustomerName,
             @NotNull @NotEmpty @Pattern(regexp = "^\\d{10}$") String newCustomerCard
     ) throws InvalidCustomerNameException, InvalidCustomerCardException, InvalidCustomerIdException, UnauthorizedException;
@@ -178,7 +178,7 @@ public interface EZShopController {
     public boolean addProductToSale(
             @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer transactionId,
             @NotNull @NotEmpty @Throw(InvalidProductCodeException.class) String productCode,
-            @NotNull @Min(0) @Throw(InvalidQuantityException.class) int amount // TODO is this right?
+            @NotNull @Min(0) @Throw(InvalidQuantityException.class) int amount // TODO(@umbo) is this right?
     ) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException;
 
     @AcceptRoles({ Role.Administrator, Role.ShopManager, Role.Cashier })
@@ -186,7 +186,7 @@ public interface EZShopController {
     public boolean deleteProductFromSale(
             @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer transactionId,
             @NotNull @NotEmpty @Throw(InvalidProductCodeException.class) String productCode,
-            @NotNull @Min(0) @Throw(InvalidQuantityException.class) int amount // TODO is this right?
+            @NotNull @Min(0) @Throw(InvalidQuantityException.class) int amount // TODO(@umbo) is this right?
     ) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException;
 
     @AcceptRoles({ Role.Administrator, Role.ShopManager, Role.Cashier })

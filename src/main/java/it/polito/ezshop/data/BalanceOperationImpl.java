@@ -5,6 +5,11 @@ import java.time.LocalDate;
 
 @Entity
 public class BalanceOperationImpl implements BalanceOperation {
+    public static enum Type {
+        CREDIT,
+        DEBIT
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
@@ -50,5 +55,9 @@ public class BalanceOperationImpl implements BalanceOperation {
     @Override
     public void setType(String type) {
         this.type = type;
+    }
+
+    public void setType(Type type) {
+        this.type = type.name();
     }
 }

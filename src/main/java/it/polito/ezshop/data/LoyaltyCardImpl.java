@@ -13,7 +13,7 @@ public class LoyaltyCardImpl implements LoyaltyCard {
     @GenericGenerator(name = "uuid", strategy = "uuid")
     @Size(max = 10)
     private String id;
-    @ColumnDefault(value = "0")
+    @ColumnDefault("0")
     private Integer points;
     @OneToOne(mappedBy = "loyaltyCard", cascade = CascadeType.ALL)
     private CustomerImpl customer;

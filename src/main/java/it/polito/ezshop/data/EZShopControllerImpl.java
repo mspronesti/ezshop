@@ -1,8 +1,6 @@
 package it.polito.ezshop.data;
 
 import it.polito.ezshop.annotations.*;
-import it.polito.ezshop.data.ProductType;
-import it.polito.ezshop.data.ProductTypeImpl;
 import it.polito.ezshop.exceptions.*;
 import jakarta.validation.*;
 import jakarta.validation.executable.ExecutableValidator;
@@ -25,9 +23,12 @@ public class EZShopControllerImpl implements EZShopController {
     private final LoyaltyCardRepository loyaltyCardRepository = new LoyaltyCardRepository();
     private final OrderRepository orderRepository = new OrderRepository();
     private final ProductTypeRepository productTypeRepository = new ProductTypeRepository();
+    private final ReturnTransactionRepository returnTransactionRepository = new ReturnTransactionRepository();
     private final SaleTransactionRepository saleTransactionRepository = new SaleTransactionRepository();
     private final UserRepository userRepository = new UserRepository();
     private User loggedUser = null;
+    private final Map<Integer, SaleTransactionImpl> openSaleTransactions = new HashMap<>();
+    private final Map<Integer, ReturnTransactionImpl> openReturnTransactions = new HashMap<>();
 
     public Integer createUser(String username, String password, String role) throws InvalidUsernameException, InvalidPasswordException, InvalidRoleException {
         User user = new UserImpl();
@@ -253,90 +254,226 @@ public class EZShopControllerImpl implements EZShopController {
     }
 
     public Integer startSaleTransaction() throws UnauthorizedException {
-        SaleTransaction saleTransaction = new SaleTransactionImpl();
-        return this.saleTransactionRepository.create(saleTransaction);
+        SaleTransactionImpl saleTransaction = new SaleTransactionImpl();
+        Integer id = saleTransactionRepository.create(saleTransaction);
+        openSaleTransactions.put(id, saleTransaction);
+        return id;
     }
 
     public boolean addProductToSale(Integer transactionId, String productCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
-        SaleTransaction saleTransaction = this.saleTransactionRepository.find(transactionId);
-        if (saleTransaction == null) { // TODO started and open?
+        SaleTransactionImpl saleTransaction = openSaleTransactions.get(transactionId);
+        if (saleTransaction == null) {
             return false;
         }
-        ProductType productType = this.productTypeRepository.find(productCode);
-        if (productType == null) {
-            return false; // TODO shouldn't this be InvalidProductCodeException?
+        ProductType product = productTypeRepository.find(productCode);
+        if (product == null) {
+            return false;
         }
-        TicketEntry entry = saleTransaction.getEntries()
-                .stream()
-                .filter(e -> e.getBarCode().equals(productType.getBarCode()))
-                .findFirst()
-                .orElseGet(() -> {
-                    TicketEntry newEntry = new TicketEntryImpl();
-                    newEntry.setBarCode(productCode);
-                    newEntry.setAmount(0);
-                    newEntry.setPricePerUnit(productType.getPricePerUnit());
-                    return newEntry;
-                });
+        TicketEntry entry = saleTransaction.getEntryByBarcode(productCode);
+        if (entry == null) {
+            entry = new TicketEntryImpl();
+            entry.setBarCode(productCode);
+            entry.setAmount(0);
+            entry.setPricePerUnit(product.getPricePerUnit());
+        }
         int newAmount = entry.getAmount() + amount;
-        if (productType.getQuantity() >= newAmount) {
+        if (product.getQuantity() >= newAmount) {
             entry.setAmount(newAmount);
-            productType.setQuantity(productType.getQuantity() - amount);
+            product.setQuantity(product.getQuantity() - amount);
+            productTypeRepository.update(product);
             if (!saleTransaction.getEntries().contains(entry)) {
                 saleTransaction.getEntries().add(entry);
             }
-            this.saleTransactionRepository.update(saleTransaction);
-            this.productTypeRepository.update(productType);
+            saleTransaction.updatePrice();
             return true;
         }
         return false;
     }
 
     public boolean deleteProductFromSale(Integer transactionId, String productCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
-        return false;
+        SaleTransactionImpl saleTransaction = openSaleTransactions.get(transactionId);
+        if (saleTransaction == null) {
+            return false;
+        }
+        TicketEntry entry = saleTransaction.getEntryByBarcode(productCode);
+        ProductType product = productTypeRepository.find(productCode);
+        if (product == null || entry == null || amount > entry.getAmount()) {
+            return false;
+        }
+        entry.setAmount(entry.getAmount() - amount);
+        product.setQuantity(product.getQuantity() + amount);
+        saleTransaction.updatePrice();
+        productTypeRepository.update(product);
+        return true;
     }
 
     public boolean applyDiscountRateToProduct(Integer transactionId, String productCode, double discountRate) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidDiscountRateException, UnauthorizedException {
-        return false;
+        if (discountRate == 1d) {
+            throw new InvalidDiscountRateException(); // TODO(@umbo) move this to dedicated validator
+        }
+        SaleTransactionImpl saleTransaction = openSaleTransactions.get(transactionId);
+        if (saleTransaction == null) {
+            return false;
+        }
+        TicketEntry entry = saleTransaction.getEntryByBarcode(productCode);
+        if (entry == null) {
+            return false;
+        }
+        entry.setDiscountRate(discountRate);
+        saleTransaction.updatePrice();
+        saleTransactionRepository.update(saleTransaction);
+        return true;
     }
 
     public boolean applyDiscountRateToSale(Integer transactionId, double discountRate) throws InvalidTransactionIdException, InvalidDiscountRateException, UnauthorizedException {
-        return false;
+        if (discountRate == 1d) {
+            throw new InvalidDiscountRateException(); // TODO(@umbo) move this to dedicated validator
+        }
+        SaleTransactionImpl saleTransaction = openSaleTransactions.get(transactionId);
+        if (saleTransaction == null) {
+            return false;
+        }
+        saleTransaction.setDiscountRate(discountRate);
+        saleTransaction.updatePrice();
+        saleTransactionRepository.update(saleTransaction);
+        return true;
     }
 
     public int computePointsForSale(Integer transactionId) throws InvalidTransactionIdException, UnauthorizedException {
-        return 0;
+        SaleTransactionImpl saleTransaction = openSaleTransactions.get(transactionId);
+        if (saleTransaction == null) {
+            saleTransaction = (SaleTransactionImpl) saleTransactionRepository.find(transactionId);
+            if (saleTransaction == null) {
+                return -1;
+            }
+        }
+        return (int) Math.floor(saleTransaction.getPrice() / 10);
     }
 
     public boolean endSaleTransaction(Integer transactionId) throws InvalidTransactionIdException, UnauthorizedException {
-        return false;
+        SaleTransactionImpl saleTransaction = openSaleTransactions.get(transactionId);
+        if (saleTransaction == null) {
+            return false;
+        }
+        saleTransactionRepository.update(saleTransaction);
+        openSaleTransactions.remove(transactionId);
+        return true;
     }
 
     public boolean deleteSaleTransaction(Integer transactionId) throws InvalidTransactionIdException, UnauthorizedException {
-        return false;
+        SaleTransactionImpl saleTransaction = openSaleTransactions.get(transactionId);
+        if (saleTransaction == null) {
+            return false;
+        }
+        for (TicketEntry entry : saleTransaction.getEntries()) {
+            ProductType product = productTypeRepository.findByBarcode(entry.getBarCode());
+            if (product == null) {
+                return false;
+            }
+            product.setQuantity(product.getQuantity() + entry.getAmount());
+            productTypeRepository.update(product);
+        }
+        openSaleTransactions.remove(transactionId);
+        return true;
     }
 
     public SaleTransaction getSaleTransaction(Integer transactionId) throws InvalidTransactionIdException, UnauthorizedException {
-        return null;
+        return saleTransactionRepository.find(transactionId);
     }
 
     public Integer startReturnTransaction(Integer transactionId) throws InvalidTransactionIdException, UnauthorizedException {
-        return null;
+        SaleTransaction saleTransaction = saleTransactionRepository.find(transactionId);
+        if (saleTransaction == null) {
+            return -1;
+        }
+        ReturnTransactionImpl returnTransaction = new ReturnTransactionImpl();
+        returnTransaction.setSaleTransaction((SaleTransactionImpl) saleTransaction);
+        Integer id = returnTransactionRepository.create(returnTransaction);
+        openReturnTransactions.put(id, returnTransaction);
+        return id;
     }
 
     public boolean returnProduct(Integer returnId, String productCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
-        return false;
+        ReturnTransactionImpl returnTransaction = openReturnTransactions.get(returnId);
+        if (returnTransaction == null) {
+            return false;
+        }
+        SaleTransactionImpl saleTransaction = returnTransaction.getSaleTransaction();
+        if (saleTransaction == null) {
+            return false;
+        }
+        TicketEntry entry = saleTransaction.getEntryByBarcode(productCode);
+        if (entry == null || entry.getAmount() < amount) {
+            return false;
+        }
+        TicketEntry returnEntry = new TicketEntryImpl();
+        returnEntry.setBarCode(productCode);
+        returnEntry.setAmount(amount);
+        returnEntry.setDiscountRate(entry.getDiscountRate());
+        returnEntry.setPricePerUnit(entry.getPricePerUnit());
+        returnTransaction.getEntries().add(returnEntry);
+        return true;
     }
 
     public boolean endReturnTransaction(Integer returnId, boolean commit) throws InvalidTransactionIdException, UnauthorizedException {
-        return false;
+        ReturnTransactionImpl returnTransaction = openReturnTransactions.get(returnId);
+        if (returnTransaction == null) {
+            return false;
+        }
+        if (!commit) {
+            openReturnTransactions.remove(returnTransaction.getTicketNumber());
+            return true;
+        }
+        SaleTransactionImpl saleTransaction = returnTransaction.getSaleTransaction();
+        if (saleTransaction == null) {
+            return false;
+        }
+        for (TicketEntry returnEntry : returnTransaction.getEntries()) {
+            TicketEntry saleEntry = saleTransaction.getEntryByBarcode(returnEntry.getBarCode());
+            ProductType product = productTypeRepository.findByBarcode(returnEntry.getBarCode());
+            if (saleEntry == null || product == null) {
+                return false;
+            }
+            int newAmount = saleEntry.getAmount() - returnEntry.getAmount();
+            if (newAmount == 0) {
+                saleTransaction.getEntries().remove(saleEntry);
+                continue;
+            }
+            saleEntry.setAmount(newAmount);
+            product.setQuantity(product.getQuantity() + returnEntry.getAmount());
+            productTypeRepository.update(product);
+        }
+        saleTransaction.updatePrice();
+        saleTransactionRepository.update(saleTransaction);
+        returnTransactionRepository.update(returnTransaction);
+        return true;
     }
 
     public boolean deleteReturnTransaction(Integer returnId) throws InvalidTransactionIdException, UnauthorizedException {
-        return false;
+        ReturnTransactionImpl returnTransaction = returnTransactionRepository.find(returnId);
+        if (returnTransaction == null) {
+            return false;
+        }
+        return true;
     }
 
     public double receiveCashPayment(Integer transactionId, double cash) throws InvalidTransactionIdException, InvalidPaymentException, UnauthorizedException {
-        return 0;
+        SaleTransactionImpl saleTransaction = (SaleTransactionImpl) saleTransactionRepository.find(transactionId);
+        if (saleTransaction == null) {
+            return -1;
+        }
+        double price = saleTransaction.getPrice();
+        if (price > cash) {
+            return -1;
+        }
+        BalanceOperationImpl payment = new BalanceOperationImpl();
+        payment.setDate(LocalDate.now());
+        payment.setType(BalanceOperationImpl.Type.CREDIT);
+        payment.setMoney(price);
+        balanceOperationRepository.create(payment);
+        saleTransaction.setPayment(payment);
+        saleTransactionRepository.update(saleTransaction);
+        return cash - price;
     }
 
     public boolean receiveCreditCardPayment(Integer transactionId, String creditCard) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException {
@@ -457,7 +594,7 @@ public class EZShopControllerImpl implements EZShopController {
      * @return true if used, false otherwise
      */
     private boolean isAssignedPosition(String location) {
-        return this.productTypeRepository.findAll().stream().anyMatch(p -> p.getLocation().equals(location));
+        return productTypeRepository.findAll().stream().anyMatch(p -> p.getLocation().equals(location));
     }
 
     /**
@@ -468,13 +605,13 @@ public class EZShopControllerImpl implements EZShopController {
      * @return true if cardId in use, false otherwise
      */
     private boolean isAssignedCardId(String customerCard) {
-        return this.customerRepository.findAll().stream().anyMatch(p -> p.getCustomerCard().equals(customerCard));
+        return customerRepository.findAll().stream().anyMatch(p -> p.getCustomerCard().equals(customerCard));
     }
     
     /**
      * Checks wether a provided string of digits corresponds to a valid 
      * GTIN bar code
-     * @param string to check
+     * @param gtin to check
      * @return true if gtin, false otherwise
      */
     private boolean isValidGTIN (String gtin) {
@@ -491,10 +628,10 @@ public class EZShopControllerImpl implements EZShopController {
     	// fill with appropriate number of initial zeros
     	code = String.format("%0" + (17 - code.length() )+"d%s",0 , code);	
 		// compute sum of the digits after processing 
-    	int sum = Integer.valueOf(code.chars()
-					     			  .map(p -> p ^ '0') // char to int 
-					     			  .map(p -> index.getAndIncrement() % 2 == 0 ? p * 3 : p)
-					     			  .sum());
+    	int sum = code.chars()
+                .map(p -> p ^ '0') // char to int
+                .map(p -> index.getAndIncrement() % 2 == 0 ? p * 3 : p)
+                .sum();
 		
     	return (sum + 9)/10 * 10 - sum == checkDigit;
     }
