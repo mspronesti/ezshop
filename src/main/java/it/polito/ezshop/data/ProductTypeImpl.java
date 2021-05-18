@@ -37,6 +37,7 @@ public class ProductTypeImpl implements ProductType {
     private String note;
     @ColumnDefault("''")
     private String description;
+    @Column(unique = true)
     @ColumnDefault("''")
     private String barcode;
     @ColumnDefault("0")
@@ -66,7 +67,7 @@ public class ProductTypeImpl implements ProductType {
 
     @Override
     public String getLocation() {
-        return position != null ? position.toString() : null;
+        return position != null ? position.toString() : "";
     }
 
     @Override

@@ -87,14 +87,16 @@ public class EZShopControllerImpl implements EZShopController {
             // TODO: move inside custom annotation
             throw new InvalidProductCodeException();
         }
-
         ProductType product = new ProductTypeImpl();
         product.setProductDescription(description);
         product.setPricePerUnit(pricePerUnit);
         product.setNote(note);
         product.setBarCode(productCode);
-
-        return productTypeRepository.create(product);
+        try {
+            return productTypeRepository.create(product);
+        } catch (Exception exception) {
+            return -1;
+        }
     }
 
     public boolean updateProduct(Integer id, String newDescription, String newCode, double newPrice, String newNote) throws InvalidProductIdException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException {
