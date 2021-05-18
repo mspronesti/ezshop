@@ -570,7 +570,7 @@ public class EZShopControllerImpl implements EZShopController {
         BalanceOperationImpl operation = new BalanceOperationImpl();
         operation.setDate(LocalDate.now());
         operation.setType(toBeAdded > 0 ? BalanceOperationImpl.Type.CREDIT : BalanceOperationImpl.Type.DEBIT);
-        operation.setMoney(Math.abs(toBeAdded));
+        operation.setMoney(toBeAdded);
         balanceOperationRepository.create(operation);
         return true;
     }
