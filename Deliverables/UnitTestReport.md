@@ -1,10 +1,10 @@
 Unit Testing Documentation template
 
-Authors:
+Authors: Massimiliano Pronesti, Matteo Notarangelo, Davide Mammone, Umberto Pepato
 
-Date:
+Date: 14/05/2021
 
-Version:
+Version: 1.0
 
 
 
@@ -992,3 +992,928 @@ Criteria for method **setDiscountRate**:
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                      |
 | --------- | ------------- | ---------------------------- | ---------------------------------------------------- |
 | *         | **Valid**     | T1("Cashier")                | it.polito.ezshop.acceptanceTest.UserTest.testSetRole |
+
+
+
+
+# White Box Unit Tests
+
+### Test cases definition
+
+
+
+### Method setBalanceId
+
+| Unit name    | JUnit test case  |
+| ------------ | ---------------- |
+| setBalanceId | testSetBalanceId |
+
+### Code coverage report
+
+
+
+![](C:\Users\davi-\Desktop\balanceId.png)
+
+
+
+| Test case         | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| ----------------- | ------------- | ------------------------ | ------------- | ---- |
+| setBalanceId("3") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+### Method setDate
+
+| Unit name | JUnit test case |
+| --------- | --------------- |
+| setDate   | testSetDate     |
+
+### Code coverage report
+
+![](C:\Users\davi-\Desktop\date.png)
+
+
+
+| Test case             | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| --------------------- | ------------- | ------------------------ | ------------- | ---- |
+| setDate("2021-18-10") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+### Method setMoney
+
+| Unit name | JUnit test case |
+| --------- | --------------- |
+| setMoney  | testSetMoney    |
+
+### Code coverage report
+
+![desktop/money](C:\Users\davi-\Desktop\money.png)
+
+
+
+| Test case       | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| --------------- | ------------- | ------------------------ | ------------- | ---- |
+| setMoney("299") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+### Method setType
+
+| Unit name | JUnit test case |
+| --------- | --------------- |
+| setType   | testSetType     |
+
+### Code coverage report
+
+![desktop/money](C:\Users\davi-\Desktop\type.png)
+
+
+
+| Test case         | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| ----------------- | ------------- | ------------------------ | ------------- | ---- |
+| setType("CREDIT") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+## Class Customer
+
+### Method setCustomerName
+
+| Unit name       | JUnit test case     |
+| --------------- | ------------------- |
+| setCustomerName | testSetCustomerName |
+
+### Code coverage report
+
+![desktop/money](C:\Users\davi-\Desktop\customerName.png)
+
+
+
+| Test case                     | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| ----------------------------- | ------------- | ------------------------ | ------------- | ---- |
+| setType("Hanamichi Sakuragi") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+### Method setCustomerCard
+
+| Unit name       | JUnit test case     |
+| --------------- | ------------------- |
+| setCustomerCard | testSetCustomerCard |
+
+### Code coverage report
+
+![desktop/money](C:\Users\davi-\Desktop\customerCard.png)
+
+
+
+| Test case          | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| ------------------ | ------------- | ------------------------ | ------------- | ---- |
+| setType("AB000CD") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+### Method setId
+
+| Unit name | JUnit test case |
+| --------- | --------------- |
+| setId     | testSetId       |
+
+### Code coverage report
+
+![desktop/money](C:\Users\davi-\Desktop\id.png)
+
+
+
+| Test case  | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| ---------- | ------------- | ------------------------ | ------------- | ---- |
+| setId("1") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+### Method setPoints
+
+| Unit name | JUnit test case |
+| --------- | --------------- |
+| setPoints | testSetPoints   |
+
+### Code coverage report
+
+![desktop/money](C:\Users\davi-\Desktop\points.png)
+
+
+
+| Test case       | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| --------------- | ------------- | ------------------------ | ------------- | ---- |
+| setPoints("43") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+## Class Order
+
+### 
+
+### Method setBalanceId
+
+| Unit name    | JUnit test case  |
+| ------------ | ---------------- |
+| setBalanceId | testSetBalanceId |
+
+### Code coverage report
+
+
+
+![](C:\Users\davi-\Desktop\balanceId.png)
+
+
+
+| Test case         | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| ----------------- | ------------- | ------------------------ | ------------- | ---- |
+| setBalanceId("3") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+### Method setProductCode
+
+| Unit name      | JUnit test case    |
+| -------------- | ------------------ |
+| setProductCode | testSetProductCode |
+
+### Code coverage report
+
+
+
+![](C:\Users\davi-\Desktop\productCode.png)
+
+
+
+| Test case              | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| ---------------------- | ------------- | ------------------------ | ------------- | ---- |
+| setProductCode("0003") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+### Method setPricePerUnit
+
+| Unit name       | JUnit test case     |
+| --------------- | ------------------- |
+| setPricePerUnit | testSetPricePerUnit |
+
+### Code coverage report
+
+
+
+![](C:\Users\davi-\Desktop\priceperunit.png)
+
+
+
+| Test case             | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| --------------------- | ------------- | ------------------------ | ------------- | ---- |
+| setPricePerUnit("39") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+### Method setQuantity
+
+| Unit name   | JUnit test case |
+| ----------- | --------------- |
+| setQuantity | testSetQuantity |
+
+### Code coverage report
+
+
+
+![](C:\Users\davi-\Desktop\quantity.png)
+
+
+
+| Test case          | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| ------------------ | ------------- | ------------------------ | ------------- | ---- |
+| setQuantity("100") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+### Method setStatus
+
+| Unit name | JUnit test case |
+| --------- | --------------- |
+| setStatus | testSetStatus   |
+
+### Code coverage report
+
+
+
+![](C:\Users\davi-\Desktop\status.png)
+
+
+
+| Test case                | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| ------------------------ | ------------- | ------------------------ | ------------- | ---- |
+| setStatus("validStatus") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+### Method setOrderId
+
+| Unit name  | JUnit test case |
+| ---------- | --------------- |
+| setOrderId | testSetOrderId  |
+
+### Code coverage report
+
+
+
+![](C:\Users\davi-\Desktop\orderId.png)
+
+
+
+| Test case          | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| ------------------ | ------------- | ------------------------ | ------------- | ---- |
+| setOrderId("0003") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+## Class ProductType
+
+
+
+### Method setQuantity
+
+| Unit name   | JUnit test case |
+| ----------- | --------------- |
+| setQuantity | testSetQuantity |
+
+### Code coverage report
+
+
+
+![](C:\Users\davi-\Desktop\quantity.png)
+
+
+
+| Test case          | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| ------------------ | ------------- | ------------------------ | ------------- | ---- |
+| setQuantity("100") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+### Method setLocation
+
+| Unit name   | JUnit test case |
+| ----------- | --------------- |
+| setLocation | testSetLocation |
+
+### Code coverage report
+
+
+
+![](C:\Users\davi-\Desktop\location.png)
+
+
+
+| Test case             | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| --------------------- | ------------- | ------------------------ | ------------- | ---- |
+| setLocation("3-a-12") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+### Method setProductDescription
+
+| Unit name             | JUnit test case           |
+| --------------------- | ------------------------- |
+| setProductDescription | testSetProductDescription |
+
+### Code coverage report
+
+
+
+![](C:\Users\davi-\Desktop\productDescription.png)
+
+
+
+| Test case                             | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| ------------------------------------- | ------------- | ------------------------ | ------------- | ---- |
+| setProductDescription("blue t-shirt") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+### Method setBarCode
+
+| Unit name  | JUnit test case |
+| ---------- | --------------- |
+| setBarCode | testSetBarCode  |
+
+### Code coverage report
+
+
+
+![](C:\Users\davi-\Desktop\barCode.png)
+
+
+
+| Test case              | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| ---------------------- | ------------- | ------------------------ | ------------- | ---- |
+| setBarCode("13148419") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+### Method setPricePerUnit
+
+| Unit name       | JUnit test case     |
+| --------------- | ------------------- |
+| setPricePerUnit | testSetPricePerUnit |
+
+### Code coverage report
+
+
+
+![](C:\Users\davi-\Desktop\priceperunit.png)
+
+
+
+| Test case             | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| --------------------- | ------------- | ------------------------ | ------------- | ---- |
+| setPricePerUnit("39") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+### Method setId
+
+| Unit name | JUnit test case |
+| --------- | --------------- |
+| setId     | testSetId       |
+
+### Code coverage report
+
+![desktop/money](C:\Users\davi-\Desktop\id.png)
+
+
+
+| Test case    | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| ------------ | ------------- | ------------------------ | ------------- | ---- |
+| setId("001") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+## Class SaleTransaction
+
+
+
+### Method setTicketNumber
+
+| Unit name       | JUnit test case     |
+| --------------- | ------------------- |
+| setTicketNumber | testSetTicketNumber |
+
+### Code coverage report
+
+
+
+![](C:\Users\davi-\Desktop\ticketnumber.png)
+
+
+
+| Test case             | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| --------------------- | ------------- | ------------------------ | ------------- | ---- |
+| setTicketNumber("10") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+### Method setEntries //void -> da cambiare
+
+| Unit name  | JUnit test case |
+| ---------- | --------------- |
+| setEntries | testSetEntries  |
+
+### Code coverage report
+
+
+
+![](C:\Users\davi-\Desktop\entries.png)
+
+
+
+| Test case              | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| ---------------------- | ------------- | ------------------------ | ------------- | ---- |
+| setEntries("FilippoS") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+### Method setDiscountRate    //void -> da cambiare
+
+| Unit name       | JUnit test case     |
+| --------------- | ------------------- |
+| setDiscountRate | testSetDiscountRate |
+
+### Code coverage report
+
+
+
+![](C:\Users\davi-\Desktop\discountrate.png)
+
+
+
+| Test case              | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| ---------------------- | ------------- | ------------------------ | ------------- | ---- |
+| setDiscountRate("0.5") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+### Method setPrice
+
+| Unit name | JUnit test case |
+| --------- | --------------- |
+| setPrice  | testSetPrice    |
+
+### Code coverage report
+
+
+
+![](C:\Users\davi-\Desktop\price.png)
+
+
+
+| Test case      | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| -------------- | ------------- | ------------------------ | ------------- | ---- |
+| setPrice("29") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+## Class TicketEntry
+
+### Method setBarCode
+
+| Unit name  | JUnit test case |
+| ---------- | --------------- |
+| setBarCode | testSetBarCode  |
+
+### Code coverage report
+
+
+
+![](C:\Users\davi-\Desktop\barcode.png)
+
+
+
+| Test case              | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| ---------------------- | ------------- | ------------------------ | ------------- | ---- |
+| setBarCode("13148419") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+### Method setProductDescription
+
+| Unit name             | JUnit test case           |
+| --------------------- | ------------------------- |
+| setProductDescription | testSetProductDescription |
+
+### Code coverage report
+
+
+
+![](C:\Users\davi-\Desktop\productdescription.png)
+
+
+
+| Test case                             | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| ------------------------------------- | ------------- | ------------------------ | ------------- | ---- |
+| setProductDescription("blue t-shirt") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+### Method setAmount
+
+| Unit name | JUnit test case |
+| --------- | --------------- |
+| setAmount | testSetAmount   |
+
+### Code coverage report
+
+
+
+![](C:\Users\davi-\Desktop\amount.png)
+
+
+
+| Test case        | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| ---------------- | ------------- | ------------------------ | ------------- | ---- |
+| setAmount("100") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+### Method setPricePerUnit
+
+| Unit name       | JUnit test case     |
+| --------------- | ------------------- |
+| setPricePerUnit | testSetPricePerUnit |
+
+### Code coverage report
+
+
+
+![](C:\Users\davi-\Desktop\priceperunit.png)
+
+
+
+| Test case             | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| --------------------- | ------------- | ------------------------ | ------------- | ---- |
+| setPricePerUnit("39") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+### Method setDiscountRate
+
+| Unit name       | JUnit test case     |
+| --------------- | ------------------- |
+| setDiscountRate | testSetDiscountRate |
+
+### Code coverage report
+
+
+
+![](C:\Users\davi-\Desktop\discountrate.png)
+
+
+
+| Test case              | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| ---------------------- | ------------- | ------------------------ | ------------- | ---- |
+| setDiscountRate("0.5") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+## Class User
+
+
+
+### Method setId
+
+| Unit name | JUnit test case |
+| --------- | --------------- |
+| setId     | testSetId       |
+
+### Code coverage report
+
+![desktop/money](C:\Users\davi-\Desktop\id.png)
+
+
+
+| Test case  | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| ---------- | ------------- | ------------------------ | ------------- | ---- |
+| setId("1") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+### Method setUsername
+
+| Unit name   | JUnit test case |
+| ----------- | --------------- |
+| setUsername | testSetUsername |
+
+### Code coverage report
+
+![desktop/money](C:\Users\davi-\Desktop\username.png)
+
+
+
+| Test case               | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| ----------------------- | ------------- | ------------------------ | ------------- | ---- |
+| setUsername("AlbertoN") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+### Method setPassword
+
+| Unit name   | JUnit test case |
+| ----------- | --------------- |
+| setPassword | testSetPassword |
+
+### Code coverage report
+
+![desktop/money](C:\Users\davi-\Desktop\password.png)
+
+
+
+| Test case                     | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| ----------------------------- | ------------- | ------------------------ | ------------- | ---- |
+| setPassword("Fe29dqh^ad3_ad") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+### Method setRole
+
+| Unit name | JUnit test case |
+| --------- | --------------- |
+| setRole   | testSetRole     |
+
+### Code coverage report
+
+![desktop/money](C:\Users\davi-\Desktop\role.png)
+
+
+
+| Test case          | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| ------------------ | ------------- | ------------------------ | ------------- | ---- |
+| setRole("Cashier") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
