@@ -1,6 +1,7 @@
 package it.polito.ezshop.data;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.io.Serializable;
 import java.util.List;
@@ -12,17 +13,18 @@ public class ProductTypeRepository extends Repository<ProductType> {
     }
 
     ProductType findByBarcode(String barcode) {
+        Session session = getSession();
+        Transaction transaction = session.beginTransaction();
         try {
-            Session session = getSession();
-            session.beginTransaction();
             ProductType productType = session
                     .createQuery("FROM ProductTypeImpl WHERE barcode = :barcode", ProductTypeImpl.class)
                     .setParameter("barcode", barcode)
                     .getSingleResult();
-            session.getTransaction().commit();
+            transaction.commit();
             return productType;
         } catch (Exception exception) {
-            return null;
+            transaction.rollback();
+            throw exception;
         }
     }
 

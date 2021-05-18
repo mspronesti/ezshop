@@ -1,6 +1,7 @@
 package it.polito.ezshop.data;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.io.Serializable;
 import java.util.List;
@@ -12,17 +13,18 @@ public class UserRepository extends Repository<User> {
     }
 
     User findByUsername(String username) {
+        Session session = getSession();
+        Transaction transaction = session.beginTransaction();
         try {
-            Session session = getSession();
-            session.beginTransaction();
             User user = session
                     .createQuery("FROM UserImpl WHERE username = :username", UserImpl.class)
                     .setParameter("username", username)
                     .getSingleResult();
-            session.getTransaction().commit();
+            transaction.commit();
             return user;
         } catch (Exception exception) {
-            return null;
+            transaction.rollback();
+            throw exception;
         }
     }
 

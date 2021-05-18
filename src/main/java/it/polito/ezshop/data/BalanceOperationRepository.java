@@ -1,6 +1,7 @@
 package it.polito.ezshop.data;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -23,9 +24,9 @@ public class BalanceOperationRepository extends Repository<BalanceOperation> {
 
     @SuppressWarnings("unchecked")
     List<BalanceOperation> findAllBetweenDates(LocalDate from, LocalDate to) {
+        Session session = getSession();
+        Transaction transaction = session.beginTransaction();
         try {
-            Session session = getSession();
-            session.beginTransaction();
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<BalanceOperationImpl> cr = cb.createQuery(BalanceOperationImpl.class);
             Root<BalanceOperationImpl> root = cr.from(BalanceOperationImpl.class);
@@ -39,10 +40,11 @@ public class BalanceOperationRepository extends Repository<BalanceOperation> {
                 cr.where(cb.lessThanOrEqualTo(root.get("date"), toDate));
             }
             List<BalanceOperation> balanceOperations = (List<BalanceOperation>)(Object) session.createQuery(cr).list();
-            session.getTransaction().commit();
+            transaction.commit();
             return balanceOperations;
         } catch (Exception exception) {
-            return null;
+            transaction.rollback();
+            throw exception;
         }
     }
 
