@@ -18,7 +18,7 @@ public class OrderImpl implements Order {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private Integer balanceId;
-    @ColumnDefault("'ISSUED'")
+    @ColumnDefault("''")
     private String status;
     private String productCode;
     @ColumnDefault("0")

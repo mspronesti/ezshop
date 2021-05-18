@@ -168,29 +168,38 @@ public class EZShopControllerImpl implements EZShopController {
 
     public Integer payOrderFor(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
         ProductType product = this.productTypeRepository.findByBarcode(productCode);
-        double expense = pricePerUnit * quantity;
-        if (product == null || computeBalance() > expense) {
-            // can't order an unexisting product or perform and order
-            // without enough money
+        if (product == null) {
+            // can't order an unexisting product 
             return -1;
         }
-        // TODO: create the order (duplicate code from payOrder?)
-
-        // TODO: update balance
-        return null;
+        
+        Integer orderId = issueOrder(productCode, quantity, pricePerUnit);
+        try {
+        	if(!payOrder(orderId)) {
+        		return -1;
+        	}
+        }catch(Exception e) {
+        	return -1;
+        }
+        
+        return orderId;
     }
 
     public boolean payOrder(Integer orderId) throws InvalidOrderIdException, UnauthorizedException {
         Order order = orderRepository.find(orderId);
         if (order != null) {
             String status = order.getStatus();
-            if (status.equals(OrderImpl.Status.ISSUED.name()) || status.equals(OrderImpl.Status.PAYED.name())) {
-                // set payed
-                order.setStatus(OrderImpl.Status.PAYED.name());
-
-                // update balance
-                recordBalanceUpdate(-1 * order.getPricePerUnit() * order.getQuantity());
-                return true;
+            if(status.equals(OrderImpl.Status.PAYED.name()))
+            	return true;
+            
+            if (status.equals(OrderImpl.Status.ISSUED.name())) {
+            	boolean payed =  recordBalanceUpdate(-1 * order.getPricePerUnit() * order.getQuantity());
+            	if(payed) {
+            		// set payed
+            		order.setStatus(OrderImpl.Status.PAYED.name());
+            		orderRepository.update(order);
+            		return true;
+            	}
             }
         }
         return false;
@@ -204,11 +213,16 @@ public class EZShopControllerImpl implements EZShopController {
             if (status.equals(OrderImpl.Status.COMPLETED.name()))
                 return true;
 
-            if (status.equals(OrderImpl.Status.ISSUED.name())) {
-                order.setStatus(OrderImpl.Status.COMPLETED.name());
+            if (status.equals(OrderImpl.Status.PAYED.name())) {
+                // set COMPLETED
+            	order.setStatus(OrderImpl.Status.COMPLETED.name());
+                orderRepository.update(order);
+                
                 ProductType product = productTypeRepository.findByBarcode(order.getProductCode());
                 if (product != null) {
+                	// update quantity
                     product.setQuantity(product.getQuantity() + order.getQuantity());
+                    productTypeRepository.update(product);
                     return true;
                 }
             }
