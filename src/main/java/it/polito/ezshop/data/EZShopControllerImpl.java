@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+
 public class EZShopControllerImpl implements EZShopController {
     private final BalanceOperationRepository balanceOperationRepository = new BalanceOperationRepository();
     private final CustomerRepository customerRepository = new CustomerRepository();
@@ -38,10 +39,15 @@ public class EZShopControllerImpl implements EZShopController {
     }
     
     public Integer createUser(String username, String password, String role) throws InvalidUsernameException, InvalidPasswordException, InvalidRoleException {
-        User user = new UserImpl();
+        if(userRepository.findByUsername(username) != null) {
+        	// user with given username already exists
+        	return -1;
+        }
+    	
+    	User user = new UserImpl();
         user.setUsername(username);
         user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
-        user.setRole(role);
+        user.setRole(role); 
         return userRepository.create(user);
     }
 

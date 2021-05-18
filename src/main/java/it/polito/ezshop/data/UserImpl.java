@@ -2,8 +2,6 @@ package it.polito.ezshop.data;
 
 import javax.persistence.*;
 
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
@@ -12,8 +10,10 @@ public class UserImpl implements User {
     @GeneratedValue(generator = "increment")
     @GenericGenerator(name = "increment", strategy = "increment")
     private Integer id;
+   
     @Column(unique = true)
-    private String username = "";
+    private String username;
+    
     private String password = "";
     private String role = Role.Cashier.name();
 
