@@ -48,7 +48,7 @@ public interface EZShopController {
     public Integer createProductType(
             @NotNull @NotEmpty @Throw(InvalidProductDescriptionException.class) String description,
             @NotNull @NotEmpty @Throw(InvalidProductCodeException.class) String productCode,
-            @NotNull @Min(0) double pricePerUnit,
+            @NotNull @Positive double pricePerUnit,
             String note
     ) throws InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException;
 
@@ -58,7 +58,7 @@ public interface EZShopController {
             @NotNull @Min(1) @Throw(InvalidProductIdException.class) Integer id,
             @NotNull @NotEmpty @Throw(InvalidProductDescriptionException.class) String newDescription,
             @NotNull @NotEmpty @Throw(InvalidProductCodeException.class) String newCode,
-            @NotNull @Min(0) @Throw(InvalidPricePerUnitException.class) double newPrice,
+            @NotNull @Positive @Throw(InvalidPricePerUnitException.class) double newPrice,
             String newNote
     ) throws InvalidProductIdException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException;
 
@@ -98,7 +98,7 @@ public interface EZShopController {
     public Integer issueOrder(
             @NotNull @NotEmpty @Throw(InvalidProductCodeException.class) String productCode,
             @NotNull @Min(1) @Throw(InvalidQuantityException.class) int quantity,
-            @NotNull @Min(0) @Throw(InvalidPricePerUnitException.class) double pricePerUnit
+            @NotNull @Positive @Throw(InvalidPricePerUnitException.class) double pricePerUnit
     ) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException;
 
     @AcceptRoles({ Role.Administrator, Role.ShopManager })
@@ -106,7 +106,7 @@ public interface EZShopController {
     public Integer payOrderFor(
             @NotNull @NotEmpty @Throw(InvalidProductCodeException.class) String productCode,
             @NotNull @Min(1) @Throw(InvalidQuantityException.class) int quantity,
-            @NotNull @Min(0) @Throw(InvalidPricePerUnitException.class) double pricePerUnit
+            @NotNull @Positive @Throw(InvalidPricePerUnitException.class) double pricePerUnit
     ) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException;
 
     @AcceptRoles({ Role.Administrator, Role.ShopManager })
@@ -194,14 +194,14 @@ public interface EZShopController {
     public boolean applyDiscountRateToProduct(
             @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer transactionId,
             @NotNull @NotEmpty @Throw(InvalidProductCodeException.class) String productCode,
-            @NotNull @Size(min = 0, max = 1) @Throw(InvalidDiscountRateException.class) double discountRate
+            @NotNull @DiscountRate @Throw(InvalidDiscountRateException.class) double discountRate
     ) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidDiscountRateException, UnauthorizedException;
 
     @AcceptRoles({ Role.Administrator, Role.ShopManager, Role.Cashier })
     @FallbackBooleanValue
     public boolean applyDiscountRateToSale(
             @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer transactionId,
-            @NotNull @Size(min = 0, max = 1) @Throw(InvalidDiscountRateException.class) double discountRate
+            @NotNull @DiscountRate @Throw(InvalidDiscountRateException.class) double discountRate
     ) throws InvalidTransactionIdException, InvalidDiscountRateException, UnauthorizedException;
 
     @AcceptRoles({ Role.Administrator, Role.ShopManager, Role.Cashier })
@@ -258,7 +258,7 @@ public interface EZShopController {
     @FallbackIntValue
     public double receiveCashPayment(
             @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer transactionId,
-            @NotNull @Min(0) @Throw(InvalidPaymentException.class) double cash
+            @NotNull @Positive @Throw(InvalidPaymentException.class) double cash
     ) throws InvalidTransactionIdException, InvalidPaymentException, UnauthorizedException;
 
     @AcceptRoles({ Role.Administrator, Role.ShopManager, Role.Cashier })
