@@ -47,7 +47,7 @@ public interface EZShopController {
     @FallbackIntValue
     public Integer createProductType(
             @NotNull @NotEmpty @Throw(InvalidProductDescriptionException.class) String description,
-            @NotNull @NotEmpty @Throw(InvalidProductCodeException.class) String productCode,
+            @NotNull @NotEmpty @GtinBarcode @Throw(InvalidProductCodeException.class) String productCode,
             @NotNull @Positive double pricePerUnit,
             String note
     ) throws InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException;
@@ -57,7 +57,7 @@ public interface EZShopController {
     public boolean updateProduct(
             @NotNull @Min(1) @Throw(InvalidProductIdException.class) Integer id,
             @NotNull @NotEmpty @Throw(InvalidProductDescriptionException.class) String newDescription,
-            @NotNull @NotEmpty @Throw(InvalidProductCodeException.class) String newCode,
+            @NotNull @NotEmpty @GtinBarcode @Throw(InvalidProductCodeException.class) String newCode,
             @NotNull @Positive @Throw(InvalidPricePerUnitException.class) double newPrice,
             String newNote
     ) throws InvalidProductIdException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException;
@@ -73,7 +73,7 @@ public interface EZShopController {
 
     @AcceptRoles({ Role.Administrator, Role.ShopManager })
     public ProductType getProductTypeByBarCode(
-            @NotNull @NotEmpty @Throw(InvalidProductCodeException.class) String barCode
+            @NotNull @NotEmpty @GtinBarcode @Throw(InvalidProductCodeException.class) String barCode
     ) throws InvalidProductCodeException, UnauthorizedException;
 
     @AcceptRoles({ Role.Administrator, Role.ShopManager })
@@ -96,7 +96,7 @@ public interface EZShopController {
     @AcceptRoles({ Role.Administrator, Role.ShopManager })
     @FallbackIntValue
     public Integer issueOrder(
-            @NotNull @NotEmpty @Throw(InvalidProductCodeException.class) String productCode,
+            @NotNull @NotEmpty @GtinBarcode @Throw(InvalidProductCodeException.class) String productCode,
             @NotNull @Min(1) @Throw(InvalidQuantityException.class) int quantity,
             @NotNull @Positive @Throw(InvalidPricePerUnitException.class) double pricePerUnit
     ) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException;
@@ -104,7 +104,7 @@ public interface EZShopController {
     @AcceptRoles({ Role.Administrator, Role.ShopManager })
     @FallbackIntValue
     public Integer payOrderFor(
-            @NotNull @NotEmpty @Throw(InvalidProductCodeException.class) String productCode,
+            @NotNull @NotEmpty @GtinBarcode @Throw(InvalidProductCodeException.class) String productCode,
             @NotNull @Min(1) @Throw(InvalidQuantityException.class) int quantity,
             @NotNull @Positive @Throw(InvalidPricePerUnitException.class) double pricePerUnit
     ) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException;
@@ -177,7 +177,7 @@ public interface EZShopController {
     @FallbackBooleanValue
     public boolean addProductToSale(
             @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer transactionId,
-            @NotNull @NotEmpty @Throw(InvalidProductCodeException.class) String productCode,
+            @NotNull @NotEmpty @GtinBarcode @Throw(InvalidProductCodeException.class) String productCode,
             @NotNull @Min(0) @Throw(InvalidQuantityException.class) int amount // TODO(@umbo) is this right?
     ) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException;
 
@@ -185,7 +185,7 @@ public interface EZShopController {
     @FallbackBooleanValue
     public boolean deleteProductFromSale(
             @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer transactionId,
-            @NotNull @NotEmpty @Throw(InvalidProductCodeException.class) String productCode,
+            @NotNull @NotEmpty @GtinBarcode @Throw(InvalidProductCodeException.class) String productCode,
             @NotNull @Min(0) @Throw(InvalidQuantityException.class) int amount // TODO(@umbo) is this right?
     ) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException;
 
@@ -193,7 +193,7 @@ public interface EZShopController {
     @FallbackBooleanValue
     public boolean applyDiscountRateToProduct(
             @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer transactionId,
-            @NotNull @NotEmpty @Throw(InvalidProductCodeException.class) String productCode,
+            @NotNull @NotEmpty @GtinBarcode @Throw(InvalidProductCodeException.class) String productCode,
             @NotNull @DiscountRate @Throw(InvalidDiscountRateException.class) double discountRate
     ) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidDiscountRateException, UnauthorizedException;
 
@@ -237,7 +237,7 @@ public interface EZShopController {
     @FallbackBooleanValue
     public boolean returnProduct(
             @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer returnId,
-            @NotNull @NotEmpty @Throw(InvalidProductCodeException.class) String productCode,
+            @NotNull @NotEmpty @GtinBarcode @Throw(InvalidProductCodeException.class) String productCode,
             @NotNull @Min(0) @Throw(InvalidQuantityException.class) int amount
     ) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException;
 

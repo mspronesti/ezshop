@@ -83,10 +83,6 @@ public class EZShopControllerImpl implements EZShopController {
     }
 
     public Integer createProductType(String description, String productCode, double pricePerUnit, String note) throws InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException {
-        if (!isValidGTIN(productCode)) {
-            // TODO: move inside custom annotation
-            throw new InvalidProductCodeException();
-        }
         ProductType product = new ProductTypeImpl();
         product.setProductDescription(description);
         product.setPricePerUnit(pricePerUnit);
@@ -100,11 +96,6 @@ public class EZShopControllerImpl implements EZShopController {
     }
 
     public boolean updateProduct(Integer id, String newDescription, String newCode, double newPrice, String newNote) throws InvalidProductIdException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException {
-        if (!isValidGTIN(newCode)) {
-            // TODO: move inside custom annotation
-            throw new InvalidProductCodeException();
-        }
-
         ProductType product = productTypeRepository.find(id);
         if (product != null) {
             product.setProductDescription(newDescription);
@@ -130,11 +121,6 @@ public class EZShopControllerImpl implements EZShopController {
     }
 
     public ProductType getProductTypeByBarCode(String barCode) throws InvalidProductCodeException, UnauthorizedException {
-        if (!isValidGTIN(barCode)) {
-            // TODO: move inside custom annotation
-            throw new InvalidProductCodeException();
-        }
-
         return productTypeRepository.findByBarcode(barCode);
     }
 
@@ -167,10 +153,6 @@ public class EZShopControllerImpl implements EZShopController {
     }
 
     public Integer issueOrder(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
-        if (!isValidGTIN(productCode)) {
-            // TODO: move inside custom annotation
-            throw new InvalidProductCodeException();
-        }
         ProductType product = this.productTypeRepository.findByBarcode(productCode);
         if (product == null) {
             // can't order an unexisting product
@@ -185,10 +167,6 @@ public class EZShopControllerImpl implements EZShopController {
     }
 
     public Integer payOrderFor(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
-        if (!isValidGTIN(productCode)) {
-            // TODO: move inside custom annotation
-            throw new InvalidProductCodeException();
-        }
         ProductType product = this.productTypeRepository.findByBarcode(productCode);
         double expense = pricePerUnit * quantity;
         if (product == null || computeBalance() > expense) {
@@ -716,34 +694,4 @@ public class EZShopControllerImpl implements EZShopController {
         // TODO: remove or keep and remove LoyaltyCard entity
         return customerRepository.findAll().stream().anyMatch(p -> p.getCustomerCard().equals(customerCard));
     }
-
-    /**
-     * Checks wether a provided string of digits corresponds to a valid
-     * GTIN bar code
-     *
-     * @param gtin to check
-     * @return true if gtin, false otherwise
-     */
-    private boolean isValidGTIN(String gtin) {
-        if (!Pattern.matches("^\\d{12,14}$", gtin))
-            return false;
-
-        AtomicInteger index = new AtomicInteger();
-
-        // create string from input excluding last digit
-        String code = gtin.substring(0, gtin.length() - 1);
-        // extracting last digit
-        int checkDigit = gtin.charAt(gtin.length() - 1) ^ '0';
-
-        // fill with appropriate number of initial zeros
-        code = String.format("%0" + (17 - code.length()) + "d%s", 0, code);
-        // compute sum of the digits after processing
-        int sum = code.chars()
-                .map(p -> p ^ '0') // char to int
-                .map(p -> index.getAndIncrement() % 2 == 0 ? p * 3 : p)
-                .sum();
-
-        return (sum + 9) / 10 * 10 - sum == checkDigit;
-    }
-
 }
