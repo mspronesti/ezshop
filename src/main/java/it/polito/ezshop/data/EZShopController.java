@@ -92,7 +92,7 @@ public interface EZShopController {
     @FallbackBooleanValue
     public boolean updatePosition(
             @NotNull @Min(1) @Throw(InvalidProductIdException.class) Integer productId,
-            String newPos
+            @Location @Throw(InvalidLocationException.class) String newPos
     ) throws InvalidProductIdException, InvalidLocationException, UnauthorizedException;
 
     @AcceptRoles({ Role.Administrator, Role.ShopManager })

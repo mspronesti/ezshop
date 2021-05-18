@@ -14,7 +14,7 @@ public class GtinBarcodeValidator implements ConstraintValidator<GtinBarcode, St
     }
 
     /**
-     * Checks wether a provided string of digits corresponds to a valid
+     * Checks whether a provided string of digits corresponds to a valid
      * GTIN bar code
      *
      * @param object to check
