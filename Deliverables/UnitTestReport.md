@@ -41,9 +41,9 @@ Criteria for method **setBalanceId**:
 
  **Combination of predicates for method setBalanceId**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T1(313124)                   |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
+| --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
+| *         | **Valid**     | T1(313124)                   | it.polito.ezshop.acceptanceTest.BalanceOperationTest.testSetBalanceId |
 
 
 
@@ -66,9 +66,9 @@ Criteria for method **setBalanceId**:
 
  **Combination of predicates for method setDate**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T1({LocalDateObj})           |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
+| --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
+| *         | **Valid**     | T1({LocalDateObj})           | it.polito.ezshop.acceptanceTest.BalanceOperationTest.testSetDate |
 
 
 
@@ -90,9 +90,9 @@ Criteria for method **setBalanceId**:
 
  **Combination of predicates for method setMoney**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T1(312.90)                   |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
+| --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
+| *         | **Valid**     | T1(31.90)                    | it.polito.ezshop.acceptanceTest.BalanceOperationTest.testSetMoney |
 
 
 
@@ -115,9 +115,9 @@ Criteria for method **setBalanceId**:
 
  **Combination of predicates for method setType**
 
-| Criterion | Valid/Invalid | Description of the test case   | JUnit test case |
-| --------- | ------------- | ------------------------------ | --------------- |
-| *         | **Valid**     | T4("DEBIT") <br />T5("CREDIT") |                 |
+| Criterion | Valid/Invalid | Description of the test case   | JUnit test case                                              |
+| --------- | ------------- | ------------------------------ | ------------------------------------------------------------ |
+| *         | **Valid**     | T4("DEBIT") <br />T5("CREDIT") | it.polito.ezshop.acceptanceTest.BalanceOperationTest.testSetType |
 
 
 
@@ -143,9 +143,9 @@ Criteria for method **setId**:
 
  **Combination of predicates for method setId**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T1(412468)                   |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                        |
+| --------- | ------------- | ---------------------------- | ------------------------------------------------------ |
+| *         | **Valid**     | T1(414276)                   | it.polito.ezshop.acceptanceTest.CustomerTest.testSetId |
 
 
 
@@ -169,9 +169,9 @@ Criteria for method **setCustomerName**:
 
  **Combination of predicates for method setCustomerName**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T5("Hanamichi Sakuragi")     |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
+| --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
+| *         | **Valid**     | T5("MarcoA)                  | it.polito.ezshop.acceptanceTest.CustomerTest.testSetCustomerName |
 
 
 
@@ -195,9 +195,9 @@ Criteria for method **setCustomerCard**:
 
  **Combination of predicates for method setCustomerCard**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T5("18039")                  |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
+| --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
+| *         | **Valid**     | T5("14148")                  | it.polito.ezshop.acceptanceTest.CustomerTest.testSetCustomerCard |
 
 
 
@@ -221,9 +221,9 @@ Criteria for method **setPoints**:
 
  **Combination of predicates for method setPoints**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T1(20)                       |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                            |
+| --------- | ------------- | ---------------------------- | ---------------------------------------------------------- |
+| *         | **Valid**     | T1(14)                       | it.polito.ezshop.acceptanceTest.CustomerTest.testSetPoints |
 
 
 
@@ -250,9 +250,9 @@ Criteria for method **setId**:
 
  **Combination of predicates for method setId**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T1("4124")                   |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                            |
+| --------- | ------------- | ---------------------------- | ---------------------------------------------------------- |
+| *         | **Valid**     | T1(14213)                    | it.polito.ezshop.acceptanceTest.LoyalitiCardTest.testSetId |
 
 
 
@@ -275,9 +275,9 @@ Criteria for method **setPoints**:
 
  **Combination of predicates for method setPoints**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T5(180)                      |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
+| --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
+| *         | **Valid**     | T1(50)                       | it.polito.ezshop.acceptanceTest.LoyalitiCardTest.testSetPoints |
 
 
 
@@ -299,9 +299,9 @@ Criteria for method **setCustomer**:
 
  **Combination of predicates for method setCustomer**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T1({CustomerObj})            |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
+| --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
+| *         | **Valid**     | T1({CustomerObj})            | it.polito.ezshop.acceptanceTest.LoyalitiCardTest.testSetCustomer |
 
 
 
@@ -330,9 +330,9 @@ Criteria for method **setOrderId**:
 
  **Combination of predicates for method setOrderId**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T1(16537)                    |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                          |
+| --------- | ------------- | ---------------------------- | -------------------------------------------------------- |
+| *         | **Valid**     | T1(16537)                    | it.polito.ezshop.acceptanceTest.OrderTest.testSetOrderId |
 
 
 
@@ -355,9 +355,9 @@ Criteria for method **setBalanceId**:
 
  **Combination of predicates for method setBalanceId**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T1(43123)                    |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                            |
+| --------- | ------------- | ---------------------------- | ---------------------------------------------------------- |
+| *         | **Valid**     | T1(43123)                    | it.polito.ezshop.acceptanceTest.OrderTest.testSetBalanceId |
 
 
 
@@ -380,9 +380,9 @@ Criteria for method **setStatus**:
 
  **Combination of predicates for method setStatus**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T5("Pending")                |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                         |
+| --------- | ------------- | ---------------------------- | ------------------------------------------------------- |
+| *         | **Valid**     | T5("Pending")                | it.polito.ezshop.acceptanceTest.OrderTest.testSetStatus |
 
 
 
@@ -404,9 +404,9 @@ Criteria for method **setProductCode**:
 
  **Combination of predicates for method setProductCode**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T5("01DA2")                  |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
+| --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
+| *         | **Valid**     | T5("01DA2")                  | it.polito.ezshop.acceptanceTest.OrderTest.testSetProductCode |
 
 
 
@@ -437,9 +437,9 @@ Criteria for method **setProductCode**:
 
  **Combination of predicates for method setPricePerUnit**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T1(12.50)                    |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
+| --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
+| *         | **Valid**     | T1(12.50)                    | it.polito.ezshop.acceptanceTest.OrderTest.testSetPricePerUnit |
 
 
 
@@ -459,9 +459,9 @@ Criteria for method **setProductCode**:
 
  **Combination of predicates for method setQuantity**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T1(6)                        |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                           |
+| --------- | ------------- | ---------------------------- | --------------------------------------------------------- |
+| *         | **Valid**     | T1(6)                        | it.polito.ezshop.acceptanceTest.OrderTest.testSetQuantity |
 
 
 
@@ -488,9 +488,9 @@ Criteria for method **setProductCode**:
 
  **Combination of predicates for method setId**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T1(3214)                     |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                           |
+| --------- | ------------- | ---------------------------- | --------------------------------------------------------- |
+| *         | **Valid**     | T1(3214)                     | it.polito.ezshop.acceptanceTest.ProductTypeTest.testSetId |
 
 
 
@@ -510,9 +510,9 @@ Criteria for method **setProductCode**:
 
  **Combination of predicates for method setQuantity**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T1(4)                        |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
+| --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
+| *         | **Valid**     | T1(4)                        | it.polito.ezshop.acceptanceTest.ProductTypeTest.testSetQuantity |
 
 
 
@@ -533,9 +533,9 @@ Criteria for method **setProductCode**:
 
  **Combination of predicates for method setLocation**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T1("3-a-12")                 |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
+| --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
+| *         | **Valid**     | T1("3-a-12")                 | it.polito.ezshop.acceptanceTest.ProductTypeTest.testSetLocation |
 
 
 
@@ -555,9 +555,9 @@ Criteria for method **setProductCode**:
 
  **Combination of predicates for method setNote**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T1("Blue version")           |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                             |
+| --------- | ------------- | ---------------------------- | ----------------------------------------------------------- |
+| *         | **Valid**     | T1("Blue version")           | it.polito.ezshop.acceptanceTest.ProductTypeTest.testSetNote |
 
 
 
@@ -580,9 +580,9 @@ Criteria for method **setProductCode**:
 
  **Combination of predicates for method setProductDescription**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T1("Blue t-shirt")           |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
+| --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
+| *         | **Valid**     | T1("Blue t-shirt")           | it.polito.ezshop.acceptanceTest.ProductTypeTest.testSetProductDescription |
 
 
 
@@ -604,9 +604,9 @@ Criteria for method **setProductCode**:
 
  **Combination of predicates for method setBarCode**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T1("13148419")               |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
+| --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
+| *         | **Valid**     | T1("13148419")               | it.polito.ezshop.acceptanceTest.ProductTypeTest.testSetBarcode |
 
 
 
@@ -628,9 +628,9 @@ Criteria for method **setProductCode**:
 
  **Combination of predicates for method setPricePerUnit**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T1(15.24)                    |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
+| --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
+| *         | **Valid**     | T1(15.24)                    | it.polito.ezshop.acceptanceTest.ProductTypeTest.testSetPricePerUnit |
 
 
 
@@ -655,9 +655,9 @@ Criteria for method **setProductCode**:
 
  **Combination of predicates for method setSaleTransaction**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | Valid         | T1({saleTransactionObj})     |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
+| --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
+| *         | Valid         | T1({saleTransactionObj})     | it.polito.ezshop.acceptanceTest.ReturnTransactionTest.testSetSaleTransaction |
 
 
 
@@ -665,17 +665,16 @@ Criteria for method **setProductCode**:
 
 
 
-### Method getTicketNumber
+### Method setTicketNumber
 
 **Criteria for method setTicketNumber:**
 
-**Predicates for method getTicketNumber:**
+**Predicates for method setTicketNumber:**
 
 | Criterion | Predicate |
 | --------- | --------- |
 
-
-**Boundaries for method getTicketNumber**:
+**Boundaries for method setTicketNumber**:
 
 | Criterion | Boundary values |
 | --------- | --------------- |
@@ -683,9 +682,9 @@ Criteria for method **setProductCode**:
 
  **Combination of predicates for method getTicketNumber**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T1(64)                       |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
+| --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
+| *         | **Valid**     | T1(64)                       | it.polito.ezshop.acceptanceTest.SaleTransactionTest.testSetTicketNumber |
 
 
 
@@ -706,9 +705,9 @@ Criteria for method **setProductCode**:
 
  **Combination of predicates for method setEntries**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T1(List<{TicketEntryObj}>)   |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
+| --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
+| *         | **Valid**     | T1(List<{TicketEntryObj}>)   | it.polito.ezshop.acceptanceTest.SaleTransactionTest.testSetEntries |
 
 
 
@@ -730,9 +729,9 @@ Criteria for method **setProductCode**:
 
  **Combination of predicates for method setDiscountRate**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T1(12.50)                    |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
+| --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
+| *         | **Valid**     | T1(12.50)                    | it.polito.ezshop.acceptanceTest.SaleTransactionTest.testSetDiscountRate |
 
 
 
@@ -754,9 +753,9 @@ Criteria for method **setProductCode**:
 
  **Combination of predicates for method setPrice**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T1(24.99)                    |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
+| --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
+| *         | **Valid**     | T1(24.99)                    | it.polito.ezshop.acceptanceTest.SaleTransactionTest.testSetPrice |
 
 
 
@@ -776,13 +775,13 @@ Criteria for method **setProductCode**:
 
  **Combination of predicates for method setPayment**
 
-| Criterion | Valid/Invalid | Description of the test case  | JUnit test case |
-| --------- | ------------- | ----------------------------- | --------------- |
-| *         | **Valid**     | T1({BalanceOperationImplObj}) |                 |
+| Criterion | Valid/Invalid | Description of the test case  | JUnit test case                                              |
+| --------- | ------------- | ----------------------------- | ------------------------------------------------------------ |
+| *         | **Valid**     | T1({BalanceOperationImplObj}) | it.polito.ezshop.acceptanceTest.SaleTransactionTest.testSetPayment |
 
 
 
-## Class TicketEntry
+## Class TicketEntryImpl
 
 
 
@@ -803,9 +802,9 @@ Criteria for method **setBarCode**:
 
  **Combination of predicates for method setBarCode**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T5("01DA2BV")                |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
+| --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
+| *         | **Valid**     | T5("313151")                 | it.polito.ezshop.acceptanceTest.TicketEntryTest.testSetBarcode |
 
 
 
@@ -825,9 +824,9 @@ Criteria for method **setProductDescription**:
 
  **Combination of predicates for method setProductDescription**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T1("Yellow T-shirt")         |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
+| --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
+| *         | **Valid**     | T1("Yellow T-shirt")         | it.polito.ezshop.acceptanceTest.TicketEntryTest.testSetProductDescription |
 
 
 
@@ -849,9 +848,9 @@ Criteria for method **setProductDescription**:
 
  **Combination of predicates for method setAmount**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T1(12)                       |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
+| --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
+| *         | **Valid**     | T1(12)                       | it.polito.ezshop.acceptanceTest.TicketEntryTest.testSetAmount |
 
 
 
@@ -872,9 +871,9 @@ Criteria for method **setProductDescription**:
 
  **Combination of predicates for method setPricePerUnit**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T1(6.24)                     |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
+| --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
+| *         | **Valid**     | T1(6.24)                     | it.polito.ezshop.acceptanceTest.TicketEntryTest.testSetPricePerUnit |
 
 
 
@@ -896,13 +895,13 @@ Criteria for method **setDiscountRate**:
 
  **Combination of predicates for method setDiscountRate**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T1(33,33)                    |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
+| --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
+| *         | **Valid**     | T1(33.33)                    | it.polito.ezshop.acceptanceTest.TicketEntryTest.testSetDiscountRate |
 
 
 
-## Class User
+## Class UserImpl
 
 
 
@@ -922,9 +921,9 @@ Criteria for method **setDiscountRate**:
 
  **Combination of predicates for method setId**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T1(2312)                     |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                    |
+| --------- | ------------- | ---------------------------- | -------------------------------------------------- |
+| *         | **Valid**     | T1(2312)                     | it.polito.ezshop.acceptanceTest.UserTest.testSetId |
 
 
 
@@ -944,9 +943,9 @@ Criteria for method **setDiscountRate**:
 
  **Combination of predicates for method setUsername**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T1("FilippoA")               |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                          |
+| --------- | ------------- | ---------------------------- | -------------------------------------------------------- |
+| *         | **Valid**     | T1("FilippoA")               | it.polito.ezshop.acceptanceTest.UserTest.testSetUsername |
 
 
 
@@ -968,9 +967,9 @@ Criteria for method **setDiscountRate**:
 
  **Combination of predicates for method setPassword**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T1("Fe29dqh^ad3_ad")         |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                          |
+| --------- | ------------- | ---------------------------- | -------------------------------------------------------- |
+| *         | **Valid**     | T1("Fe29dqh^ad3_ad")         | it.polito.ezshop.acceptanceTest.UserTest.testSetPassword |
 
 
 
@@ -990,6 +989,6 @@ Criteria for method **setDiscountRate**:
 
  **Combination of predicates for method setRole**
 
-| Criterion | Valid/Invalid | Description of the test case | JUnit test case |
-| --------- | ------------- | ---------------------------- | --------------- |
-| *         | **Valid**     | T1("Cashier")                |                 |
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                      |
+| --------- | ------------- | ---------------------------- | ---------------------------------------------------- |
+| *         | **Valid**     | T1("Cashier")                | it.polito.ezshop.acceptanceTest.UserTest.testSetRole |
