@@ -50,7 +50,7 @@ public interface EZShopController {
     public Integer createProductType(
             @NotNull @NotEmpty @Throw(InvalidProductDescriptionException.class) String description,
             @NotNull @NotEmpty @GtinBarcode @Throw(InvalidProductCodeException.class) String productCode,
-            @NotNull @Positive double pricePerUnit,
+            @NotNull @Positive @Throw(InvalidPricePerUnitException.class) double pricePerUnit,
             String note
     ) throws InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException;
 
@@ -137,7 +137,7 @@ public interface EZShopController {
     public boolean modifyCustomer(
             @NotNull @Min(1) @Throw(InvalidCustomerIdException.class) Integer id,
             @NotNull @NotEmpty @Throw(InvalidCustomerNameException.class) String newCustomerName,
-            @NotNull @NotEmpty @Pattern(regexp = LoyaltyCardImpl.PATTERN) String newCustomerCard
+            @NotNull @NotEmpty @Pattern(regexp = LoyaltyCardImpl.PATTERN) @Throw(InvalidCustomerCardException.class) String newCustomerCard
     ) throws InvalidCustomerNameException, InvalidCustomerCardException, InvalidCustomerIdException, UnauthorizedException;
 
     @AcceptRoles({ Role.Administrator, Role.ShopManager, Role.Cashier })
@@ -161,15 +161,15 @@ public interface EZShopController {
     @AcceptRoles({ Role.Administrator, Role.ShopManager, Role.Cashier })
     @FallbackBooleanValue
     public boolean attachCardToCustomer(
-            @NotNull @NotEmpty @Pattern(regexp = LoyaltyCardImpl.PATTERN) String customerCard,
+            @NotNull @NotEmpty @Pattern(regexp = LoyaltyCardImpl.PATTERN) @Throw(InvalidCustomerCardException.class) String customerCard,
             @NotNull @Min(1) @Throw(InvalidCustomerIdException.class) Integer customerId
     ) throws InvalidCustomerIdException, InvalidCustomerCardException, UnauthorizedException;
 
     @AcceptRoles({ Role.Administrator, Role.ShopManager, Role.Cashier })
     @FallbackBooleanValue
     public boolean modifyPointsOnCard(
-            @NotNull @NotEmpty @Pattern(regexp = LoyaltyCardImpl.PATTERN) String customerCard,
-            @NotNull int pointsToBeAdded
+            @NotNull @NotEmpty @Pattern(regexp = LoyaltyCardImpl.PATTERN) @Throw(InvalidCustomerCardException.class) String customerCard,
+            int pointsToBeAdded
     ) throws InvalidCustomerCardException, UnauthorizedException;
 
     @AcceptRoles({ Role.Administrator, Role.ShopManager, Role.Cashier })

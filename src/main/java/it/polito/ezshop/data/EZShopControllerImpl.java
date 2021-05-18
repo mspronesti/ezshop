@@ -291,6 +291,9 @@ public class EZShopControllerImpl implements EZShopController {
     }
 
     public boolean modifyPointsOnCard(String customerCard, int pointsToBeAdded) throws InvalidCustomerCardException, UnauthorizedException {
+        if (pointsToBeAdded < 0) {
+            return false;
+        }
         LoyaltyCard loyaltyCard = this.loyaltyCardRepository.find(customerCard);
         if (loyaltyCard != null) {
             loyaltyCard.setPoints(loyaltyCard.getPoints() + pointsToBeAdded);
