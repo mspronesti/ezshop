@@ -1012,7 +1012,7 @@ Criteria for method **setDiscountRate**:
 
 
 
-![](C:\Users\davi-\Desktop\balanceId.png)
+![](assets/WhiteBoxTesting/balanceId.png)
 
 
 
@@ -1038,7 +1038,7 @@ Criteria for method **setDiscountRate**:
 
 ### Code coverage report
 
-![](C:\Users\davi-\Desktop\date.png)
+![](assets/WhiteBoxTesting/date.png)
 
 
 
@@ -1064,7 +1064,7 @@ Criteria for method **setDiscountRate**:
 
 ### Code coverage report
 
-![desktop/money](C:\Users\davi-\Desktop\money.png)
+![](assets/WhiteBoxTesting/money.png)
 
 
 
@@ -1090,7 +1090,7 @@ Criteria for method **setDiscountRate**:
 
 ### Code coverage report
 
-![desktop/money](C:\Users\davi-\Desktop\type.png)
+![](assets/WhiteBoxTesting/type.png)
 
 
 
@@ -1118,7 +1118,7 @@ Criteria for method **setDiscountRate**:
 
 ### Code coverage report
 
-![desktop/money](C:\Users\davi-\Desktop\customerName.png)
+![](assets/WhiteBoxTesting/customerName.png)
 
 
 
@@ -1144,7 +1144,7 @@ Criteria for method **setDiscountRate**:
 
 ### Code coverage report
 
-![desktop/money](C:\Users\davi-\Desktop\customerCard.png)
+![](assets/WhiteBoxTesting/customerCard.png)
 
 
 
@@ -1170,7 +1170,7 @@ Criteria for method **setDiscountRate**:
 
 ### Code coverage report
 
-![desktop/money](C:\Users\davi-\Desktop\id.png)
+![](assets/WhiteBoxTesting/id.png)
 
 
 
@@ -1196,7 +1196,7 @@ Criteria for method **setDiscountRate**:
 
 ### Code coverage report
 
-![desktop/money](C:\Users\davi-\Desktop\points.png)
+![](assets/WhiteBoxTesting/points.png)
 
 
 
@@ -1228,7 +1228,7 @@ Criteria for method **setDiscountRate**:
 
 
 
-![](C:\Users\davi-\Desktop\balanceId.png)
+![](assets/WhiteBoxTesting/balanceId.png)
 
 
 
@@ -1256,7 +1256,7 @@ Criteria for method **setDiscountRate**:
 
 
 
-![](C:\Users\davi-\Desktop\productCode.png)
+![](assets/WhiteBoxTesting/productCode.png)
 
 
 
@@ -1284,7 +1284,7 @@ Criteria for method **setDiscountRate**:
 
 
 
-![](C:\Users\davi-\Desktop\priceperunit.png)
+![](assets/WhiteBoxTesting/priceperunit.png)
 
 
 
@@ -1312,7 +1312,7 @@ Criteria for method **setDiscountRate**:
 
 
 
-![](C:\Users\davi-\Desktop\quantity.png)
+![](assets/WhiteBoxTesting/quantity.png)
 
 
 
@@ -1340,7 +1340,7 @@ Criteria for method **setDiscountRate**:
 
 
 
-![](C:\Users\davi-\Desktop\status.png)
+![](assets/WhiteBoxTesting/status.png)
 
 
 
@@ -1368,7 +1368,7 @@ Criteria for method **setDiscountRate**:
 
 
 
-![](C:\Users\davi-\Desktop\orderId.png)
+![](assets/WhiteBoxTesting/orderId.png)
 
 
 
@@ -1400,7 +1400,7 @@ Criteria for method **setDiscountRate**:
 
 
 
-![](C:\Users\davi-\Desktop\quantity.png)
+![](assets/WhiteBoxTesting/quantity.png)
 
 
 
@@ -1428,7 +1428,7 @@ Criteria for method **setDiscountRate**:
 
 
 
-![](C:\Users\davi-\Desktop\location.png)
+![](assets/WhiteBoxTesting/location.png)
 
 
 
@@ -1456,7 +1456,7 @@ Criteria for method **setDiscountRate**:
 
 
 
-![](C:\Users\davi-\Desktop\productDescription.png)
+![](assets/WhiteBoxTesting/productDescription.png)
 
 
 
@@ -1484,7 +1484,7 @@ Criteria for method **setDiscountRate**:
 
 
 
-![](C:\Users\davi-\Desktop\barCode.png)
+![](assets/WhiteBoxTesting/barCode.png)
 
 
 
@@ -1512,7 +1512,7 @@ Criteria for method **setDiscountRate**:
 
 
 
-![](C:\Users\davi-\Desktop\priceperunit.png)
+![](assets/WhiteBoxTesting/priceperunit.png)
 
 
 
@@ -1538,7 +1538,7 @@ Criteria for method **setDiscountRate**:
 
 ### Code coverage report
 
-![desktop/money](C:\Users\davi-\Desktop\id.png)
+![desktop/money](assets/WhiteBoxTesting/id.png)
 
 
 
@@ -1570,7 +1570,7 @@ Criteria for method **setDiscountRate**:
 
 
 
-![](C:\Users\davi-\Desktop\ticketnumber.png)
+![](assets/WhiteBoxTesting/ticketnumber.png)
 
 
 
@@ -1598,7 +1598,7 @@ Criteria for method **setDiscountRate**:
 
 
 
-![](C:\Users\davi-\Desktop\entries.png)
+![](assets/WhiteBoxTesting/entries.png)
 
 
 
@@ -1626,7 +1626,7 @@ Criteria for method **setDiscountRate**:
 
 
 
-![](C:\Users\davi-\Desktop\discountrate.png)
+![](assets/WhiteBoxTesting/discountrate.png)
 
 
 
@@ -1654,7 +1654,7 @@ Criteria for method **setDiscountRate**:
 
 
 
-![](C:\Users\davi-\Desktop\price.png)
+![](assets/WhiteBoxTesting/price.png)
 
 
 
@@ -1684,7 +1684,7 @@ Criteria for method **setDiscountRate**:
 
 
 
-![](C:\Users\davi-\Desktop\barcode.png)
+![](assets/WhiteBoxTesting/barcode.png)
 
 
 
@@ -1712,7 +1712,7 @@ Criteria for method **setDiscountRate**:
 
 
 
-![](C:\Users\davi-\Desktop\productdescription.png)
+![](assets/WhiteBoxTesting/productdescription.png)
 
 
 
@@ -1740,7 +1740,7 @@ Criteria for method **setDiscountRate**:
 
 
 
-![](C:\Users\davi-\Desktop\amount.png)
+![](assets/WhiteBoxTesting/amount.png)
 
 
 
@@ -1768,7 +1768,7 @@ Criteria for method **setDiscountRate**:
 
 
 
-![](C:\Users\davi-\Desktop\priceperunit.png)
+![](assets/WhiteBoxTesting/priceperunit.png)
 
 
 
@@ -1796,7 +1796,7 @@ Criteria for method **setDiscountRate**:
 
 
 
-![](C:\Users\davi-\Desktop\discountrate.png)
+![](assets/WhiteBoxTesting/discountrate.png)
 
 
 
@@ -1826,7 +1826,7 @@ Criteria for method **setDiscountRate**:
 
 ### Code coverage report
 
-![desktop/money](C:\Users\davi-\Desktop\id.png)
+![](assets/WhiteBoxTesting/id.png)
 
 
 
@@ -1850,7 +1850,7 @@ Criteria for method **setDiscountRate**:
 
 ### Code coverage report
 
-![desktop/money](C:\Users\davi-\Desktop\username.png)
+![](assets/WhiteBoxTesting/username.png)
 
 
 
@@ -1876,7 +1876,7 @@ Criteria for method **setDiscountRate**:
 
 ### Code coverage report
 
-![desktop/money](C:\Users\davi-\Desktop\password.png)
+![](assets/WhiteBoxTesting/password.png)
 
 
 
@@ -1902,7 +1902,7 @@ Criteria for method **setDiscountRate**:
 
 ### Code coverage report
 
-![desktop/money](C:\Users\davi-\Desktop\role.png)
+![](assets/WhiteBoxTesting/role.png)
 
 
 
