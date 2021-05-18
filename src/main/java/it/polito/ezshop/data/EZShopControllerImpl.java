@@ -313,7 +313,7 @@ public class EZShopControllerImpl implements EZShopController {
         if (saleTransaction == null) {
             return false;
         }
-        ProductType product = productTypeRepository.find(productCode);
+        ProductType product = productTypeRepository.findByBarcode(productCode);
         if (product == null) {
             return false;
         }
@@ -594,7 +594,7 @@ public class EZShopControllerImpl implements EZShopController {
     public List<BalanceOperation> getCreditsAndDebits(LocalDate from, LocalDate to) throws UnauthorizedException {
         LocalDate startDate = from,
                 endDate = to;
-        if (from.isAfter(to)) {
+        if (from != null && to != null && from.isAfter(to)) {
             startDate = to;
             endDate = from;
         }
