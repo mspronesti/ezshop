@@ -1,6 +1,5 @@
 package it.polito.ezshop.util;
 
-import it.polito.ezshop.annotations.DiscountRate;
 import it.polito.ezshop.annotations.GtinBarcode;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

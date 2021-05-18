@@ -1,18 +1,29 @@
 package it.polito.ezshop.data;
 
 import jakarta.validation.constraints.Size;
+import org.hibernate.HibernateException;
+import org.hibernate.MappingException;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
+import org.hibernate.id.Configurable;
+import org.hibernate.id.IdentifierGenerator;
+import org.hibernate.service.ServiceRegistry;
+import org.hibernate.type.Type;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Properties;
 
 @Entity
 @DynamicInsert
 public class LoyaltyCardImpl implements LoyaltyCard {
+    public static final String PATTERN = "^\\d{10}$";
+
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid")
+    @GeneratedValue(generator = "cardCode")
+    @GenericGenerator(name = "cardCode", strategy = "it.polito.ezshop.util.LoyaltyCardIdGenerator")
     @Size(max = 10)
     private String id;
     @ColumnDefault("0")

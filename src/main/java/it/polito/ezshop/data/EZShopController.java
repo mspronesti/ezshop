@@ -12,7 +12,7 @@ public interface EZShopController {
     public Integer createUser(
             @NotNull @NotEmpty @Throw(InvalidUsernameException.class) String username,
             @NotNull @NotEmpty @Throw(InvalidPasswordException.class) String password,
-            @NotNull @NotEmpty @Pattern(regexp = Role.pattern) @Throw(InvalidRoleException.class) String role
+            @NotNull @NotEmpty @Pattern(regexp = Role.PATTERN) @Throw(InvalidRoleException.class) String role
     ) throws InvalidUsernameException, InvalidPasswordException, InvalidRoleException;
 
     @AcceptRoles({ Role.Administrator })
@@ -32,7 +32,7 @@ public interface EZShopController {
     @AcceptRoles({ Role.Administrator })
     public boolean updateUserRights(
             @NotNull @Min(1) @Throw(InvalidUserIdException.class) Integer id,
-            @NotNull @NotEmpty @Pattern(regexp = Role.pattern) @Throw(InvalidRoleException.class) String role
+            @NotNull @NotEmpty @Pattern(regexp = Role.PATTERN) @Throw(InvalidRoleException.class) String role
     ) throws InvalidUserIdException, InvalidRoleException, UnauthorizedException;
 
     public User login(
@@ -135,7 +135,7 @@ public interface EZShopController {
     public boolean modifyCustomer(
             @NotNull @Min(1) @Throw(InvalidCustomerIdException.class) Integer id,
             @NotNull @NotEmpty @Throw(InvalidCustomerNameException.class) String newCustomerName,
-            @NotNull @NotEmpty @Pattern(regexp = "^\\d{10}$") String newCustomerCard
+            @NotNull @NotEmpty @Pattern(regexp = LoyaltyCardImpl.PATTERN) String newCustomerCard
     ) throws InvalidCustomerNameException, InvalidCustomerCardException, InvalidCustomerIdException, UnauthorizedException;
 
     @AcceptRoles({ Role.Administrator, Role.ShopManager, Role.Cashier })
@@ -159,14 +159,14 @@ public interface EZShopController {
     @AcceptRoles({ Role.Administrator, Role.ShopManager, Role.Cashier })
     @FallbackBooleanValue
     public boolean attachCardToCustomer(
-            @NotNull @NotEmpty @Pattern(regexp = "^\\d{10}$") String customerCard,
+            @NotNull @NotEmpty @Pattern(regexp = LoyaltyCardImpl.PATTERN) String customerCard,
             @NotNull @Min(1) @Throw(InvalidCustomerIdException.class) Integer customerId
     ) throws InvalidCustomerIdException, InvalidCustomerCardException, UnauthorizedException;
 
     @AcceptRoles({ Role.Administrator, Role.ShopManager, Role.Cashier })
     @FallbackBooleanValue
     public boolean modifyPointsOnCard(
-            @NotNull @NotEmpty @Pattern(regexp = "^\\d{10}$") String customerCard,
+            @NotNull @NotEmpty @Pattern(regexp = LoyaltyCardImpl.PATTERN) String customerCard,
             @NotNull int pointsToBeAdded
     ) throws InvalidCustomerCardException, UnauthorizedException;
 

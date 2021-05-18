@@ -5,5 +5,5 @@ public enum Role {
     ShopManager,
     Cashier;
 
-    public static final String pattern = "Administrator|ShopManager|Cashier";
+    public static final String PATTERN = "Administrator|ShopManager|Cashier";
 }
