@@ -3,6 +3,7 @@ package it.polito.ezshop.data;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.ParameterExpression;
@@ -44,6 +45,9 @@ public class BalanceOperationRepository extends Repository<BalanceOperation> {
             return balanceOperations;
         } catch (Exception exception) {
             transaction.rollback();
+            if (exception instanceof NoResultException) {
+                return null;
+            }
             throw exception;
         }
     }

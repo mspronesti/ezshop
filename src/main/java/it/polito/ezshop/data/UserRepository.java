@@ -3,6 +3,7 @@ package it.polito.ezshop.data;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import javax.persistence.NoResultException;
 import java.io.Serializable;
 import java.util.List;
 
@@ -24,6 +25,9 @@ public class UserRepository extends Repository<User> {
             return user;
         } catch (Exception exception) {
             transaction.rollback();
+            if (exception instanceof NoResultException) {
+                return null;
+            }
             throw exception;
         }
     }
