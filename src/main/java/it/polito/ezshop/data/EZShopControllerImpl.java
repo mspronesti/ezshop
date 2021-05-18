@@ -27,7 +27,16 @@ public class EZShopControllerImpl implements EZShopController {
     private User loggedUser = null;
     private final Map<Integer, SaleTransactionImpl> openSaleTransactions = new HashMap<>();
     private final Map<Integer, ReturnTransactionImpl> openReturnTransactions = new HashMap<>();
-
+    
+    public void reset() {
+    	// maybe deleteAll inside each repository to avoid N queries ?
+    	this.productTypeRepository.findAll().forEach(productTypeRepository::delete);
+    	this.orderRepository.findAll().forEach(orderRepository::delete);
+    	this.returnTransactionRepository.findAll().forEach(returnTransactionRepository::delete);
+    	this.saleTransactionRepository.findAll().forEach(saleTransactionRepository::delete);
+    	this.balanceOperationRepository.findAll().forEach(balanceOperationRepository::delete);
+    }
+    
     public Integer createUser(String username, String password, String role) throws InvalidUsernameException, InvalidPasswordException, InvalidRoleException {
         User user = new UserImpl();
         user.setUsername(username);

@@ -8,6 +8,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface EZShopController {
+	public void reset();
+	
     @FallbackIntValue
     public Integer createUser(
             @NotNull @NotEmpty @Throw(InvalidUsernameException.class) String username,

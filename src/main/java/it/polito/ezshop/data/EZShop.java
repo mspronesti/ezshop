@@ -2,20 +2,9 @@ package it.polito.ezshop.data;
 
 import it.polito.ezshop.exceptions.*;
 
-import jakarta.validation.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import jakarta.validation.executable.ExecutableValidator;
-import org.hibernate.exception.JDBCConnectionException;
-import org.springframework.security.crypto.bcrypt.BCrypt;
-
-import java.lang.reflect.Method;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+
 
 
 public class EZShop implements EZShopInterface {
@@ -23,7 +12,7 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public void reset() {
-
+    	controller.reset();
     }
 
     @Override
