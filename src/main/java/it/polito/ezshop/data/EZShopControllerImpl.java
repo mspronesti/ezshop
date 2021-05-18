@@ -334,9 +334,6 @@ public class EZShopControllerImpl implements EZShopController {
     }
 
     public boolean applyDiscountRateToProduct(Integer transactionId, String productCode, double discountRate) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidDiscountRateException, UnauthorizedException {
-        if (discountRate == 1d) {
-            throw new InvalidDiscountRateException(); // TODO(@umbo) move this to dedicated validator
-        }
         SaleTransactionImpl saleTransaction = openSaleTransactions.get(transactionId);
         if (saleTransaction == null) {
             return false;
@@ -352,9 +349,6 @@ public class EZShopControllerImpl implements EZShopController {
     }
 
     public boolean applyDiscountRateToSale(Integer transactionId, double discountRate) throws InvalidTransactionIdException, InvalidDiscountRateException, UnauthorizedException {
-        if (discountRate == 1d) {
-            throw new InvalidDiscountRateException(); // TODO(@umbo) move this to dedicated validator
-        }
         SaleTransactionImpl saleTransaction = openSaleTransactions.get(transactionId);
         if (saleTransaction == null) {
             return false;
@@ -681,17 +675,5 @@ public class EZShopControllerImpl implements EZShopController {
      */
     private boolean isAssignedPosition(String location) {
         return productTypeRepository.findAll().stream().anyMatch(p -> p.getLocation().equals(location));
-    }
-
-    /**
-     * This method checks whether a given card Id
-     * is already associated to some customer
-     *
-     * @param customerCard
-     * @return true if cardId in use, false otherwise
-     */
-    private boolean isAssignedCardId(String customerCard) {
-        // TODO: remove or keep and remove LoyaltyCard entity
-        return customerRepository.findAll().stream().anyMatch(p -> p.getCustomerCard().equals(customerCard));
     }
 }
