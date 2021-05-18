@@ -4,6 +4,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -12,12 +13,10 @@ public class SaleTransactionImpl implements SaleTransaction {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    @ElementCollection
-    private List<TicketEntryImpl> entries;
-    @ColumnDefault("0")
-    private Double discountRate;
-    @ColumnDefault("0")
-    private Double price;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<TicketEntryImpl> entries = new ArrayList<>();
+    private Double discountRate = 0d;
+    private Double price = 0d;
     @OneToOne
     private BalanceOperationImpl payment;
 
@@ -34,13 +33,13 @@ public class SaleTransactionImpl implements SaleTransaction {
     @Override
     @SuppressWarnings("unchecked")
     public List<TicketEntry> getEntries() {
-        return (List<TicketEntry>)(Object)entries;
+        return (List<TicketEntry>) (Object) entries;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public void setEntries(List<TicketEntry> entries) {
-        this.entries = (List<TicketEntryImpl>)(Object)entries;
+        this.entries = (List<TicketEntryImpl>) (Object) entries;
     }
 
     @Override

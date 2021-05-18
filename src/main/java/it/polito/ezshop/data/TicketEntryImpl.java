@@ -1,21 +1,18 @@
 package it.polito.ezshop.data;
 
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 
 @Embeddable
+@DynamicInsert
 public class TicketEntryImpl implements TicketEntry {
-    @ColumnDefault("''")
-    private String barcode;
-    @ColumnDefault("''")
-    private String productDescription;
-    @ColumnDefault("0")
-    private Integer amount;
-    @ColumnDefault("0")
-    private Double pricePerUnit;
-    @ColumnDefault("0")
-    private Double discountRate;
+    private String barcode = "";
+    private String productDescription = "";
+    private Integer amount = 0;
+    private Double pricePerUnit = 0d;
+    private Double discountRate = 0d;
 
     @Override
     public String getBarCode() {
