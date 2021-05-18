@@ -1,13 +1,9 @@
 package it.polito.ezshop.data;
 
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@DynamicInsert
 public class BalanceOperationImpl implements BalanceOperation {
     public enum Type {
         CREDIT,
@@ -18,10 +14,8 @@ public class BalanceOperationImpl implements BalanceOperation {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private LocalDate date;
-    @ColumnDefault("0")
-    private Double money;
-    @ColumnDefault("''")
-    private String type;
+    private Double money = 0d;
+    private String type = "";
 
     @Override
     public int getBalanceId() {

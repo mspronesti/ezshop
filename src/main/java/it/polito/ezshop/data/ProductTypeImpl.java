@@ -1,12 +1,8 @@
 package it.polito.ezshop.data;
 
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
-
 import javax.persistence.*;
 
 @Entity
-@DynamicInsert
 public class ProductTypeImpl implements ProductType {
     @Embeddable
     private static class Position {
@@ -31,17 +27,12 @@ public class ProductTypeImpl implements ProductType {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    @ColumnDefault("0")
-    private Integer quantity;
-    @ColumnDefault("''")
-    private String note;
-    @ColumnDefault("''")
-    private String description;
+    private Integer quantity = 0;
+    private String note = "";
+    private String description = "";
     @Column(unique = true)
-    @ColumnDefault("''")
-    private String barcode;
-    @ColumnDefault("0")
-    private Double pricePerUnit;
+    private String barcode = "";
+    private Double pricePerUnit = 0d;
     @Embedded
     private Position position;
 

@@ -1,18 +1,13 @@
 package it.polito.ezshop.data;
 
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
-
 import javax.persistence.*;
 
 @Entity
-@DynamicInsert
 public class CustomerImpl implements Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    @ColumnDefault("''")
-    private String name;
+    private String name = "";
     @OneToOne
     public LoyaltyCardImpl loyaltyCard;
     @Transient

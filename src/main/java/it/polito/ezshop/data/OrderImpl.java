@@ -1,12 +1,8 @@
 package it.polito.ezshop.data;
 
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
-
 import javax.persistence.*;
 
 @Entity
-@DynamicInsert
 public class OrderImpl implements Order {
 	public enum Status{
 		ISSUED,
@@ -18,13 +14,10 @@ public class OrderImpl implements Order {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private Integer balanceId;
-    @ColumnDefault("''")
-    private String status;
-    private String productCode;
-    @ColumnDefault("0")
-    private Double pricePerUnit;
-    @ColumnDefault("0")
-    private Integer quantity;
+    private String status = "";
+    private String productCode = "";
+    private Double pricePerUnit = 0d;
+    private Integer quantity = 0;
     
     @Override
     public Integer getOrderId() {

@@ -7,18 +7,15 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@DynamicInsert
 public class UserImpl implements User {
     @Id
     @GeneratedValue(generator = "increment")
     @GenericGenerator(name = "increment", strategy = "increment")
     private Integer id;
-    @ColumnDefault("''")
-    private String username;
-    @ColumnDefault("''")
-    private String password;
-    @ColumnDefault("Cashier")
-    private String role;
+    @Column(unique = true)
+    private String username = "";
+    private String password = "";
+    private String role = Role.Cashier.name();
 
     @Override
     public Integer getId() {
