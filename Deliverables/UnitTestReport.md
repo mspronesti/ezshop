@@ -1253,7 +1253,7 @@ Criteria for method **isValid**:
 
 ### Code coverage report
 
-![](assets/WhiteBoxTesting/customerCard.png)
+![](assets/WhiteBoxTesting/setCustomerCard.png)
 
 
 
@@ -1305,7 +1305,7 @@ Criteria for method **isValid**:
 
 ### Code coverage report
 
-![](assets/WhiteBoxTesting/points.png)
+![](assets/WhiteBoxTesting/setPoint.png)
 
 
 
