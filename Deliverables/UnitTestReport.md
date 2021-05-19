@@ -197,7 +197,7 @@ Criteria for method **setCustomerCard**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
 | --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
-| *         | **Valid**     | T5("14148")                  | it.polito.ezshop.data.CustomerTest.testSetCustomerCard |
+| *         | **Valid**     | T5("1763985854")                  | it.polito.ezshop.data.CustomerTest.testSetCustomerCard |
 
 
 
@@ -252,7 +252,7 @@ Criteria for method **setId**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                            |
 | --------- | ------------- | ---------------------------- | ---------------------------------------------------------- |
-| *         | **Valid**     | T1(14213)                    | it.polito.ezshop.data.LoyalitiCardTest.testSetId |
+| *         | **Valid**     | T1("1763985854")                    | it.polito.ezshop.data.LoyalitiCardTest.testSetId |
 
 
 
