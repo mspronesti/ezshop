@@ -1,4 +1,4 @@
-package it.polito.ezshop.acceptanceTest;
+package it.polito.ezshop.data;
 
 import static org.junit.Assert.*;
 
@@ -10,7 +10,7 @@ public class LoyaltyCardTest {
 	public void testSetId() {
 		LoyaltyCardImpl loyaltyC = new LoyaltyCardImpl();
 		
-		Integer id=14213;
+		String id="1763985854";
 		loyaltyC.setId(id);
 		assertEquals(id, loyaltyC.getId());
 	}
@@ -29,7 +29,7 @@ public class LoyaltyCardTest {
 		LoyaltyCardImpl loyaltyC = new LoyaltyCardImpl();
 		
 		CustomerImpl customer = new CustomerImpl();
-		loyaltyC.setCustomer(customer);;
+		loyaltyC.setCustomer(customer);
 		assertEquals(customer, loyaltyC.getCustomer());
 	}
 }

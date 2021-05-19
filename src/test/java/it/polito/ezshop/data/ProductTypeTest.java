@@ -1,4 +1,4 @@
-package it.polito.ezshop.acceptanceTest;
+package it.polito.ezshop.data;
 
 import static org.junit.Assert.*;
 
@@ -14,7 +14,7 @@ public class ProductTypeTest {
 		productT.setQuantity(quantity);
 		assertEquals(quantity, productT.getQuantity());
 	}
-	
+	@Test
 	public void testSetLocation() {
 		ProductTypeImpl productT = new ProductTypeImpl();
 		
@@ -22,7 +22,7 @@ public class ProductTypeTest {
 		productT.setLocation(location);
 		assertEquals(location, productT.getLocation());
 	}
-	
+	@Test
 	public void testSetNote() {
 		ProductTypeImpl productT = new ProductTypeImpl();
 		
@@ -30,7 +30,7 @@ public class ProductTypeTest {
 		productT.setNote(note);
 		assertEquals(note, productT.getNote());
 	}
-	
+	@Test
 	public void testSetProductDescription() {
 		ProductTypeImpl productT = new ProductTypeImpl();
 		
@@ -38,7 +38,7 @@ public class ProductTypeTest {
 		productT.setProductDescription(description);
 		assertEquals(description, productT.getProductDescription());
 	}
-	
+	@Test
 	public void testSetBarCode() {
 		ProductTypeImpl productT = new ProductTypeImpl();
 		
@@ -46,22 +46,21 @@ public class ProductTypeTest {
 		productT.setBarCode(barcode);
 		assertEquals(barcode, productT.getBarCode());
 	}
-	
+	@Test
 	public void testSetPricePerUnit() {
 		ProductTypeImpl productT = new ProductTypeImpl();
 		
 		double price = 15.24;
 		productT.setPricePerUnit(price);
-		assert(price==productT.getPricePerUnit())
+		assert(price==productT.getPricePerUnit());
 	}
-	
+	@Test
 	public void testSetId() {
 		ProductTypeImpl productT = new ProductTypeImpl();
-		
-		Integer id=3214;
+
+		Integer id = 3214;
 		productT.setId(id);
 		assertEquals(id, productT.getId());
-	}
 	}
 
 }

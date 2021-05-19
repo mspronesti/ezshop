@@ -43,7 +43,7 @@ Criteria for method **setBalanceId**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
 | --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
-| *         | **Valid**     | T1(313124)                   | it.polito.ezshop.acceptanceTest.BalanceOperationTest.testSetBalanceId |
+| *         | **Valid**     | T1(313124)                   | it.polito.ezshop.data.BalanceOperationTest.testSetBalanceId |
 
 
 
@@ -68,7 +68,7 @@ Criteria for method **setBalanceId**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
 | --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
-| *         | **Valid**     | T1({LocalDateObj})           | it.polito.ezshop.acceptanceTest.BalanceOperationTest.testSetDate |
+| *         | **Valid**     | T1({LocalDateObj})           | it.polito.ezshop.data.BalanceOperationTest.testSetDate |
 
 
 
@@ -92,7 +92,7 @@ Criteria for method **setBalanceId**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
 | --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
-| *         | **Valid**     | T1(31.90)                    | it.polito.ezshop.acceptanceTest.BalanceOperationTest.testSetMoney |
+| *         | **Valid**     | T1(31.90)                    | it.polito.ezshop.data.BalanceOperationTest.testSetMoney |
 
 
 
@@ -117,7 +117,7 @@ Criteria for method **setBalanceId**:
 
 | Criterion | Valid/Invalid | Description of the test case   | JUnit test case                                              |
 | --------- | ------------- | ------------------------------ | ------------------------------------------------------------ |
-| *         | **Valid**     | T4("DEBIT") <br />T5("CREDIT") | it.polito.ezshop.acceptanceTest.BalanceOperationTest.testSetType |
+| *         | **Valid**     | T4("DEBIT") <br />T5("CREDIT") | it.polito.ezshop.data.BalanceOperationTest.testSetType |
 
 
 
@@ -145,7 +145,7 @@ Criteria for method **setId**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                        |
 | --------- | ------------- | ---------------------------- | ------------------------------------------------------ |
-| *         | **Valid**     | T1(414276)                   | it.polito.ezshop.acceptanceTest.CustomerTest.testSetId |
+| *         | **Valid**     | T1(414276)                   | it.polito.ezshop.data.CustomerTest.testSetId |
 
 
 
@@ -171,7 +171,7 @@ Criteria for method **setCustomerName**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
 | --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
-| *         | **Valid**     | T5("MarcoA)                  | it.polito.ezshop.acceptanceTest.CustomerTest.testSetCustomerName |
+| *         | **Valid**     | T5("MarcoA)                  | it.polito.ezshop.data.CustomerTest.testSetCustomerName |
 
 
 
@@ -197,7 +197,7 @@ Criteria for method **setCustomerCard**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
 | --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
-| *         | **Valid**     | T5("14148")                  | it.polito.ezshop.acceptanceTest.CustomerTest.testSetCustomerCard |
+| *         | **Valid**     | T5("14148")                  | it.polito.ezshop.data.CustomerTest.testSetCustomerCard |
 
 
 
@@ -223,7 +223,7 @@ Criteria for method **setPoints**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                            |
 | --------- | ------------- | ---------------------------- | ---------------------------------------------------------- |
-| *         | **Valid**     | T1(14)                       | it.polito.ezshop.acceptanceTest.CustomerTest.testSetPoints |
+| *         | **Valid**     | T1(14)                       | it.polito.ezshop.data.CustomerTest.testSetPoints |
 
 
 
@@ -252,7 +252,7 @@ Criteria for method **setId**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                            |
 | --------- | ------------- | ---------------------------- | ---------------------------------------------------------- |
-| *         | **Valid**     | T1(14213)                    | it.polito.ezshop.acceptanceTest.LoyalitiCardTest.testSetId |
+| *         | **Valid**     | T1(14213)                    | it.polito.ezshop.data.LoyalitiCardTest.testSetId |
 
 
 
@@ -277,7 +277,7 @@ Criteria for method **setPoints**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
 | --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
-| *         | **Valid**     | T1(50)                       | it.polito.ezshop.acceptanceTest.LoyalitiCardTest.testSetPoints |
+| *         | **Valid**     | T1(50)                       | it.polito.ezshop.data.LoyalitiCardTest.testSetPoints |
 
 
 
@@ -301,7 +301,7 @@ Criteria for method **setCustomer**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
 | --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
-| *         | **Valid**     | T1({CustomerObj})            | it.polito.ezshop.acceptanceTest.LoyalitiCardTest.testSetCustomer |
+| *         | **Valid**     | T1({CustomerObj})            | it.polito.ezshop.data.LoyalitiCardTest.testSetCustomer |
 
 
 
@@ -332,7 +332,7 @@ Criteria for method **setOrderId**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                          |
 | --------- | ------------- | ---------------------------- | -------------------------------------------------------- |
-| *         | **Valid**     | T1(16537)                    | it.polito.ezshop.acceptanceTest.OrderTest.testSetOrderId |
+| *         | **Valid**     | T1(16537)                    | it.polito.ezshop.data.OrderTest.testSetOrderId |
 
 
 
@@ -357,7 +357,7 @@ Criteria for method **setBalanceId**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                            |
 | --------- | ------------- | ---------------------------- | ---------------------------------------------------------- |
-| *         | **Valid**     | T1(43123)                    | it.polito.ezshop.acceptanceTest.OrderTest.testSetBalanceId |
+| *         | **Valid**     | T1(43123)                    | it.polito.ezshop.data.OrderTest.testSetBalanceId |
 
 
 
@@ -382,7 +382,7 @@ Criteria for method **setStatus**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                         |
 | --------- | ------------- | ---------------------------- | ------------------------------------------------------- |
-| *         | **Valid**     | T5("Pending")                | it.polito.ezshop.acceptanceTest.OrderTest.testSetStatus |
+| *         | **Valid**     | T5("Pending")                | it.polito.ezshop.data.OrderTest.testSetStatus |
 
 
 
@@ -406,7 +406,7 @@ Criteria for method **setProductCode**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
 | --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
-| *         | **Valid**     | T5("01DA2")                  | it.polito.ezshop.acceptanceTest.OrderTest.testSetProductCode |
+| *         | **Valid**     | T5("01DA2")                  | it.polito.ezshop.data.OrderTest.testSetProductCode |
 
 
 
@@ -439,7 +439,7 @@ Criteria for method **setProductCode**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
 | --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
-| *         | **Valid**     | T1(12.50)                    | it.polito.ezshop.acceptanceTest.OrderTest.testSetPricePerUnit |
+| *         | **Valid**     | T1(12.50)                    | it.polito.ezshop.data.OrderTest.testSetPricePerUnit |
 
 
 
@@ -461,7 +461,7 @@ Criteria for method **setProductCode**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                           |
 | --------- | ------------- | ---------------------------- | --------------------------------------------------------- |
-| *         | **Valid**     | T1(6)                        | it.polito.ezshop.acceptanceTest.OrderTest.testSetQuantity |
+| *         | **Valid**     | T1(6)                        | it.polito.ezshop.data.OrderTest.testSetQuantity |
 
 
 
@@ -490,7 +490,7 @@ Criteria for method **setProductCode**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                           |
 | --------- | ------------- | ---------------------------- | --------------------------------------------------------- |
-| *         | **Valid**     | T1(3214)                     | it.polito.ezshop.acceptanceTest.ProductTypeTest.testSetId |
+| *         | **Valid**     | T1(3214)                     | it.polito.ezshop.data.ProductTypeTest.testSetId |
 
 
 
@@ -512,7 +512,7 @@ Criteria for method **setProductCode**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
 | --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
-| *         | **Valid**     | T1(4)                        | it.polito.ezshop.acceptanceTest.ProductTypeTest.testSetQuantity |
+| *         | **Valid**     | T1(4)                        | it.polito.ezshop.data.ProductTypeTest.testSetQuantity |
 
 
 
@@ -535,7 +535,7 @@ Criteria for method **setProductCode**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
 | --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
-| *         | **Valid**     | T1("3-a-12")                 | it.polito.ezshop.acceptanceTest.ProductTypeTest.testSetLocation |
+| *         | **Valid**     | T1("3-a-12")                 | it.polito.ezshop.data.ProductTypeTest.testSetLocation |
 
 
 
@@ -557,7 +557,7 @@ Criteria for method **setProductCode**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                             |
 | --------- | ------------- | ---------------------------- | ----------------------------------------------------------- |
-| *         | **Valid**     | T1("Blue version")           | it.polito.ezshop.acceptanceTest.ProductTypeTest.testSetNote |
+| *         | **Valid**     | T1("Blue version")           | it.polito.ezshop.data.ProductTypeTest.testSetNote |
 
 
 
@@ -582,7 +582,7 @@ Criteria for method **setProductCode**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
 | --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
-| *         | **Valid**     | T1("Blue t-shirt")           | it.polito.ezshop.acceptanceTest.ProductTypeTest.testSetProductDescription |
+| *         | **Valid**     | T1("Blue t-shirt")           | it.polito.ezshop.data.ProductTypeTest.testSetProductDescription |
 
 
 
@@ -606,7 +606,7 @@ Criteria for method **setProductCode**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
 | --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
-| *         | **Valid**     | T1("13148419")               | it.polito.ezshop.acceptanceTest.ProductTypeTest.testSetBarcode |
+| *         | **Valid**     | T1("13148419")               | it.polito.ezshop.data.ProductTypeTest.testSetBarcode |
 
 
 
@@ -630,7 +630,7 @@ Criteria for method **setProductCode**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
 | --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
-| *         | **Valid**     | T1(15.24)                    | it.polito.ezshop.acceptanceTest.ProductTypeTest.testSetPricePerUnit |
+| *         | **Valid**     | T1(15.24)                    | it.polito.ezshop.data.ProductTypeTest.testSetPricePerUnit |
 
 
 
@@ -657,7 +657,7 @@ Criteria for method **setProductCode**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
 | --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
-| *         | Valid         | T1({saleTransactionObj})     | it.polito.ezshop.acceptanceTest.ReturnTransactionTest.testSetSaleTransaction |
+| *         | Valid         | T1({saleTransactionObj})     | it.polito.ezshop.data.ReturnTransactionTest.testSetSaleTransaction |
 
 
 
@@ -684,7 +684,7 @@ Criteria for method **setProductCode**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
 | --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
-| *         | **Valid**     | T1(64)                       | it.polito.ezshop.acceptanceTest.SaleTransactionTest.testSetTicketNumber |
+| *         | **Valid**     | T1(64)                       | it.polito.ezshop.data.SaleTransactionTest.testSetTicketNumber |
 
 
 
@@ -707,7 +707,7 @@ Criteria for method **setProductCode**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
 | --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
-| *         | **Valid**     | T1(List<{TicketEntryObj}>)   | it.polito.ezshop.acceptanceTest.SaleTransactionTest.testSetEntries |
+| *         | **Valid**     | T1(List<{TicketEntryObj}>)   | it.polito.ezshop.data.SaleTransactionTest.testSetEntries |
 
 
 
@@ -731,7 +731,7 @@ Criteria for method **setProductCode**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
 | --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
-| *         | **Valid**     | T1(12.50)                    | it.polito.ezshop.acceptanceTest.SaleTransactionTest.testSetDiscountRate |
+| *         | **Valid**     | T1(12.50)                    | it.polito.ezshop.data.SaleTransactionTest.testSetDiscountRate |
 
 
 
@@ -755,7 +755,7 @@ Criteria for method **setProductCode**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
 | --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
-| *         | **Valid**     | T1(24.99)                    | it.polito.ezshop.acceptanceTest.SaleTransactionTest.testSetPrice |
+| *         | **Valid**     | T1(24.99)                    | it.polito.ezshop.data.SaleTransactionTest.testSetPrice |
 
 
 
@@ -777,7 +777,7 @@ Criteria for method **setProductCode**:
 
 | Criterion | Valid/Invalid | Description of the test case  | JUnit test case                                              |
 | --------- | ------------- | ----------------------------- | ------------------------------------------------------------ |
-| *         | **Valid**     | T1({BalanceOperationImplObj}) | it.polito.ezshop.acceptanceTest.SaleTransactionTest.testSetPayment |
+| *         | **Valid**     | T1({BalanceOperationImplObj}) | it.polito.ezshop.data.SaleTransactionTest.testSetPayment |
 
 
 
@@ -804,7 +804,7 @@ Criteria for method **setBarCode**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
 | --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
-| *         | **Valid**     | T5("313151")                 | it.polito.ezshop.acceptanceTest.TicketEntryTest.testSetBarcode |
+| *         | **Valid**     | T5("313151")                 | it.polito.ezshop.data.TicketEntryTest.testSetBarcode |
 
 
 
@@ -826,7 +826,7 @@ Criteria for method **setProductDescription**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
 | --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
-| *         | **Valid**     | T1("Yellow T-shirt")         | it.polito.ezshop.acceptanceTest.TicketEntryTest.testSetProductDescription |
+| *         | **Valid**     | T1("Yellow T-shirt")         | it.polito.ezshop.data.TicketEntryTest.testSetProductDescription |
 
 
 
@@ -850,7 +850,7 @@ Criteria for method **setProductDescription**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
 | --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
-| *         | **Valid**     | T1(12)                       | it.polito.ezshop.acceptanceTest.TicketEntryTest.testSetAmount |
+| *         | **Valid**     | T1(12)                       | it.polito.ezshop.data.TicketEntryTest.testSetAmount |
 
 
 
@@ -873,7 +873,7 @@ Criteria for method **setProductDescription**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
 | --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
-| *         | **Valid**     | T1(6.24)                     | it.polito.ezshop.acceptanceTest.TicketEntryTest.testSetPricePerUnit |
+| *         | **Valid**     | T1(6.24)                     | it.polito.ezshop.data.TicketEntryTest.testSetPricePerUnit |
 
 
 
@@ -897,7 +897,7 @@ Criteria for method **setDiscountRate**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                              |
 | --------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
-| *         | **Valid**     | T1(33.33)                    | it.polito.ezshop.acceptanceTest.TicketEntryTest.testSetDiscountRate |
+| *         | **Valid**     | T1(33.33)                    | it.polito.ezshop.data.TicketEntryTest.testSetDiscountRate |
 
 
 
@@ -923,7 +923,7 @@ Criteria for method **setDiscountRate**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                    |
 | --------- | ------------- | ---------------------------- | -------------------------------------------------- |
-| *         | **Valid**     | T1(2312)                     | it.polito.ezshop.acceptanceTest.UserTest.testSetId |
+| *         | **Valid**     | T1(2312)                     | it.polito.ezshop.data.UserTest.testSetId |
 
 
 
@@ -945,7 +945,7 @@ Criteria for method **setDiscountRate**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                          |
 | --------- | ------------- | ---------------------------- | -------------------------------------------------------- |
-| *         | **Valid**     | T1("FilippoA")               | it.polito.ezshop.acceptanceTest.UserTest.testSetUsername |
+| *         | **Valid**     | T1("FilippoA")               | it.polito.ezshop.data.UserTest.testSetUsername |
 
 
 
@@ -969,7 +969,7 @@ Criteria for method **setDiscountRate**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                          |
 | --------- | ------------- | ---------------------------- | -------------------------------------------------------- |
-| *         | **Valid**     | T1("Fe29dqh^ad3_ad")         | it.polito.ezshop.acceptanceTest.UserTest.testSetPassword |
+| *         | **Valid**     | T1("Fe29dqh^ad3_ad")         | it.polito.ezshop.data.UserTest.testSetPassword |
 
 
 
@@ -991,7 +991,7 @@ Criteria for method **setDiscountRate**:
 
 | Criterion | Valid/Invalid | Description of the test case | JUnit test case                                      |
 | --------- | ------------- | ---------------------------- | ---------------------------------------------------- |
-| *         | **Valid**     | T1("Cashier")                | it.polito.ezshop.acceptanceTest.UserTest.testSetRole |
+| *         | **Valid**     | T1("Cashier")                | it.polito.ezshop.data.UserTest.testSetRole |
 
 
 ## Class DiscountRateValidator
@@ -1024,9 +1024,9 @@ Criteria for method **isValid**:
 
 | Double is valid | Sign of double         | Valid/Invalid | Description of the test case | JUnit test case                                              |
 | --------------- | ---------------------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
-| Valid           | [0d,1)                 | **Valid**     | T1(0.5d) -> true             | it.polito.ezshop.acceptanceTests.DiscountRateValidatorTest.testIsValid |
-| ""              | (-inf,0d) \|\| [1,inf) | Valid         | T2(24d) -> false             | it.polito.ezshop.acceptanceTests.DiscountRateValidatorTest.testIsValid |
-| null            | -                      | Invalid       | T3() -> NullPointer          | it.polito.ezshop.acceptanceTests.DiscountRateValidatorTest.testIsValid |
+| Valid           | [0d,1)                 | **Valid**     | T1(0.5d) -> true             | it.polito.ezshop.utils.DiscountRateValidatorTest.testIsValid |
+| ""              | (-inf,0d) \|\| [1,inf) | Valid         | T2(24d) -> false             | it.polito.ezshop.utils.DiscountRateValidatorTest.testIsValid |
+| null            | -                      | Invalid       | T3() -> NullPointer          | it.polito.ezshop.utils.DiscountRateValidatorTest.testIsValid |
 
 
 ## Class GtinBarcodeValidator
@@ -1061,11 +1061,11 @@ Criteria for method **isValid**:
 
 | String length             | Is a number | String is valid | Valid/Invalid | Description of the test case | JUnit test case                                              |
 | ------------------------- | ----------- | --------------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
-| [12 ,14]                  | Yes         | Valid           | **Valid**     | T1("012345678905") -> true   | it.polito.ezshop.acceptanceTests.GtBarcodeValidatorTest.testIsValid |
-| ""                        | ""          | Invalid         | Valid         | T2("333333333333") -> false  | it.polito.ezshop.acceptanceTests.GtBarcodeValidatorTest.testIsValid |
-| ""                        | No          | -               | Valid         | T2("ciao") -> false          | it.polito.ezshop.acceptanceTests.GtBarcodeValidatorTest.testIsValid |
-| [0, 11]  \|\|[15, MaxInt) | -           | -               | Valid         | T2("12") -> false            | it.polito.ezshop.acceptanceTests.GtBarcodeValidatorTest.testIsValid |
-| null                      | -           | -               | Invalid       | T5(null) -> NullPointer      | it.polito.ezshop.acceptanceTests.GtBarcodeValidatorTest.testIsValid |
+| [12 ,14]                  | Yes         | Valid           | **Valid**     | T1("012345678905") -> true   | it.polito.ezshop.utils.GtBarcodeValidatorTest.testIsValid |
+| ""                        | ""          | Invalid         | Valid         | T2("333333333333") -> false  | it.polito.ezshop.utils.GtBarcodeValidatorTest.testIsValid |
+| ""                        | No          | -               | Valid         | T2("ciao") -> false          | it.polito.ezshop.utils.GtBarcodeValidatorTest.testIsValid |
+| [0, 11]  \|\|[15, MaxInt) | -           | -               | Valid         | T2("12") -> false            | it.polito.ezshop.utils.GtBarcodeValidatorTest.testIsValid |
+| null                      | -           | -               | Invalid       | T5(null) -> NullPointer      | it.polito.ezshop.utils.GtBarcodeValidatorTest.testIsValid |
 
 
 ## Class LocationValidator
@@ -1097,10 +1097,10 @@ Criteria for method **isValid**:
 
 | String length | String is valid | Valid/Invalid | Description of the test case | JUnit test case                                              |
 | ------------- | --------------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
-| !0            | Valid           | Valid         | T1("1-a-1") -> true          | it.polito.ezshop.acceptanceTests.LocationValidatorTest.testIsValid |
-| ""            | Invalid         | Valid         | T2("3131ad") - > false       | it.polito.ezshop.acceptanceTests.LocationValidatorTest.testIsValid |
-| Empty         | -               | Valid         | T3("") -> true               | it.polito.ezshop.acceptanceTests.LocationValidatorTest.testIsValid |
-| null          | -               | Valid         | T4(null) -> false            | it.polito.ezshop.acceptanceTests.LocationValidatorTest.testIsValid |
+| !0            | Valid           | Valid         | T1("1-a-1") -> true          | it.polito.ezshop.utils.LocationValidatorTest.testIsValid |
+| ""            | Invalid         | Valid         | T2("3131ad") - > false       | it.polito.ezshop.utils.LocationValidatorTest.testIsValid |
+| Empty         | -               | Valid         | T3("") -> true               | it.polito.ezshop.utils.LocationValidatorTest.testIsValid |
+| null          | -               | Valid         | T4(null) -> false            | it.polito.ezshop.utils.LocationValidatorTest.testIsValid |
 
 
 

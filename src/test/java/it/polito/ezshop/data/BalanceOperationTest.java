@@ -1,4 +1,4 @@
-package it.polito.ezshop.acceptanceTest;
+package it.polito.ezshop.data;
 
 import static org.junit.Assert.*;
 

@@ -1,4 +1,4 @@
-package it.polito.ezshop.acceptanceTest;
+package it.polito.ezshop.data;
 
 import static org.junit.Assert.*;
 
@@ -20,7 +20,7 @@ public class OrderTest {
 		OrderImpl order = new OrderImpl();
 		
 		String productCode = "01DA2";
-		order.setProductCode(productCode);;
+		order.setProductCode(productCode);
 		assertEquals(productCode, order.getProductCode());
 	}
 	

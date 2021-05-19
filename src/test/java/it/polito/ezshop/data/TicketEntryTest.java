@@ -1,4 +1,4 @@
-package it.polito.ezshop.acceptanceTest;
+package it.polito.ezshop.data;
 
 import static org.junit.Assert.*;
 
@@ -19,18 +19,18 @@ public class TicketEntryTest {
 	public void testSetProductDescription() {
 		TicketEntryImpl ticket = new TicketEntryImpl();
 		
-		String productDescr="Yellow T-shirt";
-		ticket.setProductDescription(productDescr);
-		assertEquals(productDescr, ticket.getProductDescription());
+		String productDesc="Yellow T-shirt";
+		ticket.setProductDescription(productDesc);
+		assertEquals(productDesc, ticket.getProductDescription());
 	}
 	
 	@Test
 	public void testSetAmount() {
 		TicketEntryImpl ticket = new TicketEntryImpl();
 		
-		int amout=12;
-		ticket.setAmount(amout);
-		assertEquals(amout, ticket.getAmount());
+		int amount=12;
+		ticket.setAmount(amount);
+		assertEquals(amount, ticket.getAmount());
 	}
 	
 	@Test

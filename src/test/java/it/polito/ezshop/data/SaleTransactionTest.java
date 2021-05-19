@@ -1,7 +1,8 @@
-package it.polito.ezshop.acceptanceTest;
+package it.polito.ezshop.data;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
@@ -21,7 +22,7 @@ public class SaleTransactionTest {
 	public void testSetEntries() {
 		SaleTransactionImpl saleTr = new SaleTransactionImpl();
 
-		List<TicketEntryImpl> ticketList;
+		List<TicketEntry> ticketList = new ArrayList<>();
 
 		TicketEntryImpl tk1 = new TicketEntryImpl();
 		TicketEntryImpl tk2 = new TicketEntryImpl();
@@ -55,7 +56,7 @@ public class SaleTransactionTest {
 	public void testSetPayment() {
 		SaleTransactionImpl saleTr = new SaleTransactionImpl();
 
-		BalanceOperation balanceOp = new BalanceOperation();
+		BalanceOperationImpl balanceOp = new BalanceOperationImpl();
 		saleTr.setPayment(balanceOp);
 		assertEquals(balanceOp, saleTr.getPayment());
 	}

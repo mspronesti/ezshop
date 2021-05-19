@@ -1,10 +1,10 @@
-package it.polito.ezshop.acceptanceTests;
+package it.polito.ezshop.utils;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import it.polito.ezshop.util.LocationValidator;
+
 
 public class LocationValidatorTest {
 
