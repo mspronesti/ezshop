@@ -1107,13 +1107,9 @@ Criteria for method **isValid**:
 
 # White Box Unit Tests
 
-![data code coverage](../assets/data-coverage-report.png)
-![utils code coverage](../assets/utils-coverage-report.png)
+### Test cases definition
 
-Our implementation, being based on many delegate classes and cross-dependecies, led to a somewhat low line coverage
-percentage, but many of said classes will be tested more thoroughly in the integration testing phase.
 
-## Test cases definition
 
 ### Method setBalanceId
 
@@ -1125,7 +1121,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 
 
-![](../assets/WhiteBoxTesting/balanceId.png)
+![](assets/WhiteBoxTesting/balanceId.png)
 
 
 
@@ -1151,7 +1147,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 ### Code coverage report
 
-![](../assets/WhiteBoxTesting/date.png)
+![](assets/WhiteBoxTesting/date.png)
 
 
 
@@ -1177,7 +1173,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 ### Code coverage report
 
-![](../assets/WhiteBoxTesting/money.png)
+![](assets/WhiteBoxTesting/money.png)
 
 
 
@@ -1203,7 +1199,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 ### Code coverage report
 
-![](../assets/WhiteBoxTesting/type.png)
+![](assets/WhiteBoxTesting/type.png)
 
 
 
@@ -1231,7 +1227,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 ### Code coverage report
 
-![](../assets/WhiteBoxTesting/customerName.png)
+![](assets/WhiteBoxTesting/customerName.png)
 
 
 
@@ -1257,7 +1253,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 ### Code coverage report
 
-![](../assets/WhiteBoxTesting/customerCard.png)
+![](assets/WhiteBoxTesting/setCustomerCard.png)
 
 
 
@@ -1283,7 +1279,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 ### Code coverage report
 
-![](../assets/WhiteBoxTesting/id.png)
+![](assets/WhiteBoxTesting/id.png)
 
 
 
@@ -1309,7 +1305,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 ### Code coverage report
 
-![](../assets/WhiteBoxTesting/points.png)
+![](assets/WhiteBoxTesting/setPoint.png)
 
 
 
@@ -1341,7 +1337,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 
 
-![](../assets/WhiteBoxTesting/balanceId.png)
+![](assets/WhiteBoxTesting/balanceId.png)
 
 
 
@@ -1369,7 +1365,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 
 
-![](../assets/WhiteBoxTesting/productCode.png)
+![](assets/WhiteBoxTesting/productCode.png)
 
 
 
@@ -1397,7 +1393,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 
 
-![](../assets/WhiteBoxTesting/priceperunit.png)
+![](assets/WhiteBoxTesting/priceperunit.png)
 
 
 
@@ -1425,7 +1421,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 
 
-![](../assets/WhiteBoxTesting/quantity.png)
+![](assets/WhiteBoxTesting/quantity.png)
 
 
 
@@ -1453,7 +1449,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 
 
-![](../assets/WhiteBoxTesting/status.png)
+![](assets/WhiteBoxTesting/status.png)
 
 
 
@@ -1481,7 +1477,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 
 
-![](../assets/WhiteBoxTesting/orderId.png)
+![](assets/WhiteBoxTesting/orderId.png)
 
 
 
@@ -1513,7 +1509,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 
 
-![](../assets/WhiteBoxTesting/quantity.png)
+![](assets/WhiteBoxTesting/quantity.png)
 
 
 
@@ -1541,7 +1537,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 
 
-![](../assets/WhiteBoxTesting/location.png)
+![](assets/WhiteBoxTesting/location.png)
 
 
 
@@ -1569,7 +1565,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 
 
-![](../assets/WhiteBoxTesting/productDescription.png)
+![](assets/WhiteBoxTesting/productDescription.png)
 
 
 
@@ -1597,7 +1593,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 
 
-![](../assets/WhiteBoxTesting/barCode.png)
+![](assets/WhiteBoxTesting/barCode.png)
 
 
 
@@ -1625,7 +1621,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 
 
-![](../assets/WhiteBoxTesting/priceperunit.png)
+![](assets/WhiteBoxTesting/priceperunit.png)
 
 
 
@@ -1651,7 +1647,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 ### Code coverage report
 
-![](../assets/WhiteBoxTesting/id.png)
+![desktop/money](assets/WhiteBoxTesting/id.png)
 
 
 
@@ -1683,7 +1679,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 
 
-![](../assets/WhiteBoxTesting/ticketnumber.png)
+![](assets/WhiteBoxTesting/ticketnumber.png)
 
 
 
@@ -1711,7 +1707,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 
 
-![](../assets/WhiteBoxTesting/entries.png)
+![](assets/WhiteBoxTesting/entries.png)
 
 
 
@@ -1739,7 +1735,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 
 
-![](../assets/WhiteBoxTesting/discountrate.png)
+![](assets/WhiteBoxTesting/discountrate.png)
 
 
 
@@ -1767,7 +1763,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 
 
-![](../assets/WhiteBoxTesting/price.png)
+![](assets/WhiteBoxTesting/price.png)
 
 
 
@@ -1797,7 +1793,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 
 
-![](../assets/WhiteBoxTesting/barcode.png)
+![](assets/WhiteBoxTesting/barcode.png)
 
 
 
@@ -1825,7 +1821,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 
 
-![](../assets/WhiteBoxTesting/productdescription.png)
+![](assets/WhiteBoxTesting/productdescription.png)
 
 
 
@@ -1853,7 +1849,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 
 
-![](../assets/WhiteBoxTesting/amount.png)
+![](assets/WhiteBoxTesting/amount.png)
 
 
 
@@ -1881,7 +1877,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 
 
-![](../assets/WhiteBoxTesting/priceperunit.png)
+![](assets/WhiteBoxTesting/priceperunit.png)
 
 
 
@@ -1909,7 +1905,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 
 
-![](../assets/WhiteBoxTesting/discountrate.png)
+![](assets/WhiteBoxTesting/discountrate.png)
 
 
 
@@ -1939,7 +1935,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 ### Code coverage report
 
-![](../assets/WhiteBoxTesting/id.png)
+![](assets/WhiteBoxTesting/id.png)
 
 
 
@@ -1963,7 +1959,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 ### Code coverage report
 
-![](../assets/WhiteBoxTesting/username.png)
+![](assets/WhiteBoxTesting/username.png)
 
 
 
@@ -1989,7 +1985,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 ### Code coverage report
 
-![](../assets/WhiteBoxTesting/password.png)
+![](assets/WhiteBoxTesting/password.png)
 
 
 
@@ -2015,7 +2011,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 ### Code coverage report
 
-![](../assets/WhiteBoxTesting/role.png)
+![](assets/WhiteBoxTesting/role.png)
 
 
 
@@ -2041,7 +2037,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 ### Code coverage report
 
-![](../assets/WhiteBoxTesting/DiscountValidator.png)
+![](assets/WhiteBoxTesting/DiscountValidator.png)
 
 
 
@@ -2071,7 +2067,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 ### Code coverage report
 
-![](../assets/WhiteBoxTesting/GtinBarcodeValidator.png)
+![](assets/WhiteBoxTesting/GtinBarcodeValidator.png)
 
 
 
@@ -2102,7 +2098,7 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 
 ### Code coverage report
 
-![](../assets/WhiteBoxTesting/locationValidator.png)
+![](assets/WhiteBoxTesting/locationValidator.png)
 
 
 
