@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Entity
 public class LoyaltyCardImpl implements LoyaltyCard {
-    public static final String PATTERN = "^\\d{10}$";
+    public static final String PATTERN = "^$|^\\d{10}$";
 
     @Id
     @GeneratedValue(generator = "cardCode")

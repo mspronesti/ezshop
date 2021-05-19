@@ -44,6 +44,9 @@ public class CustomerImpl implements Customer {
         if (card != null && card.getCustomer() == null) {
             loyaltyCard = (LoyaltyCardImpl) card;
         }
+        if(customerCard.isEmpty()) {
+        	loyaltyCard = null; // throws NullPointer
+        }
     }
 
     @Override

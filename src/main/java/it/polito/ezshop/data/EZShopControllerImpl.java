@@ -257,7 +257,7 @@ public class EZShopControllerImpl implements EZShopController {
     public boolean modifyCustomer(Integer id, String newCustomerName, String newCustomerCard) throws InvalidCustomerNameException, InvalidCustomerCardException, InvalidCustomerIdException, UnauthorizedException {
         Customer customer = customerRepository.find(id);
         if (customer != null) {
-            customer.setCustomerCard(newCustomerCard); // se null/empty reset/keep ?
+            customer.setCustomerCard(newCustomerCard); // empty = reset, null = keep
             customer.setCustomerName(newCustomerName);
             customerRepository.update(customer);
             return true;

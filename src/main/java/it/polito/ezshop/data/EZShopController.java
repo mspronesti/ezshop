@@ -137,7 +137,7 @@ public interface EZShopController {
     public boolean modifyCustomer(
             @NotNull @Min(1) @Throw(InvalidCustomerIdException.class) Integer id,
             @NotNull @NotEmpty @Throw(InvalidCustomerNameException.class) String newCustomerName,
-            @NotNull @NotEmpty @Pattern(regexp = LoyaltyCardImpl.PATTERN) @Throw(InvalidCustomerCardException.class) String newCustomerCard
+            @Pattern(regexp = LoyaltyCardImpl.PATTERN) @Throw(InvalidCustomerCardException.class) String newCustomerCard
     ) throws InvalidCustomerNameException, InvalidCustomerCardException, InvalidCustomerIdException, UnauthorizedException;
 
     @AcceptRoles({ Role.Administrator, Role.ShopManager, Role.Cashier })
