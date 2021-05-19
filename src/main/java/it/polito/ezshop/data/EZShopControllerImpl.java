@@ -115,6 +115,7 @@ public class EZShopControllerImpl implements EZShopController {
             product.setBarCode(newCode);
             product.setPricePerUnit(newPrice);
             product.setNote(newNote);
+            productTypeRepository.update(product);
             return true;
         }
         return false;
