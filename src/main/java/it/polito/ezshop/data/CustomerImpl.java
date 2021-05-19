@@ -40,12 +40,12 @@ public class CustomerImpl implements Customer {
 
     @Override
     public void setCustomerCard(String customerCard) {
-        LoyaltyCard card = loyaltyCardRepository.find(customerCard);
-        if (card != null && card.getCustomer() == null) {
-            loyaltyCard = (LoyaltyCardImpl) card;
+        if (customerCard.isEmpty()) {
+        	loyaltyCard = null;
         }
-        if(customerCard.isEmpty()) {
-        	loyaltyCard = null; // throws NullPointer
+        LoyaltyCard card = loyaltyCardRepository.find(customerCard);
+        if (card != null && (card.getCustomer() == null || card.getCustomer().getId().equals(this.id))) {
+            loyaltyCard = (LoyaltyCardImpl) card;
         }
     }
 
@@ -56,6 +56,8 @@ public class CustomerImpl implements Customer {
 
     @Override
     public void setPoints(Integer points) {
-        loyaltyCard.setPoints(points);
+        if (loyaltyCard != null) {
+            loyaltyCard.setPoints(points);
+        }
     }
 }
