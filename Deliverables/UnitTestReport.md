@@ -917,7 +917,7 @@ Criteria for method **setDiscountRate**:
 **Boundaries for method setId**:
 
 | Criterion | Boundary values |
-| --------- | --------------- ||
+| --------- | --------------- |
 
  **Combination of predicates for method setId**
 
@@ -1100,12 +1100,19 @@ Criteria for method **isValid**:
 | !0            | Valid           | Valid         | T1("1-a-1") -> true          | it.polito.ezshop.utils.LocationValidatorTest.testIsValid |
 | ""            | Invalid         | Valid         | T2("3131ad") - > false       | it.polito.ezshop.utils.LocationValidatorTest.testIsValid |
 | Empty         | -               | Valid         | T3("") -> true               | it.polito.ezshop.utils.LocationValidatorTest.testIsValid |
-| null          | -               | Valid         | T4(null) -> false            | it.polito.ezshop.utils.LocationValidatorTest.testIsValid |
+| null          | -               | Valid         | T4(null) -> true            | it.polito.ezshop.utils.LocationValidatorTest.testIsValid |
 
 
 
 
 # White Box Unit Tests
+
+![data code coverage](../assets/data-coverage-report.png)
+![utils code coverage](../assets/utils-coverage-report.png)
+
+Our implementation, being based on many delegate classes and cross-dependecies, led to a somewhat low line coverage
+percentage, but many of said classes will be tested more thoroughly in the integration testing phase.
+
 
 ### Test cases definition
 
