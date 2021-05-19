@@ -16,7 +16,13 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
+/**
+ * EZShopController is a delegate for all EZShop's method implementations. It is initialized by means of a dedicated
+ * factory (EZShopControllerFactory), which wraps it in a Dynamic Proxy in order to automatically validate method
+ * parameters - using Hibernate Validator - and edge cases (ie database connection not working) in order to provide
+ * automatic fallback methods.
+ * Custom annotations and validators are used for this purpose (see the annotations and utils packages).
+ */
 public class EZShopControllerImpl implements EZShopController {
     private final BalanceOperationRepository balanceOperationRepository = new BalanceOperationRepository();
     private final CustomerRepository customerRepository = new CustomerRepository();
