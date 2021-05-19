@@ -4,8 +4,10 @@ import it.polito.ezshop.annotations.*;
 import it.polito.ezshop.exceptions.*;
 import it.polito.ezshop.utils.PaymentGateway;
 import jakarta.validation.*;
+import jakarta.validation.constraints.*;
 import jakarta.validation.executable.ExecutableValidator;
 import org.hibernate.exception.JDBCConnectionException;
+import org.hibernate.validator.constraints.CreditCardNumber;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.lang.reflect.Constructor;
@@ -38,7 +40,6 @@ public class EZShopControllerImpl implements EZShopController {
     private final PaymentGateway paymentGateway = new PaymentGateway();
 
     public void reset() {
-        // maybe deleteAll inside each repository to avoid N queries ?
         this.productTypeRepository.findAll().forEach(productTypeRepository::delete);
         this.orderRepository.findAll().forEach(orderRepository::delete);
         this.returnTransactionRepository.findAll().forEach(returnTransactionRepository::delete);
@@ -46,7 +47,13 @@ public class EZShopControllerImpl implements EZShopController {
         this.balanceOperationRepository.findAll().forEach(balanceOperationRepository::delete);
     }
 
-    public Integer createUser(String username, String password, String role) throws InvalidUsernameException, InvalidPasswordException, InvalidRoleException {
+    @Override
+    @FallbackIntValue
+    public Integer createUser(
+            @NotNull @NotEmpty @Throw(InvalidUsernameException.class) String username,
+            @NotNull @NotEmpty @Throw(InvalidPasswordException.class) String password,
+            @NotNull @NotEmpty @Pattern(regexp = Role.PATTERN) @Throw(InvalidRoleException.class) String role
+    ) throws InvalidUsernameException, InvalidPasswordException, InvalidRoleException {
         if (userRepository.findByUsername(username) != null) {
             // user with given username already exists
             return -1;
@@ -59,7 +66,12 @@ public class EZShopControllerImpl implements EZShopController {
         return userRepository.create(user);
     }
 
-    public boolean deleteUser(Integer id) throws InvalidUserIdException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator})
+    @FallbackBooleanValue
+    public boolean deleteUser(
+            @NotNull @Min(1) @Throw(InvalidUserIdException.class) Integer id
+    ) throws InvalidUserIdException, UnauthorizedException {
         User user = userRepository.find(id);
         if (user != null) {
             userRepository.delete(user);
@@ -68,15 +80,26 @@ public class EZShopControllerImpl implements EZShopController {
         return false;
     }
 
+    @Override
+    @AcceptRoles({Role.Administrator})
     public List<User> getAllUsers() throws UnauthorizedException {
         return userRepository.findAll();
     }
 
-    public User getUser(Integer id) throws InvalidUserIdException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator})
+    public User getUser(
+            @NotNull @Min(1) @Throw(InvalidUserIdException.class) Integer id
+    ) throws InvalidUserIdException, UnauthorizedException {
         return userRepository.find(id);
     }
 
-    public boolean updateUserRights(Integer id, String role) throws InvalidUserIdException, InvalidRoleException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator})
+    public boolean updateUserRights(
+            @NotNull @Min(1) @Throw(InvalidUserIdException.class) Integer id,
+            @NotNull @NotEmpty @Pattern(regexp = Role.PATTERN) @Throw(InvalidRoleException.class) String role
+    ) throws InvalidUserIdException, InvalidRoleException, UnauthorizedException {
         User user = userRepository.find(id);
         if (user != null) {
             user.setRole(role);
@@ -86,7 +109,11 @@ public class EZShopControllerImpl implements EZShopController {
         return false;
     }
 
-    public User login(String username, String password) throws InvalidUsernameException, InvalidPasswordException {
+    @Override
+    public User login(
+            @NotNull @NotEmpty @Throw(InvalidUsernameException.class) String username,
+            @NotNull @NotEmpty @Throw(InvalidPasswordException.class) String password
+    ) throws InvalidUsernameException, InvalidPasswordException {
         User user = userRepository.findByUsername(username);
         if (user != null && BCrypt.checkpw(password, user.getPassword())) {
             loggedUser = user;
@@ -95,6 +122,8 @@ public class EZShopControllerImpl implements EZShopController {
         return null;
     }
 
+    @Override
+    @FallbackBooleanValue
     public boolean logout() {
         if (loggedUser != null) {
             loggedUser = null;
@@ -103,7 +132,15 @@ public class EZShopControllerImpl implements EZShopController {
         return false;
     }
 
-    public Integer createProductType(String description, String productCode, double pricePerUnit, String note) throws InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager})
+    @FallbackIntValue
+    public Integer createProductType(
+            @NotNull @NotEmpty @Throw(InvalidProductDescriptionException.class) String description,
+            @NotNull @NotEmpty @GtinBarcode @Throw(InvalidProductCodeException.class) String productCode,
+            @NotNull @Positive @Throw(InvalidPricePerUnitException.class) double pricePerUnit,
+            String note
+    ) throws InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException {
         ProductType product = new ProductTypeImpl();
         product.setProductDescription(description);
         product.setPricePerUnit(pricePerUnit);
@@ -116,7 +153,16 @@ public class EZShopControllerImpl implements EZShopController {
         }
     }
 
-    public boolean updateProduct(Integer id, String newDescription, String newCode, double newPrice, String newNote) throws InvalidProductIdException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager})
+    @FallbackBooleanValue
+    public boolean updateProduct(
+            @NotNull @Min(1) @Throw(InvalidProductIdException.class) Integer id,
+            @NotNull @NotEmpty @Throw(InvalidProductDescriptionException.class) String newDescription,
+            @NotNull @NotEmpty @GtinBarcode @Throw(InvalidProductCodeException.class) String newCode,
+            @NotNull @Positive @Throw(InvalidPricePerUnitException.class) double newPrice,
+            String newNote
+    ) throws InvalidProductIdException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException {
         ProductType product = productTypeRepository.find(id);
         if (product != null) {
             product.setProductDescription(newDescription);
@@ -129,7 +175,12 @@ public class EZShopControllerImpl implements EZShopController {
         return false;
     }
 
-    public boolean deleteProductType(Integer id) throws InvalidProductIdException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager})
+    @FallbackBooleanValue
+    public boolean deleteProductType(
+            @NotNull @Min(0) @Throw(InvalidProductIdException.class) Integer id
+    ) throws InvalidProductIdException, UnauthorizedException {
         ProductType productType = productTypeRepository.find(id);
         if (productType != null) {
             productTypeRepository.delete(productType);
@@ -138,21 +189,35 @@ public class EZShopControllerImpl implements EZShopController {
         return false;
     }
 
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
     public List<ProductType> getAllProductTypes() throws UnauthorizedException {
         return productTypeRepository.findAll();
     }
 
-    public ProductType getProductTypeByBarCode(String barCode) throws InvalidProductCodeException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager})
+    public ProductType getProductTypeByBarCode(
+            @NotNull @NotEmpty @GtinBarcode @Throw(InvalidProductCodeException.class) String barCode
+    ) throws InvalidProductCodeException, UnauthorizedException {
         return productTypeRepository.findByBarcode(barCode);
     }
 
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager})
     public List<ProductType> getProductTypesByDescription(String description) throws UnauthorizedException {
         return productTypeRepository.findAll().stream()
                 .filter(t -> t.getProductDescription().contains(description))
                 .collect(Collectors.toList());
     }
 
-    public boolean updateQuantity(Integer productId, int toBeAdded) throws InvalidProductIdException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager})
+    @FallbackBooleanValue
+    public boolean updateQuantity(
+            @NotNull @Min(1) @Throw(InvalidProductIdException.class) Integer productId,
+            int toBeAdded
+    ) throws InvalidProductIdException, UnauthorizedException {
         ProductType product = this.productTypeRepository.find(productId);
         int newQuantity = product.getQuantity() + toBeAdded;
         if (newQuantity >= 0 && !product.getLocation().isEmpty()) {
@@ -163,7 +228,13 @@ public class EZShopControllerImpl implements EZShopController {
         return false;
     }
 
-    public boolean updatePosition(Integer productId, String newPos) throws InvalidProductIdException, InvalidLocationException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager})
+    @FallbackBooleanValue
+    public boolean updatePosition(
+            @NotNull @Min(1) @Throw(InvalidProductIdException.class) Integer productId,
+            @Location @Throw(InvalidLocationException.class) String newPos
+    ) throws InvalidProductIdException, InvalidLocationException, UnauthorizedException {
         ProductType product = this.productTypeRepository.find(productId);
         if (product != null && !isAssignedPosition(newPos)) {
             // resets or sets position
@@ -174,7 +245,14 @@ public class EZShopControllerImpl implements EZShopController {
         return false;
     }
 
-    public Integer issueOrder(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager})
+    @FallbackIntValue
+    public Integer issueOrder(
+            @NotNull @NotEmpty @GtinBarcode @Throw(InvalidProductCodeException.class) String productCode,
+            @NotNull @Min(1) @Throw(InvalidQuantityException.class) int quantity,
+            @NotNull @Positive @Throw(InvalidPricePerUnitException.class) double pricePerUnit
+    ) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
         ProductType product = this.productTypeRepository.findByBarcode(productCode);
         if (product == null) {
             // can't order an unexisting product
@@ -188,7 +266,14 @@ public class EZShopControllerImpl implements EZShopController {
         return orderRepository.create(order);
     }
 
-    public Integer payOrderFor(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager})
+    @FallbackIntValue
+    public Integer payOrderFor(
+            @NotNull @NotEmpty @GtinBarcode @Throw(InvalidProductCodeException.class) String productCode,
+            @NotNull @Min(1) @Throw(InvalidQuantityException.class) int quantity,
+            @NotNull @Positive @Throw(InvalidPricePerUnitException.class) double pricePerUnit
+    ) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
         ProductType product = this.productTypeRepository.findByBarcode(productCode);
         if (product == null) {
             // can't order an unexisting product 
@@ -207,7 +292,12 @@ public class EZShopControllerImpl implements EZShopController {
         return orderId;
     }
 
-    public boolean payOrder(Integer orderId) throws InvalidOrderIdException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager})
+    @FallbackBooleanValue
+    public boolean payOrder(
+            @NotNull @Min(1) @Throw(InvalidOrderIdException.class) Integer orderId
+    ) throws InvalidOrderIdException, UnauthorizedException {
         Order order = orderRepository.find(orderId);
         if (order != null) {
             String status = order.getStatus();
@@ -237,7 +327,12 @@ public class EZShopControllerImpl implements EZShopController {
         return false;
     }
 
-    public boolean recordOrderArrival(Integer orderId) throws InvalidOrderIdException, UnauthorizedException, InvalidLocationException {
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager})
+    @FallbackBooleanValue
+    public boolean recordOrderArrival(
+            @NotNull @Min(1) @Throw(InvalidOrderIdException.class) Integer orderId
+    ) throws InvalidOrderIdException, UnauthorizedException, InvalidLocationException {
         Order order = orderRepository.find(orderId);
         if (order != null) {
             String status = order.getStatus();
@@ -262,11 +357,18 @@ public class EZShopControllerImpl implements EZShopController {
         return false;
     }
 
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager})
     public List<Order> getAllOrders() throws UnauthorizedException {
         return orderRepository.findAll();
     }
 
-    public Integer defineCustomer(String customerName) throws InvalidCustomerNameException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
+    @FallbackIntValue
+    public Integer defineCustomer(
+            @NotNull @NotEmpty @Throw(InvalidCustomerNameException.class) String customerName
+    ) throws InvalidCustomerNameException, UnauthorizedException {
         if (customerRepository.findByName(customerName) != null) {
             // customer with given name already exists
             return -1;
@@ -276,7 +378,14 @@ public class EZShopControllerImpl implements EZShopController {
         return customerRepository.create(customer);
     }
 
-    public boolean modifyCustomer(Integer id, String newCustomerName, String newCustomerCard) throws InvalidCustomerNameException, InvalidCustomerCardException, InvalidCustomerIdException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
+    @FallbackBooleanValue
+    public boolean modifyCustomer(
+            @NotNull @Min(1) @Throw(InvalidCustomerIdException.class) Integer id,
+            @NotNull @NotEmpty @Throw(InvalidCustomerNameException.class) String newCustomerName,
+            @Pattern(regexp = LoyaltyCardImpl.PATTERN) @Throw(InvalidCustomerCardException.class) String newCustomerCard
+    ) throws InvalidCustomerNameException, InvalidCustomerCardException, InvalidCustomerIdException, UnauthorizedException {
         Customer customer = customerRepository.find(id);
         if (customer != null) {
             if (newCustomerCard != null) {
@@ -289,7 +398,12 @@ public class EZShopControllerImpl implements EZShopController {
         return false;
     }
 
-    public boolean deleteCustomer(Integer id) throws InvalidCustomerIdException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
+    @FallbackBooleanValue
+    public boolean deleteCustomer(
+            @NotNull @Min(1) @Throw(InvalidCustomerIdException.class) Integer id
+    ) throws InvalidCustomerIdException, UnauthorizedException {
         Customer customer = customerRepository.find(id);
         if (customer != null) {
             customerRepository.delete(customer);
@@ -298,20 +412,35 @@ public class EZShopControllerImpl implements EZShopController {
         return false;
     }
 
-    public Customer getCustomer(Integer id) throws InvalidCustomerIdException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
+    public Customer getCustomer(
+            @NotNull @Min(1) @Throw(InvalidCustomerIdException.class) Integer id
+    ) throws InvalidCustomerIdException, UnauthorizedException {
         return customerRepository.find(id);
     }
 
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
     public List<Customer> getAllCustomers() throws UnauthorizedException {
         return this.customerRepository.findAll();
     }
 
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
+    @FallbackStringValue
     public String createCard() throws UnauthorizedException {
         LoyaltyCard loyaltyCard = new LoyaltyCardImpl();
         return this.loyaltyCardRepository.create(loyaltyCard);
     }
 
-    public boolean attachCardToCustomer(String customerCard, Integer customerId) throws InvalidCustomerIdException, InvalidCustomerCardException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
+    @FallbackBooleanValue
+    public boolean attachCardToCustomer(
+            @NotNull @NotEmpty @Pattern(regexp = LoyaltyCardImpl.PATTERN) @Throw(InvalidCustomerCardException.class) String customerCard,
+            @NotNull @Min(1) @Throw(InvalidCustomerIdException.class) Integer customerId
+    ) throws InvalidCustomerIdException, InvalidCustomerCardException, UnauthorizedException {
         Customer customer = this.customerRepository.find(customerId);
         if (customer != null) {
             customer.setCustomerCard(customerCard);
@@ -321,7 +450,13 @@ public class EZShopControllerImpl implements EZShopController {
         return false;
     }
 
-    public boolean modifyPointsOnCard(String customerCard, int pointsToBeAdded) throws InvalidCustomerCardException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
+    @FallbackBooleanValue
+    public boolean modifyPointsOnCard(
+            @NotNull @NotEmpty @Pattern(regexp = LoyaltyCardImpl.PATTERN) @Throw(InvalidCustomerCardException.class) String customerCard,
+            int pointsToBeAdded
+    ) throws InvalidCustomerCardException, UnauthorizedException {
         if (pointsToBeAdded < 0) {
             return false;
         }
@@ -334,6 +469,8 @@ public class EZShopControllerImpl implements EZShopController {
         return false;
     }
 
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
     public Integer startSaleTransaction() throws UnauthorizedException {
         SaleTransactionImpl saleTransaction = new SaleTransactionImpl();
         Integer id = saleTransactionRepository.create(saleTransaction);
@@ -341,7 +478,14 @@ public class EZShopControllerImpl implements EZShopController {
         return id;
     }
 
-    public boolean addProductToSale(Integer transactionId, String productCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
+    @FallbackBooleanValue
+    public boolean addProductToSale(
+            @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer transactionId,
+            @NotNull @NotEmpty @GtinBarcode @Throw(InvalidProductCodeException.class) String productCode,
+            @NotNull @Min(0) @Throw(InvalidQuantityException.class) int amount
+    ) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
         SaleTransactionImpl saleTransaction = openSaleTransactions.get(transactionId);
         if (saleTransaction == null) {
             return false;
@@ -371,7 +515,14 @@ public class EZShopControllerImpl implements EZShopController {
         return false;
     }
 
-    public boolean deleteProductFromSale(Integer transactionId, String productCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
+    @FallbackBooleanValue
+    public boolean deleteProductFromSale(
+            @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer transactionId,
+            @NotNull @NotEmpty @GtinBarcode @Throw(InvalidProductCodeException.class) String productCode,
+            @NotNull @Min(0) @Throw(InvalidQuantityException.class) int amount
+    ) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
         SaleTransactionImpl saleTransaction = openSaleTransactions.get(transactionId);
         if (saleTransaction == null) {
             return false;
@@ -393,7 +544,14 @@ public class EZShopControllerImpl implements EZShopController {
         return true;
     }
 
-    public boolean applyDiscountRateToProduct(Integer transactionId, String productCode, double discountRate) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidDiscountRateException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
+    @FallbackBooleanValue
+    public boolean applyDiscountRateToProduct(
+            @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer transactionId,
+            @NotNull @NotEmpty @GtinBarcode @Throw(InvalidProductCodeException.class) String productCode,
+            @NotNull @DiscountRate @Throw(InvalidDiscountRateException.class) double discountRate
+    ) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidDiscountRateException, UnauthorizedException {
         SaleTransactionImpl saleTransaction = openSaleTransactions.get(transactionId);
         if (saleTransaction == null) {
             return false;
@@ -408,7 +566,13 @@ public class EZShopControllerImpl implements EZShopController {
         return true;
     }
 
-    public boolean applyDiscountRateToSale(Integer transactionId, double discountRate) throws InvalidTransactionIdException, InvalidDiscountRateException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
+    @FallbackBooleanValue
+    public boolean applyDiscountRateToSale(
+            @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer transactionId,
+            @NotNull @DiscountRate @Throw(InvalidDiscountRateException.class) double discountRate
+    ) throws InvalidTransactionIdException, InvalidDiscountRateException, UnauthorizedException {
         SaleTransactionImpl saleTransaction = openSaleTransactions.get(transactionId);
         if (saleTransaction == null) {
             return false;
@@ -419,7 +583,12 @@ public class EZShopControllerImpl implements EZShopController {
         return true;
     }
 
-    public int computePointsForSale(Integer transactionId) throws InvalidTransactionIdException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
+    @FallbackIntValue
+    public int computePointsForSale(
+            @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer transactionId
+    ) throws InvalidTransactionIdException, UnauthorizedException {
         SaleTransactionImpl saleTransaction = openSaleTransactions.get(transactionId);
         if (saleTransaction == null) {
             saleTransaction = (SaleTransactionImpl) saleTransactionRepository.find(transactionId);
@@ -430,7 +599,12 @@ public class EZShopControllerImpl implements EZShopController {
         return (int) Math.floor(saleTransaction.getPrice() / 10);
     }
 
-    public boolean endSaleTransaction(Integer transactionId) throws InvalidTransactionIdException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
+    @FallbackBooleanValue
+    public boolean endSaleTransaction(
+            @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer transactionId
+    ) throws InvalidTransactionIdException, UnauthorizedException {
         SaleTransactionImpl saleTransaction = openSaleTransactions.get(transactionId);
         if (saleTransaction == null) {
             return false;
@@ -440,7 +614,12 @@ public class EZShopControllerImpl implements EZShopController {
         return true;
     }
 
-    public boolean deleteSaleTransaction(Integer transactionId) throws InvalidTransactionIdException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
+    @FallbackBooleanValue
+    public boolean deleteSaleTransaction(
+            @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer transactionId
+    ) throws InvalidTransactionIdException, UnauthorizedException {
         SaleTransactionImpl saleTransaction = openSaleTransactions.get(transactionId);
         if (saleTransaction == null) {
             return false;
@@ -457,11 +636,20 @@ public class EZShopControllerImpl implements EZShopController {
         return true;
     }
 
-    public SaleTransaction getSaleTransaction(Integer transactionId) throws InvalidTransactionIdException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
+    public SaleTransaction getSaleTransaction(
+            @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer transactionId
+    ) throws InvalidTransactionIdException, UnauthorizedException {
         return saleTransactionRepository.find(transactionId);
     }
 
-    public Integer startReturnTransaction(Integer transactionId) throws InvalidTransactionIdException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
+    @FallbackIntValue
+    public Integer startReturnTransaction(
+            @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer transactionId
+    ) throws InvalidTransactionIdException, UnauthorizedException {
         SaleTransaction saleTransaction = saleTransactionRepository.find(transactionId);
         if (saleTransaction == null) {
             return -1;
@@ -473,7 +661,14 @@ public class EZShopControllerImpl implements EZShopController {
         return id;
     }
 
-    public boolean returnProduct(Integer returnId, String productCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
+    @FallbackBooleanValue
+    public boolean returnProduct(
+            @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer returnId,
+            @NotNull @NotEmpty @GtinBarcode @Throw(InvalidProductCodeException.class) String productCode,
+            @NotNull @Min(0) @Throw(InvalidQuantityException.class) int amount
+    ) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
         ReturnTransactionImpl returnTransaction = openReturnTransactions.get(returnId);
         if (returnTransaction == null) {
             return false;
@@ -496,7 +691,13 @@ public class EZShopControllerImpl implements EZShopController {
         return true;
     }
 
-    public boolean endReturnTransaction(Integer returnId, boolean commit) throws InvalidTransactionIdException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
+    @FallbackBooleanValue
+    public boolean endReturnTransaction(
+            @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer returnId,
+            boolean commit
+    ) throws InvalidTransactionIdException, UnauthorizedException {
         ReturnTransactionImpl returnTransaction = openReturnTransactions.get(returnId);
         if (returnTransaction == null) {
             return false;
@@ -530,7 +731,12 @@ public class EZShopControllerImpl implements EZShopController {
         return true;
     }
 
-    public boolean deleteReturnTransaction(Integer returnId) throws InvalidTransactionIdException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
+    @FallbackBooleanValue
+    public boolean deleteReturnTransaction(
+            @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer returnId
+    ) throws InvalidTransactionIdException, UnauthorizedException {
         ReturnTransactionImpl returnTransaction = returnTransactionRepository.find(returnId);
         if (returnTransaction == null || returnTransaction.getPayment() != null) {
             return false;
@@ -564,7 +770,13 @@ public class EZShopControllerImpl implements EZShopController {
         return true;
     }
 
-    public double receiveCashPayment(Integer transactionId, double cash) throws InvalidTransactionIdException, InvalidPaymentException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
+    @FallbackIntValue
+    public double receiveCashPayment(
+            @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer transactionId,
+            @NotNull @Positive @Throw(InvalidPaymentException.class) double cash
+    ) throws InvalidTransactionIdException, InvalidPaymentException, UnauthorizedException {
         SaleTransactionImpl saleTransaction = (SaleTransactionImpl) saleTransactionRepository.find(transactionId);
         if (saleTransaction == null) {
             return -1;
@@ -583,7 +795,13 @@ public class EZShopControllerImpl implements EZShopController {
         return cash - price;
     }
 
-    public boolean receiveCreditCardPayment(Integer transactionId, String creditCard) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
+    @FallbackBooleanValue
+    public boolean receiveCreditCardPayment(
+            @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer transactionId,
+            @NotNull @NotEmpty @CreditCardNumber @Throw(InvalidCreditCardException.class) String creditCard
+    ) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException {
         SaleTransactionImpl saleTransaction = (SaleTransactionImpl) saleTransactionRepository.find(transactionId);
         if (saleTransaction == null) {
             return false;
@@ -602,7 +820,12 @@ public class EZShopControllerImpl implements EZShopController {
         return false;
     }
 
-    public double returnCashPayment(Integer returnId) throws InvalidTransactionIdException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
+    @FallbackIntValue
+    public double returnCashPayment(
+            @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer returnId
+    ) throws InvalidTransactionIdException, UnauthorizedException {
         ReturnTransactionImpl returnTransaction = returnTransactionRepository.find(returnId);
         if (returnTransaction == null || returnTransaction.getPayment() != null) {
             return -1;
@@ -618,7 +841,13 @@ public class EZShopControllerImpl implements EZShopController {
         return price;
     }
 
-    public double returnCreditCardPayment(Integer returnId, String creditCard) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException {
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
+    @FallbackBooleanValue
+    public double returnCreditCardPayment(
+            @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer returnId,
+            @NotNull @NotEmpty @CreditCardNumber @Throw(InvalidCreditCardException.class) String creditCard
+    ) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException {
         ReturnTransactionImpl returnTransaction = returnTransactionRepository.find(returnId);
         if (returnTransaction == null) {
             return -1;
@@ -635,6 +864,9 @@ public class EZShopControllerImpl implements EZShopController {
         return -1;
     }
 
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager})
+    @FallbackBooleanValue
     public boolean recordBalanceUpdate(double toBeAdded) throws UnauthorizedException {
         double currentBalance = computeBalance();
         if (currentBalance + toBeAdded < 0) {
@@ -648,6 +880,8 @@ public class EZShopControllerImpl implements EZShopController {
         return true;
     }
 
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager})
     public List<BalanceOperation> getCreditsAndDebits(LocalDate from, LocalDate to) throws UnauthorizedException {
         LocalDate startDate = from,
                 endDate = to;
@@ -658,6 +892,8 @@ public class EZShopControllerImpl implements EZShopController {
         return balanceOperationRepository.findAllBetweenDates(startDate, endDate);
     }
 
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager})
     public double computeBalance() throws UnauthorizedException {
         return balanceOperationRepository.findAll()
                 .stream()
