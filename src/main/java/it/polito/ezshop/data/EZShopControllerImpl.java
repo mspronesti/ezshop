@@ -356,7 +356,12 @@ public class EZShopControllerImpl implements EZShopController {
         if (product == null || entry == null || amount > entry.getAmount()) {
             return false;
         }
-        entry.setAmount(entry.getAmount() - amount);
+        int newAmount = entry.getAmount() - amount;
+        if (newAmount == 0) {
+            saleTransaction.getEntries().remove(entry);
+        } else {
+            entry.setAmount(newAmount);
+        }
         product.setQuantity(product.getQuantity() + amount);
         saleTransaction.updatePrice();
         productTypeRepository.update(product);
