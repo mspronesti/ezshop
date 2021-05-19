@@ -2026,3 +2026,93 @@ Criteria for method **isValid**:
 | Unit name | Loop rows | Number of iterations | JUnit test case |
 | --------- | --------- | -------------------- | --------------- |
 | -         | -         | -                    | -               |
+
+## Class DiscountRateValidator
+
+### Method isValid
+
+| Unit name | JUnit test case |
+| --------- | --------------- |
+| isValid   | testIsValid     |
+
+### Code coverage report
+
+![](assets/WhiteBoxTesting/DiscountValidator.png)
+
+
+
+| Test case     | Node coverage | Node coverage cumulative | Edge coverage | Path | Number of test cases needed to cover all nodes |
+| ------------- | ------------- | ------------------------ | ------------- | ---- | ---------------------------------------------- |
+| isValid("0d") | 1-2           | 66%                      | 1-2           | 1    | -                                              |
+| isValid("1")  | 1-3           | 100%                     | 1-3           | 1    | -                                              |
+| **total**     | 1-2-3         | 100%                     | 100%          | 2    | 2                                              |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+## Class GtinBarcodeValidator
+
+### Method isValid
+
+| Unit name | JUnit test case |
+| --------- | --------------- |
+| isValid   | testIsValid     |
+
+### Code coverage report
+
+![](assets/WhiteBoxTesting/GtinBarcodeValidator.png)
+
+
+
+| Test case               | Node coverage | Node coverage cumulative | Edge coverage | Path | Number of test cases needed to cover all nodes |
+| ----------------------- | ------------- | ------------------------ | ------------- | ---- | ---------------------------------------------- |
+| isValid("^\\d{12,14}$") | 1-2           | 33%                      | 1-2           | 1    | -                                              |
+| isValid("...")          | 1-3-4-6       | 66%                      | 1-3 3-4 4-6   | 1    | -                                              |
+| isValid                 | 1-3-4-5       | 100%                     | 1-3 3-4 4-5   | 1    |                                                |
+| **total**               | 1-2-3-4-5-6   | 100%                     | 100%          | 3    | 3                                              |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+
+
+## Class LocationValidator
+
+### Method isValid
+
+| Unit name | JUnit test case |
+| --------- | --------------- |
+| isValid   | testIsValid     |
+
+### Code coverage report
+
+![](assets/WhiteBoxTesting/locationValidator.png)
+
+
+
+| Test case                        | Node coverage | Node coverage cumulative | Edge coverage | Path | Number of test cases needed to cover all nodes |
+| -------------------------------- | ------------- | ------------------------ | ------------- | ---- | ---------------------------------------------- |
+| isValid("null")<br />isValid("") | 1-2           | 66%                      | 1-2           | 1    | -                                              |
+| isValid("...")                   | 1-3           | 100%                     | 1-3           | 1    | -                                              |
+| **total**                        | 1-2-3         | 100%                     | 100%          | 2    | 2                                              |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
