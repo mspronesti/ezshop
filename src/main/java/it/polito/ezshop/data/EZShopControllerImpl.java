@@ -251,7 +251,11 @@ public class EZShopControllerImpl implements EZShopController {
     }
 
     public Integer defineCustomer(String customerName) throws InvalidCustomerNameException, UnauthorizedException {
-        Customer customer = new CustomerImpl();
+        if(customerRepository.findByName(customerName) != null) {
+        	// customer with given name already exists
+        	return -1;
+        }
+    	Customer customer = new CustomerImpl();
         customer.setCustomerName(customerName);
         return customerRepository.create(customer);
     }

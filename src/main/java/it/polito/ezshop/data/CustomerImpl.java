@@ -7,7 +7,7 @@ public class CustomerImpl implements Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    private String name = "";
+    private String name;
     @OneToOne
     public LoyaltyCardImpl loyaltyCard;
     @Transient
