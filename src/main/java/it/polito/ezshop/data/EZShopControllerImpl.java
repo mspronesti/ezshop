@@ -333,7 +333,7 @@ public class EZShopControllerImpl implements EZShopController {
             entry.setPricePerUnit(product.getPricePerUnit());
         }
         int newAmount = entry.getAmount() + amount;
-        if (product.getQuantity() >= newAmount) {
+        if (product.getQuantity() >= amount) {
             entry.setAmount(newAmount);
             product.setQuantity(product.getQuantity() - amount);
             productTypeRepository.update(product);
