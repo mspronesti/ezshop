@@ -209,13 +209,23 @@ public class EZShopControllerImpl implements EZShopController {
             	return true;
             
             if (status.equals(OrderImpl.Status.ISSUED.name())) {
-            	boolean payed =  recordBalanceUpdate(-1 * order.getPricePerUnit() * order.getQuantity());
-            	if(payed) {
-            		// set payed
-            		order.setStatus(OrderImpl.Status.PAYED.name());
-            		orderRepository.update(order);
-            		return true;
-            	}
+            	   double currentBalance = computeBalance();
+            	   double toBeAdded = -1 * order.getPricePerUnit() * order.getQuantity();
+                   if (currentBalance + toBeAdded < 0) {
+                       return false;
+                   }
+                   
+                   BalanceOperationImpl operation = new BalanceOperationImpl();
+                   operation.setDate(LocalDate.now());
+                   operation.setType(toBeAdded > 0 ? BalanceOperationImpl.Type.CREDIT : BalanceOperationImpl.Type.DEBIT);
+                   operation.setMoney(toBeAdded);
+                   balanceOperationRepository.create(operation);
+            	
+                   // set payed
+                   order.setStatus(OrderImpl.Status.PAYED.name());
+                   order.setBalanceId(operation.getBalanceId());
+                   orderRepository.update(order);
+                   return true;
             }
         }
         return false;
