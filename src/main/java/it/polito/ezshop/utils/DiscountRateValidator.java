@@ -1,4 +1,4 @@
-package it.polito.ezshop.util;
+package it.polito.ezshop.utils;
 
 import it.polito.ezshop.annotations.DiscountRate;
 import jakarta.validation.ConstraintValidator;

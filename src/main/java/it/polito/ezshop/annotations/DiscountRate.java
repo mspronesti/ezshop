@@ -1,6 +1,6 @@
 package it.polito.ezshop.annotations;
 
-import it.polito.ezshop.util.DiscountRateValidator;
+import it.polito.ezshop.utils.DiscountRateValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

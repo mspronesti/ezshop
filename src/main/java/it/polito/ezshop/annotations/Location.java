@@ -1,6 +1,6 @@
 package it.polito.ezshop.annotations;
 
-import it.polito.ezshop.util.LocationValidator;
+import it.polito.ezshop.utils.LocationValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

@@ -2,6 +2,7 @@ package it.polito.ezshop.data;
 
 import it.polito.ezshop.annotations.*;
 import it.polito.ezshop.exceptions.*;
+import it.polito.ezshop.utils.PaymentGateway;
 import jakarta.validation.*;
 import jakarta.validation.executable.ExecutableValidator;
 import org.hibernate.exception.JDBCConnectionException;
@@ -25,10 +26,11 @@ public class EZShopControllerImpl implements EZShopController {
     private final ReturnTransactionRepository returnTransactionRepository = new ReturnTransactionRepository();
     private final SaleTransactionRepository saleTransactionRepository = new SaleTransactionRepository();
     private final UserRepository userRepository = new UserRepository();
-    private User loggedUser = null;
+    private User loggedUser;
     private final Map<Integer, SaleTransactionImpl> openSaleTransactions = new HashMap<>();
     private final Map<Integer, ReturnTransactionImpl> openReturnTransactions = new HashMap<>();
-    
+    private final PaymentGateway paymentGateway = new PaymentGateway();
+
     public void reset() {
     	// maybe deleteAll inside each repository to avoid N queries ?
     	this.productTypeRepository.findAll().forEach(productTypeRepository::delete);
@@ -562,7 +564,21 @@ public class EZShopControllerImpl implements EZShopController {
     }
 
     public boolean receiveCreditCardPayment(Integer transactionId, String creditCard) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException {
-        // TODO(@umbo) waiting for an answer about creditcards.txt
+        SaleTransactionImpl saleTransaction = (SaleTransactionImpl) saleTransactionRepository.find(transactionId);
+        if (saleTransaction == null) {
+            return false;
+        }
+        double price = saleTransaction.getPrice();
+        boolean b = paymentGateway.requestPayment(creditCard, price);
+        System.out.println("Paying " + price + " result " + b);
+        if (b) {
+            BalanceOperationImpl operation = new BalanceOperationImpl();
+            operation.setDate(LocalDate.now());
+            operation.setType(BalanceOperationImpl.Type.CREDIT);
+            operation.setMoney(price);
+            balanceOperationRepository.create(operation);
+            return true;
+        }
         return false;
     }
 
@@ -574,7 +590,6 @@ public class EZShopControllerImpl implements EZShopController {
         BalanceOperationImpl payment = new BalanceOperationImpl();
         payment.setDate(LocalDate.now());
         payment.setType(BalanceOperationImpl.Type.DEBIT);
-        // TODO(@umbo) waiting for an answer about a preliminary balance check
         double price = returnTransaction.getPrice();
         payment.setMoney(price);
         balanceOperationRepository.create(payment);
@@ -584,8 +599,20 @@ public class EZShopControllerImpl implements EZShopController {
     }
 
     public double returnCreditCardPayment(Integer returnId, String creditCard) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException {
-        // TODO(@umbo) waiting for an answer about creditcards.txt
-        return 0;
+        ReturnTransactionImpl returnTransaction = returnTransactionRepository.find(returnId);
+        if (returnTransaction == null) {
+            return -1;
+        }
+        double price = returnTransaction.getPrice();
+        if (paymentGateway.requestAccreditation(creditCard, price)) {
+            BalanceOperationImpl operation = new BalanceOperationImpl();
+            operation.setDate(LocalDate.now());
+            operation.setType(BalanceOperationImpl.Type.DEBIT);
+            operation.setMoney(price);
+            balanceOperationRepository.create(operation);
+            return price;
+        }
+        return -1;
     }
 
     public boolean recordBalanceUpdate(double toBeAdded) throws UnauthorizedException {

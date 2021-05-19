@@ -1,10 +1,9 @@
-package it.polito.ezshop.util;
+package it.polito.ezshop.utils;
 
 import it.polito.ezshop.annotations.Location;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
 public class LocationValidator implements ConstraintValidator<Location, String> {

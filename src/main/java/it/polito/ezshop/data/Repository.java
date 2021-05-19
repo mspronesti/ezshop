@@ -1,6 +1,6 @@
 package it.polito.ezshop.data;
 
-import it.polito.ezshop.util.HibernateUtil;
+import it.polito.ezshop.utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;

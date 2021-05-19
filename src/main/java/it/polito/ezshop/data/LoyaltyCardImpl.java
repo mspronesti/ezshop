@@ -11,7 +11,7 @@ public class LoyaltyCardImpl implements LoyaltyCard {
 
     @Id
     @GeneratedValue(generator = "cardCode")
-    @GenericGenerator(name = "cardCode", strategy = "it.polito.ezshop.util.LoyaltyCardIdGenerator")
+    @GenericGenerator(name = "cardCode", strategy = "it.polito.ezshop.utils.LoyaltyCardIdGenerator")
     @Size(max = 10)
     private String id;
     private Integer points = 0;
