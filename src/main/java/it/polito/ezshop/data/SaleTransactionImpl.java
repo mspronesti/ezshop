@@ -1,6 +1,5 @@
 package it.polito.ezshop.data;
 
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
@@ -13,7 +12,7 @@ public class SaleTransactionImpl implements SaleTransaction {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection
     private List<TicketEntryImpl> entries = new ArrayList<>();
     private Double discountRate = 0d;
     private Double price = 0d;
