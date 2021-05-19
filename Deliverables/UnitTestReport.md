@@ -994,6 +994,115 @@ Criteria for method **setDiscountRate**:
 | *         | **Valid**     | T1("Cashier")                | it.polito.ezshop.acceptanceTest.UserTest.testSetRole |
 
 
+## Class DiscountRateValidator
+
+
+### Method isValid
+
+Criteria for method **isValid**:
+
+- Sign of double
+
+- Double is valid
+
+**Predicates for method isValid:**
+
+| Criterion       | Predicate    |
+| --------------- | ------------ |
+| Sign of double  | >=0d && <1   |
+|                 | <0d \|\| >=1 |
+| Double is valid | Valid        |
+|                 | null         |
+
+**Boundaries for method isValid**:
+
+| Criterion      | Boundary values |
+| -------------- | --------------- |
+| Sign of double | -Inf, 0d,1, Inf |
+
+ **Combination of predicates for method isValid**
+
+| Double is valid | Sign of double         | Valid/Invalid | Description of the test case | JUnit test case                                              |
+| --------------- | ---------------------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
+| Valid           | [0d,1)                 | **Valid**     | T1(0.5d) -> true             | it.polito.ezshop.acceptanceTests.DiscountRateValidatorTest.testIsValid |
+| ""              | (-inf,0d) \|\| [1,inf) | Valid         | T2(24d) -> false             | it.polito.ezshop.acceptanceTests.DiscountRateValidatorTest.testIsValid |
+| null            | -                      | Invalid       | T3() -> NullPointer          | it.polito.ezshop.acceptanceTests.DiscountRateValidatorTest.testIsValid |
+
+
+## Class GtinBarcodeValidator
+
+
+### Method isValid
+
+Criteria for method **isValid**:
+
+- length of String
+- Is a number
+- String is valid
+
+**Predicates for method isValid:**
+
+| Criterion       | Predicate                   |
+| --------------- | --------------------------- |
+| String length   | [12, 14]                    |
+|                 | [0, 11]  \|\|  [15, MaxInt) |
+|                 | null                        |
+| Is a number     | Number                      |
+|                 | Not a number                |
+| String is valid | Valid                       |
+|                 | Invalid                     |
+
+**Boundaries for method isValid**:
+
+| Criterion | Boundary values |
+| --------- | --------------- |
+
+ **Combination of predicates for method isValid**
+
+| String length             | Is a number | String is valid | Valid/Invalid | Description of the test case | JUnit test case                                              |
+| ------------------------- | ----------- | --------------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
+| [12 ,14]                  | Yes         | Valid           | **Valid**     | T1("012345678905") -> true   | it.polito.ezshop.acceptanceTests.GtBarcodeValidatorTest.testIsValid |
+| ""                        | ""          | Invalid         | Valid         | T2("333333333333") -> false  | it.polito.ezshop.acceptanceTests.GtBarcodeValidatorTest.testIsValid |
+| ""                        | No          | -               | Valid         | T2("ciao") -> false          | it.polito.ezshop.acceptanceTests.GtBarcodeValidatorTest.testIsValid |
+| [0, 11]  \|\|[15, MaxInt) | -           | -               | Valid         | T2("12") -> false            | it.polito.ezshop.acceptanceTests.GtBarcodeValidatorTest.testIsValid |
+| null                      | -           | -               | Invalid       | T5(null) -> NullPointer      | it.polito.ezshop.acceptanceTests.GtBarcodeValidatorTest.testIsValid |
+
+
+## Class LocationValidator
+
+
+### Method isValid
+
+Criteria for method **isValid**:
+
+- String length
+- String is valid
+
+**Predicates for method isValid:**
+
+| Criterion       | Predicate |
+| --------------- | --------- |
+| String length   | !=0       |
+|                 | Empty     |
+|                 | null      |
+| String is valid | Valid     |
+|                 | Invalid   |
+
+**Boundaries for method isValid**:
+
+| Criterion | Boundary values |
+| --------- | --------------- |
+
+ **Combination of predicates for method isValid**
+
+| String length | String is valid | Valid/Invalid | Description of the test case | JUnit test case                                              |
+| ------------- | --------------- | ------------- | ---------------------------- | ------------------------------------------------------------ |
+| !0            | Valid           | Valid         | T1("1-a-1") -> true          | it.polito.ezshop.acceptanceTests.LocationValidatorTest.testIsValid |
+| ""            | Invalid         | Valid         | T2("3131ad") - > false       | it.polito.ezshop.acceptanceTests.LocationValidatorTest.testIsValid |
+| Empty         | -               | Valid         | T3("") -> true               | it.polito.ezshop.acceptanceTests.LocationValidatorTest.testIsValid |
+| null          | -               | Valid         | T4(null) -> false            | it.polito.ezshop.acceptanceTests.LocationValidatorTest.testIsValid |
+
+
 
 
 # White Box Unit Tests
