@@ -3,6 +3,7 @@ package it.polito.ezshop.data;
 import it.polito.ezshop.annotations.*;
 import it.polito.ezshop.exceptions.*;
 import jakarta.validation.constraints.*;
+import org.hibernate.validator.constraints.CreditCardNumber;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -267,7 +268,7 @@ public interface EZShopController {
     @FallbackBooleanValue
     public boolean receiveCreditCardPayment(
             @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer transactionId,
-            @NotNull @NotEmpty @Throw(InvalidCreditCardException.class) String creditCard
+            @NotNull @NotEmpty @CreditCardNumber @Throw(InvalidCreditCardException.class) String creditCard
     ) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException;
 
     @AcceptRoles({ Role.Administrator, Role.ShopManager, Role.Cashier })
@@ -280,7 +281,7 @@ public interface EZShopController {
     @FallbackBooleanValue
     public double returnCreditCardPayment(
             @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer returnId,
-            @NotNull @NotEmpty @Throw(InvalidCreditCardException.class) String creditCard
+            @NotNull @NotEmpty @CreditCardNumber @Throw(InvalidCreditCardException.class) String creditCard
     ) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException;
 
     @AcceptRoles({ Role.Administrator, Role.ShopManager })
