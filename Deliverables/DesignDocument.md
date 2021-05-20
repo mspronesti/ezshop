@@ -2,9 +2,9 @@
 
 Authors: Massimiliano Pronesti, Matteo Notarangelo, Davide Mammone, Umberto Pepato 
 
-Date: 30/04/2021
+Date: 19/05/2021
 
-Version: 1.0
+Version: 2.0
 
 # Contents
 
@@ -13,7 +13,7 @@ Version: 1.0
 - [Verification traceability matrix](#verification-traceability-matrix)
 - [Verification sequence diagrams](#verification-sequence-diagrams)
   * [Scenario 1-1](#scenario-1-1)
-  * [Scenario 2-2](#scenario-2-2)
+  * [Scenario 2-2](#scenario-2-1)
   * [Scenario 3-2](#scenario-3-2)
   * [Scenario 4-2](#scenario-4-2)
   * [Scenario 6-5](#scenario-6-5)
@@ -21,26 +21,25 @@ Version: 1.0
   * [Scenario 9-1](#scenario-9-1)
 # Instructions
 
-The design must satisfy the Official Requirements document, notably functional and non functional requirements
+The design must satisfy the Official Requirements document, notably functional and non-functional requirements.
 
 # High level design 
 
-The application follows the 3-tier architectural pattern, with each entity having a dedicated `Repository` to interact
-with the persistence layer. The Data layer interacts with the repositories to execute collection-related actions, the
-View layer with the Java UI library and the Application layer accepts inputs from the UI and converts them to data model
-actions.
+The application follows the Repository pattern to interact with the persistence layer.
 
 ## Packages
 
 ```plantuml
 @startuml
 package it.polito.ezshop {
+    package annotations
     package data
-    package view
-    package application
+    package exceptions
+    package utils
 }
-view -- application
-application -- data
+data -- annotations
+data -- exceptions
+data -- utils
 @enduml
 ```
 
@@ -50,13 +49,13 @@ application -- data
 @startuml
 left to right direction
 
-package application {
+package data {
 
     interface EZShopInterface {
     
     }
     
-    class Shop implements EZShopInterface {
+    class EZShop implements EZShopInterface {
         List<User> users
         List<ProductType> products
         List<Customer> customers
@@ -112,51 +111,21 @@ package application {
         + List<BalanceOperation> getCreditsAndDebits(LocalDate from, LocalDate to)
         + double computeBalance()
     }
-
-    class AccountBook {
-        double totalBalance
-        List<BalanceOperation> operations
-
-        boolean recordBalanceUpdate(double toBeAdded)
-        double getBalance()
-        List<BalanceOperation> getCreditsAndDebits(LocalDate from, LocalDate to)
-    }
     
-    AccountBook -- Shop
-
-    class Config {
-
-    }
-
-    class Util {
-
-    }
-
-    class CreditCardCircuit {
-    
-        boolean isValid(String creditCard)
-        boolean isExpired(String creditCard)
-        boolean hasEnoughCredit(String creditCard, double requiredBalance)
-        boolean processPayment(String creditCard, double requiredBalance)
-        boolean returnPayment(String creditCard, double requiredBalance)
-    }
-}
-@enduml
-```
-
-```plantuml
-@startuml
-left to right direction
-
-package data {
+    EZShop -- EZShopController
 
     interface Repository<T> {
-        +EntityManager getEntityManager()
-        +List<T> findAll()
-        +T find(Integer id)
-        +boolean create(T entity)
-        +T update(T entity)
-        +boolean delete(T entity)
+        Session getSession()
+        T _find(Class<? extends T> entityClass, Serializable id)
+        List<T> _findAll(Class<? extends T> entityClass)
+        Serializable _create(T entity)
+        T _update(T entity)
+        void _delete(T entity)
+        {abstract} T find(Serializable id)
+        {abstract} List<T> findAll()
+        {abstract} Serializable create(T entity)
+        {abstract} T update(T entity)
+        {abstract} void delete(T entity)
     }
 
     class User <<Persistent>> {
@@ -169,9 +138,10 @@ package data {
     class UserRepository implements Repository {
         +List<User> findAll()
         +User find(Integer id)
-        +boolean create(User user)
+        +User findByUsername(String username)
+        +Integer create(User user)
         +User update(User user)
-        +boolean delete(User user)
+        +void delete(User user)
     }
 
     User -- UserRepository
@@ -185,34 +155,28 @@ package data {
     class CustomerRepository implements Repository {
         +List<Customer> findAll()
         +Customer find(Integer id)
-        +boolean create(Customer user)
+        +Customer findByName(String name)
+        +Integer create(Customer user)
         +Customer update(Customer user)
-        +boolean delete(Customer user)
+        +void delete(Customer user)
     }
 
     Customer -- CustomerRepository
 
     class BalanceOperation <<Persistent>> {
-        description
-        amount
-        date
-    }
-
-    class Credit extends BalanceOperation {
-
-    }
-
-    class Debit extends BalanceOperation {
-
+        Integer id
+        Double money
+        String type
+        LocalDate date
     }
 
     class BalanceOperationRepository implements Repository {
         +List<BalanceOperation> findAll()
         +List<BalanceOperation> findAllBetweenDates(LocalDate from, LocalDate to)
         +BalanceOperation find(Integer id)
-        +boolean create(BalanceOperation user)
+        +Integer create(BalanceOperation user)
         +BalanceOperation update(BalanceOperation user)
-        +boolean delete(BalanceOperation user)
+        +void delete(BalanceOperation user)
     }
 
     BalanceOperation -- BalanceOperationRepository
@@ -222,31 +186,42 @@ package data {
         Integer points
     }
 
+    class LoyaltyCardRepository implements Repository {
+        +List<LoyaltyCard> findAll()
+        +LoyaltyCard find(Integer id)
+        +String create(LoyaltyCard user)
+        +LoyaltyCard update(LoyaltyCard user)
+        +void delete(LoyaltyCard user)
+    }
+
+    LoyaltyCard -- LoyaltyCardRepository
+
     class Order <<Persistent>> {
         Integer id
+        Integer balanceId
         String barcode
-        double pricePerUnit
-        Integer quantity
         String status
+        Double pricePerUnit
+        Integer quantity
     }
 
     class OrderRepository implements Repository {
         +List<Order> findAll()
         +Order find(Integer id)
-        +boolean create(Order user)
+        +Integer create(Order user)
         +Order update(Order user)
-        +boolean delete(Order user)
+        +void delete(Order user)
     }
 
     Order -- OrderRepository
 
     class ProductType <<Persistent>> {
         Integer id
-        String barcode
-        String description
-        double pricePerUnit
-        String note
         Integer quantity
+        String note
+        String description
+        String barcode
+        Double pricePerUnit
         Position position
     }
 
@@ -254,9 +229,9 @@ package data {
         +List<ProductType> findAll()
         +ProductType find(Integer id)
         +ProductType findByBarcode(String barcode)
-        +boolean create(ProductType user)
+        +Integer create(ProductType user)
         +ProductType update(ProductType user)
-        +boolean delete(ProductType user)
+        +void delete(ProductType user)
     }
 
     ProductType -- ProductTypeRepository
@@ -267,47 +242,41 @@ package data {
         String levelID
     }
 
-    class Transaction <<Persistent>> {
+    class SaleTransactionRepository implements Repository {
+        +List<SaleTransaction> findAll()
+        +SaleTransaction find(Integer id)
+        +Integer create(SaleTransaction user)
+        +SaleTransaction update(SaleTransaction user)
+        +void delete(SaleTransaction user)
     }
 
-    class TransactionRepository implements Repository {
-        +List<Transaction> findAll()
-        +Transaction find(Integer id)
-        +boolean create(Transaction user)
-        +Transaction update(Transaction user)
-        +boolean delete(Transaction user)
-    }
-
-    Transaction -- TransactionRepository
-
-    class ReturnTransaction extends Transaction {
+    class SaleTransaction {
         Integer id
-        Integer returnId
-        Map<ProductType, Integer> productAndAmount
-        boolean commit
+        List<TicketEntry> entries
+        Double discountRate
+        Double price
+    }
+    
+    class ReturnTransaction extends SaleTransaction {
+        SaleTransaction saleTransaction
     }
 
-    class TransactionItem {
-        Integer quantity
-        double discountRate
-        ProductType product
+    SaleTransaction -- SaleTransactionRepository
+    
+    class ReturnTransactionRepository implements Repository {
+        +List<ReturnTransaction> findAll()
+        +ReturnTransaction find(Integer id)
+        +Integer create(ReturnTransaction user)
+        +ReturnTransaction update(ReturnTransaction user)
+        +void delete(ReturnTransaction user)
     }
+    
+    ReturnTransaction -- ReturnTransactionRepository
 
-    class SaleTransaction extends Transaction {
-        Integer id
-        List<TransactionItem> products
-        String date
-        String time
-        double cost
-        String paymentType
-        String status
-        double discountRate
-    }
-
-    Order --|> Debit
     Order "*" - ProductType
 
     SaleTransaction - "*" ProductType
+    ReturnTransaction - "*" ProductType
 
     LoyaltyCard "0..1" --> Customer
 
@@ -317,12 +286,10 @@ package data {
 
     ReturnTransaction "*" - SaleTransaction
     ReturnTransaction "*" - ProductType
+    ReturnTransaction "*" - ProductType
 
-    TransactionItem -- SaleTransaction
-    TransactionItem -- ProductType
-
-    SaleTransaction --|> Credit
-    ReturnTransaction --|> Debit
+    TicketEntry -- SaleTransaction
+    TicketEntry -- ProductType
 }
 
 @enduml
@@ -330,23 +297,28 @@ package data {
 
 ```plantuml
 @startuml
-package view {
-note: TBD
+package utils {
+    class DiscountRateValidator
+    class GtinBarcodeValidator
+    class HibernateUtil
+    class LocationValidator
+    class LoyaltyCardIdGenerator
+    class PaymentGateway
 }
 @enduml
 ```
 
 # Verification traceability matrix
 
-| FR Code | AccountBook | CreditCardCircuit | CustomerRepository | BalanceOperationRepository | LoyalityCard | OrderRepository | ProductTypeRepository|Position|TransactionRepository|TransactionItem| Shop | UserRepository |
-| :--------:|:---:|:-----------:|:---------:|:----------------:| :---------------: | :------: | :--------: |:---:|:-----------:|:---------:|:----------------:| :--------: |
-| FR1   | | | | |   |   |   | | | |  X |X| 
-| FR3   | | | | |   |   | X | | | |  X | |  
-| FR4   | | | | |   | X | X |X|X| |  X | |  
-| FR5   | | |X| | X |   |   | | | |  X | |  
-| FR6   | | | | | X |   | X | |X|X|  X | |  
-| FR7   | |X| | |   |   |   | | |X|  X | | 
-| FR8   |X| | |X|   |   |   | | | |  X | |  
+| FR Code | PaymentGateway | CustomerRepository | BalanceOperationRepository | LoyalityCard | OrderRepository | ProductTypeRepository|Position|TransactionRepository|TicketEntry| EZShop | UserRepository |
+| :--------:|:-----------:|:---------:|:----------------:| :---------------: | :------: | :--------: |:---:|:-----------:|:---------:|:----------------:| :--------: |
+| FR1   | | | |   |   |   | | | |  X |X| 
+| FR3   | | | |   |   | X | | | |  X | |  
+| FR4   | | | |   | X | X |X|X| |  X | |  
+| FR5   | |X| | X |   |   | | | |  X | |  
+| FR6   | | | | X |   | X | |X|X|  X | |  
+| FR7   |X| | |   |   |   | | |X|  X | | 
+| FR8   | | |X|   |   |   | | | |  X | |  
 
 # Verification sequence diagrams
 
@@ -358,11 +330,11 @@ actor Administrator
     Shop -> ProductTypeRepository: createProductType
     activate ProductTypeRepository
 
-    ProductTypeRepository -> EntityManager: create
-    activate EntityManager
+    ProductTypeRepository -> Session: create
+    activate Session
 
-    EntityManager --> ProductTypeRepository
-    deactivate EntityManager
+    Session --> ProductTypeRepository
+    deactivate Session
 
     ProductTypeRepository --> Shop
     deactivate ProductTypeRepository
@@ -376,11 +348,11 @@ actor Administrator
     Shop -> UserRepository: createUser
     activate UserRepository
 
-    UserRepository -> EntityManager: create
-    activate EntityManager
+    UserRepository -> Session: create
+    activate Session
 
-    EntityManager --> UserRepository
-    deactivate EntityManager
+    Session --> UserRepository
+    deactivate Session
 
     UserRepository --> Shop
     deactivate UserRepository
@@ -394,17 +366,17 @@ actor Administrator
     Shop -> OrderRepository: payOrder
     activate OrderRepository
 
-    OrderRepository -> EntityManager: find
-    activate EntityManager
+    OrderRepository -> Session: find
+    activate Session
 
-    EntityManager --> OrderRepository
-    deactivate EntityManager
+    Session --> OrderRepository
+    deactivate Session
 
-    OrderRepository -> EntityManager: update
-    activate EntityManager
+    OrderRepository -> Session: update
+    activate Session
 
-    EntityManager --> OrderRepository
-    deactivate EntityManager
+    Session --> OrderRepository
+    deactivate Session
 
     OrderRepository --> Shop
     deactivate OrderRepository
@@ -419,17 +391,17 @@ actor Administrator
     Shop -> CustomerRepository: attachCardToCustomer
     activate CustomerRepository
 
-    CustomerRepository -> EntityManager: find
-    activate EntityManager
+    CustomerRepository -> Session: find
+    activate Session
 
-    EntityManager --> CustomerRepository
-    deactivate EntityManager
+    Session --> CustomerRepository
+    deactivate Session
 
-    CustomerRepository -> EntityManager: update
-    activate EntityManager
+    CustomerRepository -> Session: update
+    activate Session
 
-    EntityManager --> CustomerRepository
-    deactivate EntityManager
+    Session --> CustomerRepository
+    deactivate Session
 
     CustomerRepository --> Shop
     deactivate CustomerRepository
@@ -443,11 +415,11 @@ actor Administrator
     Shop -> TransactionRepository: startSaleTransaction
     activate TransactionRepository
     
-    TransactionRepository -> EntityManager: create
-    activate EntityManager
+    TransactionRepository -> Session: create
+    activate Session
     
-    EntityManager --> TransactionRepository
-    deactivate EntityManager
+    Session --> TransactionRepository
+    deactivate Session
     
     TransactionRepository --> Shop
     deactivate TransactionRepository
@@ -455,11 +427,11 @@ actor Administrator
     Shop -> ProductTypeRepository: getProductTypeByBarCode
     activate ProductTypeRepository
     
-    ProductTypeRepository -> EntityManager: findByBarcode
-    activate EntityManager
+    ProductTypeRepository -> Session: findByBarcode
+    activate Session
     
-    EntityManager --> ProductTypeRepository
-    deactivate EntityManager
+    Session --> ProductTypeRepository
+    deactivate Session
     
     ProductTypeRepository --> Shop
     deactivate ProductTypeRepository
@@ -467,20 +439,20 @@ actor Administrator
     Shop -> ProductTypeRepository: addProductToSale
     activate ProductTypeRepository
     
-    ProductTypeRepository -> EntityManager: update
-    activate EntityManager
+    ProductTypeRepository -> Session: update
+    activate Session
     
-    EntityManager --> ProductTypeRepository
-    deactivate EntityManager
+    Session --> ProductTypeRepository
+    deactivate Session
     
     ProductTypeRepository --> TransactionRepository
     deactivate TransactionRepository
     
-    TransactionRepository -> EntityManager: update
-    activate EntityManager
+    TransactionRepository -> Session: update
+    activate Session
     
-    EntityManager --> TransactionRepository
-    deactivate EntityManager
+    Session --> TransactionRepository
+    deactivate Session
     
     TransactionRepository --> Shop
     deactivate TransactionRepository
@@ -488,11 +460,11 @@ actor Administrator
     Shop -> TransactionRepository: endSaleTransaction
     activate TransactionRepository
     
-    TransactionRepository -> EntityManager: update
-    activate EntityManager
+    TransactionRepository -> Session: update
+    activate Session
     
-    EntityManager --> TransactionRepository
-    deactivate EntityManager
+    Session --> TransactionRepository
+    deactivate Session
     
     TransactionRepository --> Shop
     deactivate ProductTypeRepository
@@ -505,11 +477,11 @@ actor Administrator
     
     Shop -> TransactionRepository: deleteSaleTransaction
     
-    TransactionRepository -> EntityManager: delete
-    activate EntityManager
+    TransactionRepository -> Session: delete
+    activate Session
     
-    EntityManager --> TransactionRepository
-    deactivate EntityManager
+    Session --> TransactionRepository
+    deactivate Session
     
     TransactionRepository --> Shop
     deactivate TransactionRepository
@@ -523,11 +495,11 @@ actor Administrator
     Shop -> TransactionRepository: receiveCashPayment
     activate TransactionRepository
 
-    TransactionRepository --> EntityManager: find
-    activate EntityManager
+    TransactionRepository --> Session: find
+    activate Session
 
-    EntityManager --> TransactionRepository
-    deactivate EntityManager
+    Session --> TransactionRepository
+    deactivate Session
 
     TransactionRepository --> Shop
     deactivate TransactionRepository
@@ -545,11 +517,11 @@ actor Administrator
     AccountBook -> BalanceOperationRepository: getCreditsAndDebits
     activate BalanceOperationRepository
 
-    BalanceOperationRepository --> EntityManager: findAllBetweenDates
-    activate EntityManager
+    BalanceOperationRepository --> Session: findAllBetweenDates
+    activate Session
 
-    EntityManager --> BalanceOperationRepository
-    deactivate EntityManager
+    Session --> BalanceOperationRepository
+    deactivate Session
 
     BalanceOperationRepository --> AccountBook
     deactivate BalanceOperationRepository
