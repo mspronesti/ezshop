@@ -1,10 +1,10 @@
 # Integration and API Test Documentation
 
-Authors:
+Authors: Massimiliano Pronesti, Matteo Notarangelo, Davide Mammone, Umberto Pepato
 
-Date:
+Date: 22/05/2021
 
-Version:
+Version: 1.0
 
 # Contents
 
@@ -24,6 +24,86 @@ Version:
 # Dependency graph 
 
      <report the here the dependency graph of the classes in EzShop, using plantuml>
+```plantuml
+@startuml
+top to bottom direction
+
+class BalanceOperationImpl {
+}
+
+class BalanceOperationRepository {
+}
+
+class CustomerImpl {
+}
+
+class CustomerRepository{
+}
+
+class EZshop {
+}
+
+class EZshopControllerImpl {
+}
+
+class EZshopControllerFactory{
+}
+
+class LoyaltyCardImpl{}
+
+class LoyaltyCardRepository{}
+
+class OrderImpl{}
+
+class OrderRepository{}
+
+class ProductTypeImpl{}
+
+class ProductTypeRepository{}
+
+class ReturnTransactionImpl{}
+
+class SaleTransactionImpl{}
+
+class SaleTransactionRepository{}
+
+class Role{}
+
+class TicketEntryImpl{}
+
+class UserImpl{}
+
+class UserRepository{}
+
+BalanceOperationRepository --|> BalanceOperationImpl
+CustomerRepository --|> CustomerImpl
+LoyaltyCardRepository --|> LoyaltyCardImpl
+OrderRepository --|> OrderImpl
+ProductTypeRepository --|> ProductTypeImpl
+ReturnTransactionRepository --|> ReturnTransactionImpl
+SaleTransactionRepository --|> SaleTransactionImpl
+UserRepository --|> UserImpl
+
+CustomerImpl --|> LoyaltyCardImpl
+ReturnTransactionImpl --|> SaleTransactionImpl
+SaleTransactionImpl --|> BalanceOperationImpl
+SaleTransactionImpl --|> TicketEntryImpl
+UserImpl --|> Role
+
+EZshopControllerFactory --|> EZshopControllerImpl
+EZshop --|> EZshopControllerFactory
+EZshopControllerImpl --|> BalanceOperationRepository
+EZshopControllerImpl --|> CustomerRepository
+EZshopControllerImpl --|> LoyaltyCardRepository
+EZshopControllerImpl --|> OrderRepository
+EZshopControllerImpl --|> ProductTypeRepository
+EZshopControllerImpl --|> ReturnTransactionRepository
+EZshopControllerImpl --|> SaleTransactionRepository
+EZshopControllerImpl --|>  UserRepository
+
+
+@enduml
+```
      
 # Integration approach
 
