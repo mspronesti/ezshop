@@ -2,111 +2,62 @@ package it.polito.ezshop.data;
 
 import org.junit.Test;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
 
 public class CustomerRepositoryTest {
+    private static final CustomerRepository repo = new CustomerRepository();
 
     @Test
     public void find() {
-        CustomerRepository customerRepository = new CustomerRepository();
-        CustomerImpl customer = new CustomerImpl();
-        Integer id;
-        id=customerRepository.create(customer);
-        assert(id.equals(customerRepository.find(id).getId()));
-        customerRepository.delete(customer);
-    }
-
-    @Test
-    public void findByName() {
-        CustomerRepository customerRepository = new CustomerRepository();
-        CustomerImpl customer = new CustomerImpl();
-        String name="Marco";
-        customer.setCustomerName(name);
-        int id=customerRepository.create(customer);
-
-        assert(id==customerRepository.findByName(name).getId());
-        customerRepository.delete(customer);
-
-
+        Integer customerId=16;
+        assertEquals(customerId,repo.find(customerId).getId());
     }
 
     @Test
     public void findAll() {
-        CustomerRepository customerRepository = new CustomerRepository();
-        CustomerImpl customer1 = new CustomerImpl();
-        CustomerImpl customer2 = new CustomerImpl();
-        CustomerImpl customer3 = new CustomerImpl();
-        List<Customer> CustomerList = new ArrayList<>();
-        List<Integer> idArray=new ArrayList<>();
+        assertEquals(repo.findAll().getClass(), ArrayList.class);
+        assertEquals(repo.findAll().get(0).getClass(), CustomerImpl.class);
+    }
+
+    @Test
+    public void findByName() {
+        String name = "Simone";
+        assertEquals(name, repo.findByName(name).getCustomerName());
+    }
 
 
-        CustomerList.add(customer1); CustomerList.add(customer2); CustomerList.add(customer3);
+    @Test
+    public void update() {
+        LoyaltyCardRepository loyaltyCardRepository = new LoyaltyCardRepository();
+        LoyaltyCard card= new LoyaltyCardImpl();
+        String newCardId=loyaltyCardRepository.create(card);
+        int newPoint=312;
+        card.setPoints(newPoint);
+        loyaltyCardRepository.update(card);
 
-        for (Customer entry:CustomerList) {
-            idArray.add((customerRepository.create(entry)));
-        }
+        Customer customer = repo.find(16);
 
-        CustomerList=customerRepository.findAll();
+        customer.setCustomerCard(newCardId);
+        customer.setPoints(newPoint);
 
+        Customer updated=repo.update(customer);
 
-        for (Customer entry:CustomerList) {
-            assertTrue(idArray.contains(entry.getId()));
-        }
-
-        for (Customer entry:CustomerList) {
-            customerRepository.delete(entry);
-        }
+        assert(newPoint==updated.getPoints());
+        assertEquals(newCardId, updated.getCustomerCard());
     }
 
     @Test
     public void create() {
-        CustomerRepository customerRepository = new CustomerRepository();
-        Customer customer = new CustomerImpl();
-
-        assertTrue(customerRepository.create(customer)>0);
-
-        customerRepository.delete(customer);
-    }
-
-    @Test
-    public void update() {
-        CustomerRepository customerRepository = new CustomerRepository();
-        Customer customer = new CustomerImpl();
-        LoyaltyCardRepository loyaltyCardRepository = new LoyaltyCardRepository();
-        LoyaltyCardImpl loyaltyCard = new LoyaltyCardImpl();
-
-        Integer customerId;
-        Integer points=12;
-        String loyaltyCardId = loyaltyCardRepository.create(loyaltyCard);
-        String name="Giulio";
-
-        customerId=customerRepository.create(customer);
-        customer.setCustomerName(name);
-        customer.setCustomerCard(loyaltyCardId);
-        customer.setPoints(points);
-
-        Customer customer1 = customerRepository.update(customer);
-
-        assertEquals(customerId,customerRepository.find(customerId).getId());
-        assertEquals(name,customer1.getCustomerName());
-        assertEquals(loyaltyCardId,customer1.getCustomerCard());
-        //assertEquals(points,customer1.getPoints());
-
-        loyaltyCardRepository.delete(loyaltyCard);
-        customerRepository.delete(customer);
+        assertTrue(repo.create(new CustomerImpl())>0);
     }
 
     @Test
     public void delete() {
-        CustomerRepository customerRepository = new CustomerRepository();
-        Customer customer = new CustomerImpl();
-        Integer id;
-
-        id=customerRepository.create(customer);
-        customerRepository.delete(customer);
-        assertNull(customerRepository.find(id));
+        repo.delete(repo.find(17));
+        assertNull(repo.find(17));
     }
 }
