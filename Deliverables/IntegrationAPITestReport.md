@@ -67,8 +67,6 @@ class SaleTransactionImpl{}
 
 class SaleTransactionRepository{}
 
-class Role{}
-
 class TicketEntryImpl{}
 
 class UserImpl{}
@@ -85,10 +83,10 @@ SaleTransactionRepository --|> SaleTransactionImpl
 UserRepository --|> UserImpl
 
 CustomerImpl --|> LoyaltyCardImpl
+LoyaltyCardImpl --|> CustomerImpl
 ReturnTransactionImpl --|> SaleTransactionImpl
 SaleTransactionImpl --|> BalanceOperationImpl
 SaleTransactionImpl --|> TicketEntryImpl
-UserImpl --|> Role
 
 EZshopControllerFactory --|> EZshopControllerImpl
 EZshop --|> EZshopControllerFactory
