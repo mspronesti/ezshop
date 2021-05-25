@@ -64,6 +64,7 @@ public class SaleTransactionRepositoryTest {
         SaleTransactionRepository saleTransactionRepository = new SaleTransactionRepository();
         BalanceOperationImpl balanceOp = new BalanceOperationImpl();
         BalanceOperationRepository balanceOperationRepository = new BalanceOperationRepository();
+
         List<TicketEntry> ticketList = new ArrayList<>();
         List<String> idArray=new ArrayList<>();
 
@@ -89,6 +90,7 @@ public class SaleTransactionRepositoryTest {
         saleTransaction.setPrice(price);
         saleTransaction.setEntries(ticketList);
         saleTransaction.setPayment(balanceOp);
+
         int balanceId = balanceOperationRepository.create(balanceOp);
 
 

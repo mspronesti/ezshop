@@ -2,7 +2,6 @@ package it.polito.ezshop.data;
 
 import org.junit.Test;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,30 +75,27 @@ public class CustomerRepositoryTest {
     public void update() {
         CustomerRepository customerRepository = new CustomerRepository();
         Customer customer = new CustomerImpl();
+        LoyaltyCardRepository loyaltyCardRepository = new LoyaltyCardRepository();
+        LoyaltyCardImpl loyaltyCard = new LoyaltyCardImpl();
 
-        Integer id;
+        Integer customerId;
         Integer points=12;
-        String cardId="1763985854";
+        String loyaltyCardId = loyaltyCardRepository.create(loyaltyCard);
         String name="Giulio";
 
-        id=customerRepository.create(customer);
-
+        customerId=customerRepository.create(customer);
         customer.setCustomerName(name);
-        customer.setCustomerCard(cardId);
+        customer.setCustomerCard(loyaltyCardId);
         customer.setPoints(points);
 
-        customerRepository.update(customer);
+        Customer customer1 = customerRepository.update(customer);
 
-        Customer updated = customerRepository.find(id);
+        assertEquals(customerId,customerRepository.find(customerId).getId());
+        assertEquals(name,customer1.getCustomerName());
+        assertEquals(loyaltyCardId,customer1.getCustomerCard());
+        //assertEquals(points,customer1.getPoints());
 
-        assertEquals(name, updated.getCustomerName());
-        System.out.println(updated.getPoints());
-        System.out.println(updated.getCustomerCard());
-
-        //assertTrue(points.equals(updated.getPoints()) || updated.getPoints()==null);
-        //assertEquals(balanceId, updated.getBalanceId());
-        //assertTrue(updated.getCustomerCard().equals(cardId) || updated.getCustomerCard()==null);
-
+        loyaltyCardRepository.delete(loyaltyCard);
         customerRepository.delete(customer);
     }
 

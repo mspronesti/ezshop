@@ -21,13 +21,13 @@ public class LoyaltyCardRepositoryTest {
     @Test
     public void findAll() {
         LoyaltyCardRepository loyaltyCardRepository = new LoyaltyCardRepository();
-        List<LoyaltyCard> loyaltyCardList = new ArrayList<>();
-        List<String> idArray = new ArrayList<>();
 
         LoyaltyCardImpl loyaltyCard1= new LoyaltyCardImpl();
         LoyaltyCardImpl loyaltyCard2= new LoyaltyCardImpl();
         LoyaltyCardImpl loyaltyCard3= new LoyaltyCardImpl();
 
+        List<String> idArray = new ArrayList<>();
+        List<LoyaltyCard> loyaltyCardList = new ArrayList<>();
 
         loyaltyCardList.add(loyaltyCard1);
         loyaltyCardList.add(loyaltyCard2);
@@ -63,22 +63,23 @@ public class LoyaltyCardRepositoryTest {
     public void update() {
         LoyaltyCardImpl loyaltyCard= new LoyaltyCardImpl();
         LoyaltyCardRepository loyaltyCardRepository = new LoyaltyCardRepository();
-        //CustomerImpl customer = new CustomerImpl();
-        //CustomerRepository customerRepository = new CustomerRepository();
+        CustomerImpl customer = new CustomerImpl();
+        CustomerRepository customerRepository = new CustomerRepository();
 
-        String id = loyaltyCardRepository.create(loyaltyCard);
-
-        //customer.setId(customerRepository.create(customer));
+        String loyaltyCardId = loyaltyCardRepository.create(loyaltyCard);
+        Integer customerId = customerRepository.create(customer);
 
         Integer points = 30;
         loyaltyCard.setPoints(points);
-        //loyaltyCard.setCustomer(customer);
+        loyaltyCard.setCustomer(customer);
+
         LoyaltyCard loyaltyCard1 = loyaltyCardRepository.update(loyaltyCard);
 
-        assertEquals(id,loyaltyCard1.getId());
+        assertEquals(loyaltyCardId,loyaltyCard1.getId());
         assertEquals(points,loyaltyCard1.getPoints());
-        //assertEquals(customer.getId(),loyaltyCard1.getCustomer().getId());
-        //customerRepository.delete(customer);
+        assertEquals(customerId,loyaltyCard1.getCustomer().getId());
+
+        customerRepository.delete(customer);
         loyaltyCardRepository.delete(loyaltyCard);
     }
 
