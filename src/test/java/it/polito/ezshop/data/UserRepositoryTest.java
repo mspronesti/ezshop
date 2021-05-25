@@ -35,30 +35,37 @@ public class UserRepositoryTest {
     public void findAll() {
         UserRepository repo = new UserRepository();
         List<User> userList = new ArrayList<>();
+        List<Integer> idArray = new ArrayList<>();
 
         UserImpl user1 = new UserImpl();
         UserImpl user2 = new UserImpl();
         UserImpl user3 = new UserImpl();
-
-        repo.create(user1);
-        repo.create(user2);
-        repo.create(user3);
+        
         userList.add(user1);
         userList.add(user2);
         userList.add(user3);
-        
-        assertEquals(userList,repo.findAll());
-        repo.delete(user1);
-        repo.delete(user2);
-        repo.delete(user3);
+
+        for (User entry:userList) {
+            idArray.add((repo.create(entry)));
+        }
+
+        userList=repo.findAll();
+
+
+        for (User entry:userList) {
+            assertTrue(idArray.contains(entry.getId()));
+        }
+
+        for (User entry:userList) {
+            repo.delete(entry);
+        }
     }
 
     @Test
     public void create() {
         UserImpl user= new UserImpl();
         UserRepository repo = new UserRepository();
-        Integer id=repo.create(user);
-        assertEquals(id,user.getId());
+        assertTrue(repo.create(user)>0);
         repo.delete(user);
     }
 
