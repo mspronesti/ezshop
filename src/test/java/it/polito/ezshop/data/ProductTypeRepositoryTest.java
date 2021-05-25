@@ -13,6 +13,7 @@ public class ProductTypeRepositoryTest {
     public void find() {
         ProductTypeRepository productTypeRepository = new ProductTypeRepository();
         ProductTypeImpl productType = new ProductTypeImpl();
+        productType.setBarCode("012345678905");
         Integer id = productTypeRepository.create(productType);
         assertEquals(id,productTypeRepository.find(id).getId());
         productTypeRepository.delete(productType);
@@ -22,12 +23,13 @@ public class ProductTypeRepositoryTest {
     public void findByBarcode() {
         ProductTypeRepository productTypeRepository = new ProductTypeRepository();
         ProductTypeImpl productType = new ProductTypeImpl();
-        Integer id = productTypeRepository.create(productType);
 
-        String barcode = "13148419";
+
+        String barcode = "978073562153";
         productType.setBarCode(barcode);
-        productTypeRepository.update(productType);
+        Integer id = productTypeRepository.create(productType);
         assertEquals(id,productTypeRepository.findByBarcode(productType.getBarCode()).getId());
+        productTypeRepository.delete(productType);
     }
 
     @Test
@@ -37,8 +39,11 @@ public class ProductTypeRepositoryTest {
         List<Integer> idArray = new ArrayList<>();
 
         ProductTypeImpl productType1 = new ProductTypeImpl();
+        productType1.setBarCode("012345678905");
         ProductTypeImpl productType2 = new ProductTypeImpl();
+        productType2.setBarCode("978073562153");
         ProductTypeImpl productType3 = new ProductTypeImpl();
+        productType3.setBarCode("9781234567897");
 
         productTypeList.add(productType1);
         productTypeList.add(productType2);
