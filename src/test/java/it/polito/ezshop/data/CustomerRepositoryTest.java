@@ -18,7 +18,6 @@ public class CustomerRepositoryTest {
         id=customerRepository.create(customer);
         assert(id.equals(customerRepository.find(id).getId()));
         customerRepository.delete(customer);
-
     }
 
     @Test
@@ -77,6 +76,7 @@ public class CustomerRepositoryTest {
     public void update() {
         CustomerRepository customerRepository = new CustomerRepository();
         Customer customer = new CustomerImpl();
+
         Integer id;
         Integer points=12;
         String cardId="1763985854";
@@ -95,6 +95,7 @@ public class CustomerRepositoryTest {
         assertEquals(name, updated.getCustomerName());
         System.out.println(updated.getPoints());
         System.out.println(updated.getCustomerCard());
+
         //assertTrue(points.equals(updated.getPoints()) || updated.getPoints()==null);
         //assertEquals(balanceId, updated.getBalanceId());
         //assertTrue(updated.getCustomerCard().equals(cardId) || updated.getCustomerCard()==null);

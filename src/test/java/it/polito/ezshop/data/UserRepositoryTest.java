@@ -24,9 +24,10 @@ public class UserRepositoryTest {
     public void findByUsername() {
         UserImpl user= new UserImpl();
         UserRepository repo = new UserRepository();
-        repo.create(user);
         String username = "DavideM";
-        repo.update(user);
+        user.setUsername(username);
+        repo.create(user);
+
         assertEquals(username,repo.findByUsername(username).getUsername());
         repo.delete(user);
     }

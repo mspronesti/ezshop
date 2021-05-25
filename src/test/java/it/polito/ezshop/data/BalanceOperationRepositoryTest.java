@@ -2,11 +2,9 @@ package it.polito.ezshop.data;
 
 import org.junit.Test;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -94,7 +92,6 @@ public class BalanceOperationRepositoryTest {
         BalanceOperationRepository balanceOperationRepository = new BalanceOperationRepository();
         BalanceOperation balanceOperation = new BalanceOperationImpl();
         Integer id;
-        int balanceId=5;
         double money=12.0;
 
         id=balanceOperationRepository.create(balanceOperation);
@@ -103,7 +100,6 @@ public class BalanceOperationRepositoryTest {
         balanceOperation.setMoney(12.0);
         balanceOperation.setDate(date);
         balanceOperation.setType("CREDIT");
-        //balanceOperation.setBalanceId(balanceId);
 
         balanceOperationRepository.update(balanceOperation);
 
@@ -111,7 +107,6 @@ public class BalanceOperationRepositoryTest {
 
         assert(money==updated.getMoney());
         assertEquals(date, updated.getDate());
-        //assertEquals(balanceId, updated.getBalanceId());
         assertEquals("CREDIT", updated.getType());
 
         balanceOperationRepository.delete(balanceOperation);
@@ -121,7 +116,6 @@ public class BalanceOperationRepositoryTest {
     public void create() {
         BalanceOperationRepository balanceOperationRepository = new BalanceOperationRepository();
         BalanceOperation balanceOperation = new BalanceOperationImpl();
-        Integer id;
 
         assertTrue(balanceOperationRepository.create(balanceOperation)>0);
 
