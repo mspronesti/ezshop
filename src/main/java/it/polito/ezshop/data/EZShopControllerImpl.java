@@ -45,6 +45,7 @@ public class EZShopControllerImpl implements EZShopController {
         this.returnTransactionRepository.findAll().forEach(returnTransactionRepository::delete);
         this.saleTransactionRepository.findAll().forEach(saleTransactionRepository::delete);
         this.balanceOperationRepository.findAll().forEach(balanceOperationRepository::delete);
+        this.userRepository.findAll().forEach(userRepository::delete);
     }
 
     @Override
