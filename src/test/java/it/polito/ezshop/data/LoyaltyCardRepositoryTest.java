@@ -2,6 +2,9 @@ package it.polito.ezshop.data;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class LoyaltyCardRepositoryTest {
@@ -17,6 +20,34 @@ public class LoyaltyCardRepositoryTest {
 
     @Test
     public void findAll() {
+        LoyaltyCardRepository loyaltyCardRepository = new LoyaltyCardRepository();
+        List<LoyaltyCard> loyaltyCardList = new ArrayList<>();
+        List<String> idArray = new ArrayList<>();
+
+        LoyaltyCardImpl loyaltyCard1= new LoyaltyCardImpl();
+        LoyaltyCardImpl loyaltyCard2= new LoyaltyCardImpl();
+        LoyaltyCardImpl loyaltyCard3= new LoyaltyCardImpl();
+
+
+        loyaltyCardList.add(loyaltyCard1);
+        loyaltyCardList.add(loyaltyCard2);
+        loyaltyCardList.add(loyaltyCard3);
+
+        for (LoyaltyCard entry:loyaltyCardList) {
+            idArray.add((loyaltyCardRepository.create(entry)));
+        }
+
+        loyaltyCardList=loyaltyCardRepository.findAll();
+
+
+        for (LoyaltyCard entry:loyaltyCardList) {
+            assertTrue(idArray.contains(entry.getId()));
+        }
+
+        for (LoyaltyCard entry:loyaltyCardList) {
+            loyaltyCardRepository.delete(entry);
+        }
+
     }
 
     @Test
@@ -32,8 +63,8 @@ public class LoyaltyCardRepositoryTest {
     public void update() {
         LoyaltyCardImpl loyaltyCard= new LoyaltyCardImpl();
         LoyaltyCardRepository loyaltyCardRepository = new LoyaltyCardRepository();
-        CustomerImpl customer = new CustomerImpl();
-        CustomerRepository customerRepository = new CustomerRepository();
+        //CustomerImpl customer = new CustomerImpl();
+        //CustomerRepository customerRepository = new CustomerRepository();
 
         String id = loyaltyCardRepository.create(loyaltyCard);
 
