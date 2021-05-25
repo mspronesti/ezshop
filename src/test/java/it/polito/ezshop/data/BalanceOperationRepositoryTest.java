@@ -1,89 +1,41 @@
 package it.polito.ezshop.data;
 
-import org.junit.After;
-import org.junit.Before;
+
 import org.junit.Test;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.Assert.*;
 
 
 public class BalanceOperationRepositoryTest {
 
-    private static BalanceOperationRepository repo = new BalanceOperationRepository();
-    private static List<BalanceOperation> balanceOperationList=new ArrayList<>();
-    private static BalanceOperationImpl balanceOperation;
-    private static Integer balanceOperationId;
+    private static final BalanceOperationRepository repo = new BalanceOperationRepository();
 
-
-    @Before
-    public void init(){
-        balanceOperation = new BalanceOperationImpl();
-        balanceOperation.setDate(LocalDate.of(2021, 3, 9));
-        balanceOperation.setMoney(12.0);
-        balanceOperation.setType("CREDIT");
-        balanceOperationId=repo.create(balanceOperation);
-    }
-    
     @Test
     public void find() {
-        assert(balanceOperationId==repo.find(balanceOperationId).getBalanceId());
+        int balanceOperationId=36;
+        assertEquals(balanceOperationId,repo.find(balanceOperationId).getBalanceId());
     }
 
     @Test
     public void findAll() {
-        List<Integer> idArray=new ArrayList<>();
-        BalanceOperationImpl balanceOperation2 = new BalanceOperationImpl();
-        BalanceOperationImpl balanceOperation3 = new BalanceOperationImpl();
-
-        balanceOperationList.add(balanceOperation2);
-        balanceOperationList.add(balanceOperation3);
-
-        idArray.add(balanceOperationId);
-
-        for (BalanceOperation entry:balanceOperationList) {
-            idArray.add((repo.create(entry)));
-        }
-
-        balanceOperationList=repo.findAll();
-
-        for (BalanceOperation entry:balanceOperationList) {
-            assertTrue(idArray.contains(entry.getBalanceId()));
-        }
-
+        assertEquals(repo.findAll().getClass(), ArrayList.class);
+        assertEquals(repo.findAll().get(0).getClass(), BalanceOperationImpl.class);
     }
 
     @Test
     public void findAllBetweenDates() {
-        BalanceOperationImpl balanceOperation2 = new BalanceOperationImpl();
-        BalanceOperationImpl balanceOperation3 = new BalanceOperationImpl();
-
-        List<LocalDate> dateArray=new ArrayList<>();
-        dateArray.add(LocalDate.of(2020, 1,1));
-        dateArray.add(LocalDate.of(2021, 3, 9));
-
-        balanceOperation2.setDate(LocalDate.of(2020, 1,1));
-        balanceOperation3.setDate(LocalDate.of(2021, 3, 9));
-
-        balanceOperationList.add(balanceOperation);
-        balanceOperationList.add(balanceOperation2);
-        balanceOperationList.add(balanceOperation3);
-
-
-        for (BalanceOperation entry:balanceOperationList) {
-            repo.create(entry);
+        LocalDate from =LocalDate.of(2020,9,9);
+        LocalDate to =LocalDate.of(2021,5,31);
+        for (BalanceOperation entry:
+                repo.findAllBetweenDates(from,to)) {
+            assertTrue(entry.getDate().isBefore(to)
+                            && entry.getDate().isAfter(from));
         }
-
-        balanceOperationList=repo.findAllBetweenDates(LocalDate.of(2020,9,9), LocalDate.of(2021,3,31));
-
-        for (BalanceOperation entry:balanceOperationList) {
-            assertTrue(dateArray.contains(entry.getDate()) &&
-                    (entry.getDate().isBefore(LocalDate.of(2021,3,31))
-                            && entry.getDate().isAfter(LocalDate.of(2020,9,9))));
-        }
+        assertEquals(repo.findAllBetweenDates(from, to).getClass(), ArrayList.class);
+        assertEquals(repo.findAllBetweenDates(from, to).get(0).getClass(), BalanceOperationImpl.class);
     }
 
 
@@ -91,7 +43,8 @@ public class BalanceOperationRepositoryTest {
     public void update() {
         double newMoney=25.0;
         LocalDate newDate = LocalDate.of(2020,12,12);
-        String newType = "DEBIT";
+        String newType = "CREDIT";
+        BalanceOperation balanceOperation = repo.find(36);
 
         balanceOperation.setMoney(newMoney);
         balanceOperation.setDate(newDate);
@@ -106,22 +59,12 @@ public class BalanceOperationRepositoryTest {
 
     @Test
     public void create() {
-        assertTrue(balanceOperationId>0);
+        assertTrue(repo.create(new BalanceOperationImpl())>0);
     }
 
     @Test
     public void delete() {
-        repo.delete(balanceOperation);
-        assertNull(repo.find(balanceOperationId));
-    }
-
-    @After
-    public void stop(){
-
-        balanceOperationList=repo.findAll();
-        for (BalanceOperation u:balanceOperationList) {
-            repo.delete(u);
-        }
-        balanceOperationList.clear();
+        repo.delete(repo.find(34));
+        assertNull(repo.find(34));
     }
 }

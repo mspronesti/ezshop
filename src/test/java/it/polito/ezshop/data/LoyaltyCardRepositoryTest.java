@@ -1,5 +1,7 @@
 package it.polito.ezshop.data;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -8,87 +10,48 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class LoyaltyCardRepositoryTest {
+    private static final LoyaltyCardRepository repo = new LoyaltyCardRepository();
 
     @Test
     public void find() {
-        LoyaltyCardImpl loyaltyCard= new LoyaltyCardImpl();
-        LoyaltyCardRepository loyaltyCardRepository = new LoyaltyCardRepository();
-        String id = loyaltyCardRepository.create(loyaltyCard);
-        assertEquals(id,loyaltyCardRepository.find(id).getId());
-        loyaltyCardRepository.delete(loyaltyCard);
+        String loyaltyCardId="8819278768";
+        assertEquals(loyaltyCardId,repo.find(loyaltyCardId).getId());
     }
 
     @Test
     public void findAll() {
-        LoyaltyCardRepository loyaltyCardRepository = new LoyaltyCardRepository();
-
-        LoyaltyCardImpl loyaltyCard1= new LoyaltyCardImpl();
-        LoyaltyCardImpl loyaltyCard2= new LoyaltyCardImpl();
-        LoyaltyCardImpl loyaltyCard3= new LoyaltyCardImpl();
-
-        List<String> idArray = new ArrayList<>();
-        List<LoyaltyCard> loyaltyCardList = new ArrayList<>();
-
-        loyaltyCardList.add(loyaltyCard1);
-        loyaltyCardList.add(loyaltyCard2);
-        loyaltyCardList.add(loyaltyCard3);
-
-        for (LoyaltyCard entry:loyaltyCardList) {
-            idArray.add((loyaltyCardRepository.create(entry)));
-        }
-
-        loyaltyCardList=loyaltyCardRepository.findAll();
-
-
-        for (LoyaltyCard entry:loyaltyCardList) {
-            assertTrue(idArray.contains(entry.getId()));
-        }
-
-        for (LoyaltyCard entry:loyaltyCardList) {
-            loyaltyCardRepository.delete(entry);
-        }
-
-    }
-
-    @Test
-    public void create() {
-        LoyaltyCardImpl loyaltyCard= new LoyaltyCardImpl();
-        LoyaltyCardRepository loyaltyCardRepository = new LoyaltyCardRepository();
-        String id = loyaltyCardRepository.create(loyaltyCard);
-        assertEquals(id,loyaltyCard.getId());
-        loyaltyCardRepository.delete(loyaltyCard);
+        assertEquals(repo.findAll().getClass(), ArrayList.class);
+        assertEquals(repo.findAll().get(0).getClass(), LoyaltyCardImpl.class);
     }
 
     @Test
     public void update() {
-        LoyaltyCardImpl loyaltyCard= new LoyaltyCardImpl();
-        LoyaltyCardRepository loyaltyCardRepository = new LoyaltyCardRepository();
-        CustomerImpl customer = new CustomerImpl();
         CustomerRepository customerRepository = new CustomerRepository();
+        Customer newCustomer=new CustomerImpl();
+        Integer customerId=customerRepository.create(newCustomer);
+        int newPoint=312;
+        customerRepository.update(newCustomer);
 
-        String loyaltyCardId = loyaltyCardRepository.create(loyaltyCard);
-        Integer customerId = customerRepository.create(customer);
+        LoyaltyCard loyaltyCard = repo.find("8819278768");
 
-        Integer points = 30;
-        loyaltyCard.setPoints(points);
-        loyaltyCard.setCustomer(customer);
+        loyaltyCard.setCustomer(newCustomer);
+        loyaltyCard.setPoints(newPoint);
 
-        LoyaltyCard loyaltyCard1 = loyaltyCardRepository.update(loyaltyCard);
+        LoyaltyCard updated=repo.update(loyaltyCard);
 
-        assertEquals(loyaltyCardId,loyaltyCard1.getId());
-        assertEquals(points,loyaltyCard1.getPoints());
-        assertEquals(customerId,loyaltyCard1.getCustomer().getId());
+        assert(newPoint==updated.getPoints());
+        assertEquals(newCustomer.getId(), updated.getCustomer().getId());
+    }
 
-        customerRepository.delete(customer);
-        loyaltyCardRepository.delete(loyaltyCard);
+    @Test
+    public void create() {
+        assertTrue(repo.create(new LoyaltyCardImpl()).length()>0);
     }
 
     @Test
     public void delete() {
-        LoyaltyCardImpl loyaltyCard= new LoyaltyCardImpl();
-        LoyaltyCardRepository loyaltyCardRepository = new LoyaltyCardRepository();
-        String id = loyaltyCardRepository.create(loyaltyCard);
-        loyaltyCardRepository.delete(loyaltyCard);
-        assertNull(loyaltyCardRepository.find(id));
+        String id;
+        repo.delete(repo.find(id=repo.create(new LoyaltyCardImpl())));
+        assertNull(repo.find(id));
     }
 }
