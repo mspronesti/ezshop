@@ -1,8 +1,6 @@
 package it.polito.ezshop.data;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
 
 import java.util.ArrayList;
@@ -14,12 +12,13 @@ public class UserRepositoryTest {
 
     private static UserRepository repo = new UserRepository();
     private static List<User> userList=new ArrayList<>();
-    private static UserImpl user = new UserImpl();
+    private static UserImpl user;
     private static Integer userId;
     private static String username="MarcoC";
 
-    @BeforeClass
-    static public void init(){
+    @Before
+    public void init(){
+        user = new UserImpl();
         user.setUsername(username);
         user.setPassword("password");
         user.setRole("Cashier");
@@ -40,7 +39,6 @@ public class UserRepositoryTest {
     @Test
     public void findAll() {
         List<Integer> idArray = new ArrayList<>();
-
         UserImpl user2 = new UserImpl();
         UserImpl user3 = new UserImpl();
 
@@ -55,7 +53,6 @@ public class UserRepositoryTest {
 
         userList=repo.findAll();
 
-
         for (User entry:userList) {
             assertTrue(idArray.contains(entry.getId()));
         }
@@ -65,7 +62,6 @@ public class UserRepositoryTest {
     @Test
     public void create() {
         assertTrue(userId>0);
-
     }
 
     @Test
@@ -78,11 +74,11 @@ public class UserRepositoryTest {
         user.setUsername(newUsername);
         user.setPassword(newPassword);
 
-        repo.update(user);
+        User updated = repo.update(user);
 
-        assertEquals(newRole,user.getRole());
-        assertEquals(newUsername,user.getUsername());
-        assertEquals(newPassword,user.getPassword());
+        assertEquals(newRole,updated.getRole());
+        assertEquals(newUsername,updated.getUsername());
+        assertEquals(newPassword,updated.getPassword());
     }
 
     @Test
@@ -91,12 +87,12 @@ public class UserRepositoryTest {
         assertNull(repo.find(userId));
     }
 
-    @AfterClass
-    static public void stop(){
-
-        if((userList=repo.findAll())!=null)
-            for (User u:userList) {
-                repo.delete(u);
-            }
+    @After
+    public void stop(){
+        userList=repo.findAll();
+        for (User u:userList) {
+            repo.delete(u);
+        }
+        userList.clear();
     }
 }

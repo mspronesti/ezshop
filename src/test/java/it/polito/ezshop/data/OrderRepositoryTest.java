@@ -1,5 +1,7 @@
 package it.polito.ezshop.data;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -9,93 +11,92 @@ import static org.junit.Assert.*;
 
 public class OrderRepositoryTest {
 
+
+    private static OrderRepository repo = new OrderRepository();
+    private static List<Order> orderList=new ArrayList<>();
+    private static OrderImpl order;
+    private static Integer orderId;
+
+    @Before
+    public void init(){
+        order = new OrderImpl();
+        order.setBalanceId(43123);
+        order.setProductCode("01DA2");
+        order.setQuantity(12);
+        order.setStatus("PAYED");
+        order.setPricePerUnit(13.00);
+        orderId=repo.create(order);
+    }
+    
     @Test
     public void find() {
-        OrderImpl order = new OrderImpl();
-        OrderRepository orderRepository = new OrderRepository();
-        Integer id = orderRepository.create(order);
-        assertEquals(id,orderRepository.find(id).getOrderId());
-        orderRepository.delete(order);
+        assertEquals(orderId,repo.find(orderId).getOrderId());
     }
 
     @Test
     public void findAll() {
-        OrderRepository orderRepository = new OrderRepository();
-        List<Order> orderList = new ArrayList<>();
-        List<Integer> idArray=new ArrayList<>();
-        
-        OrderImpl tr1 = new OrderImpl();
-        OrderImpl tr2 = new OrderImpl();
-        OrderImpl tr3 = new OrderImpl();
-        orderRepository.create(tr1);
-        orderRepository.create(tr2);
-        orderRepository.create(tr3);
+        List<Integer> idArray = new ArrayList<>();
+        OrderImpl order2 = new OrderImpl();
+        OrderImpl order3 = new OrderImpl();
 
-        orderList.add(tr1);
-        orderList.add(tr2);
-        orderList.add(tr3);
+        orderList.add(order2);
+        orderList.add(order3);
+
+        idArray.add(orderId);
 
         for (Order entry:orderList) {
-            idArray.add((orderRepository.create(entry)));
+            idArray.add((repo.create(entry)));
         }
 
-        orderList=orderRepository.findAll();
-
+        orderList=repo.findAll();
 
         for (Order entry:orderList) {
             assertTrue(idArray.contains(entry.getOrderId()));
-        }
-
-        for (Order entry:orderList) {
-            orderRepository.delete(entry);
         }
     }
 
     @Test
     public void create() {
-        OrderImpl order = new OrderImpl();
-        OrderRepository orderRepository = new OrderRepository();
-        Integer id = orderRepository.create(order);
-        assertEquals(id,order.getOrderId());
-        orderRepository.delete(order);
+        assertTrue(orderId>0);
     }
 
     @Test
     public void update() {
-        OrderImpl order = new OrderImpl();
-        OrderRepository orderRepository = new OrderRepository();
+        String newStatus = "COMPLETED";
+        Integer newBalanceId = 30;
+        String newProductCode = "12DE2";
+        double newPrice = 18.50;
+        int newQuantity = 12;
 
-        Integer id = orderRepository.create(order);
-        String status = "PAYED";
-        Integer balanceId = 30;
-        String productCode = "01DA2";
-        double price = 12.50;
-        int quantity = 6;
+        order.setBalanceId(newBalanceId);
+        order.setProductCode(newProductCode);
+        order.setPricePerUnit(newPrice);
+        order.setQuantity(newQuantity);
+        order.setStatus(newStatus);
 
-        order.setBalanceId(balanceId);
-        order.setProductCode(productCode);
-        order.setPricePerUnit(price);
-        order.setQuantity(quantity);
-        order.setStatus(status);
+        Order updated=repo.update(order);
 
-        orderRepository.update(order);
+        assertEquals(newStatus, updated.getStatus());
+        assertEquals(newQuantity, updated.getQuantity());
+        assert(newPrice==updated.getPricePerUnit());
+        assertEquals(newProductCode, updated.getProductCode());
+        assertEquals(newBalanceId, updated.getBalanceId());
 
-        assertEquals(id,orderRepository.find(id).getOrderId());
-        assertEquals(status, order.getStatus());
-        assertEquals(quantity, order.getQuantity());
-        assert(price==order.getPricePerUnit());
-        assertEquals(productCode, order.getProductCode());
-        assertEquals(balanceId, order.getBalanceId());
-
-        orderRepository.delete(order);
+        repo.delete(order);
     }
 
     @Test
     public void delete() {
-        OrderImpl order = new OrderImpl();
-        OrderRepository orderRepository = new OrderRepository();
-        Integer id = orderRepository.create(order);
-        orderRepository.delete(order);
-        assertNull(orderRepository.find(id));
+        repo.delete(order);
+        assertNull(repo.find(orderId));
+    }
+
+    @After
+    public void stop(){
+        orderList=repo.findAll();
+        for (Order o:orderList) {
+            repo.delete(o);
+        }
+        orderList.clear();
     }
 }

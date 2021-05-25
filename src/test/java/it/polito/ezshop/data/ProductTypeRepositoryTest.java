@@ -1,5 +1,7 @@
 package it.polito.ezshop.data;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -8,112 +10,104 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class ProductTypeRepositoryTest {
+    
+    private static ProductTypeRepository repo = new ProductTypeRepository();
+    private static List<ProductType> productTypeList=new ArrayList<>();
+    private static ProductTypeImpl productType;
+    private static Integer productTypeId;
+    private static String productTypeBarcode="012345678905";
+
+    @Before
+    public void init(){
+        productType = new ProductTypeImpl();
+        productType.setBarCode(productTypeBarcode);
+        productType.setProductDescription("T-shirt");
+        productType.setNote("Blue");
+        productType.setQuantity(12);
+        productType.setPricePerUnit(2.50);
+        productType.setLocation("3-a-12");
+        productTypeId=repo.create(productType);
+    }
+
 
     @Test
     public void find() {
-        ProductTypeRepository productTypeRepository = new ProductTypeRepository();
-        ProductTypeImpl productType = new ProductTypeImpl();
-        productType.setBarCode("012345678905");
-        Integer id = productTypeRepository.create(productType);
-        assertEquals(id,productTypeRepository.find(id).getId());
-        productTypeRepository.delete(productType);
+        assertEquals(productTypeId,repo.find(productTypeId).getId());
     }
 
     @Test
     public void findByBarcode() {
-        ProductTypeRepository productTypeRepository = new ProductTypeRepository();
-        ProductTypeImpl productType = new ProductTypeImpl();
-
-
-        String barcode = "978073562153";
-        productType.setBarCode(barcode);
-        Integer id = productTypeRepository.create(productType);
-        assertEquals(id,productTypeRepository.findByBarcode(productType.getBarCode()).getId());
-        productTypeRepository.delete(productType);
+        assertEquals(productTypeBarcode,repo.findByBarcode(productTypeBarcode).getBarCode());
     }
 
     @Test
     public void findAll() {
-        ProductTypeRepository productTypeRepository = new ProductTypeRepository();
-        List<ProductType> productTypeList = new ArrayList<>();
         List<Integer> idArray = new ArrayList<>();
-
-        ProductTypeImpl productType1 = new ProductTypeImpl();
-        productType1.setBarCode("012345678905");
         ProductTypeImpl productType2 = new ProductTypeImpl();
         productType2.setBarCode("978073562153");
         ProductTypeImpl productType3 = new ProductTypeImpl();
-        productType3.setBarCode("9781234567897");
+        productType3.setBarCode("7891234567897");
 
-        productTypeList.add(productType1);
         productTypeList.add(productType2);
         productTypeList.add(productType3);
 
-        for (ProductType entry:productTypeList){
-            idArray.add(productTypeRepository.create(entry));
+        idArray.add(productTypeId);
+
+        for (ProductType entry:productTypeList) {
+            idArray.add((repo.create(entry)));
         }
 
-        productTypeList = productTypeRepository.findAll();
+        productTypeList=repo.findAll();
 
-        for (ProductType entry:productTypeList){
+        for (ProductType entry:productTypeList) {
             assertTrue(idArray.contains(entry.getId()));
         }
 
-        for (ProductType entry:productTypeList){
-            productTypeRepository.delete(entry);
-        }
     }
 
     @Test
     public void create() {
-        ProductTypeRepository productTypeRepository = new ProductTypeRepository();
-        ProductTypeImpl productType = new ProductTypeImpl();
-        assertTrue(productTypeRepository.create(productType)>0);
-        productTypeRepository.delete(productType);
+        assertTrue(productTypeId>0);
     }
 
     @Test
     public void update() {
-        ProductTypeRepository productTypeRepository = new ProductTypeRepository();
-        ProductTypeImpl productType = new ProductTypeImpl();
-        Integer id = productTypeRepository.create(productType);
+        Integer newQuantity=4;
+        String newLocation = "3-a-15";
+        String newNote = "Yellow";
+        String newDescription = "Shirt";
+        String newBarcode = "13148419";
+        double newPrice = 15.24;
 
-        Integer quantity=4;
-        productType.setQuantity(quantity);
+        productType.setQuantity(newQuantity);
+        productType.setLocation(newLocation);
+        productType.setNote(newNote);
+        productType.setProductDescription(newDescription);
+        productType.setBarCode(newBarcode);
+        productType.setPricePerUnit(newPrice);
 
-        String location = "3-a-12";
-        productType.setLocation(location);
+        ProductType updated = repo.update(productType);
 
-        String note = "Blue version";
-        productType.setNote(note);
-
-        String description = "Blue t-shirt";
-        productType.setProductDescription(description);
-
-        String barcode = "13148419";
-        productType.setBarCode(barcode);
-
-        double price = 15.24;
-        productType.setPricePerUnit(price);
-
-        ProductType productType1 = productTypeRepository.update(productType);
-
-        assertEquals(quantity,productType1.getQuantity());
-        assertEquals(location,productType1.getLocation());
-        assertEquals(note,productType1.getNote());
-        assertEquals(description,productType1.getProductDescription());
-        assertEquals(barcode,productType1.getBarCode());
-        assert(price == productType1.getPricePerUnit());
-        productTypeRepository.delete(productType);
-
+        assertEquals(newQuantity,updated.getQuantity());
+        assertEquals(newLocation,updated.getLocation());
+        assertEquals(newNote,updated.getNote());
+        assertEquals(newDescription,updated.getProductDescription());
+        assertEquals(newBarcode,updated.getBarCode());
+        assert(newPrice == updated.getPricePerUnit());
     }
-
+    
     @Test
     public void delete() {
-        ProductTypeRepository productTypeRepository = new ProductTypeRepository();
-        ProductTypeImpl productType = new ProductTypeImpl();
-        Integer id = productTypeRepository.create(productType);
-        productTypeRepository.delete(productType);
-        assertNull(productTypeRepository.find(id));
+        repo.delete(productType);
+        assertNull(repo.find(productTypeId));
+    }
+
+    @After
+    public void stop(){
+        productTypeList=repo.findAll();
+        for (ProductType p:productTypeList) {
+            repo.delete(p);
+        }
+        productTypeList.clear();
     }
 }
