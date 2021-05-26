@@ -184,8 +184,6 @@ public class EZShopTest {
 		assertThrows(InvalidPricePerUnitException.class, () -> ezshop.createProductType(description, productCode, 0, note));
 		
 		
-		// correct product creation
-		//assert(controller.createProductType(description, productCode, pricePerUnit, note) != -1);
 		// attempt to duplicate
 		assert(ezshop.createProductType(description, productCode, pricePerUnit, note) == -1);
 	}
@@ -668,8 +666,7 @@ public class EZShopTest {
 	
 	@Test
 	public void testAddProductToSale() throws InvalidUsernameException, InvalidPasswordException, UnauthorizedException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductCodeException {
-		// DOVREBBERO essere validi
-		Integer transactionId = 7; 
+		Integer transactionId = 7;
 		String productCode = "012345678905";
 		int amount = 15;
 		
@@ -685,16 +682,12 @@ public class EZShopTest {
 		
 		// invalid product code
 		assertThrows(InvalidProductCodeException.class, () -> ezshop.addProductToSale(transactionId, "", amount));
-		// non lancia l'eccezione giusta ... problemi simili a quelli della invoke
-//		assertThrows(InvalidProductCodeException.class, () -> controller.addProductToSale(transactionId, null, amount));
 		assertThrows(InvalidProductCodeException.class, () -> ezshop.addProductToSale(transactionId, "012345678949", amount));
 		
 		// invalid quantity
 		assertThrows(InvalidQuantityException.class, () -> ezshop.addProductToSale(transactionId, productCode, -10));
 		
-		// resto ........
 
-		// TODO: to be implemented
 		int newId=ezshop.startSaleTransaction();
 		assertTrue(ezshop.addProductToSale(newId, productCode, 1));
 		assertFalse(ezshop.addProductToSale(newId, productCode, 1000));
@@ -724,12 +717,7 @@ public class EZShopTest {
 		// invalid quantity
 		assertThrows(InvalidQuantityException.class, () -> ezshop.deleteProductFromSale(transactionId, productCode, -10));
 		
-		// resto ........
 
-		// TODO: to be implemented
-		//Integer newId=ezshop.startSaleTransaction();
-		//ezshop.addProductToSale(newId, productCode, 10);
-		//assertTrue(ezshop.deleteProductFromSale(newId, productCode, 1));
 	}
 	
 	@Test
@@ -958,7 +946,6 @@ public class EZShopTest {
 	
 	@Test
 	public void testReturnCashPayment() throws InvalidTransactionIdException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
-		// TODO: to be implemented
 		// unauth (nobody logged)
 		Integer returnId= 29;
 		ReturnTransactionRepository repo = new ReturnTransactionRepository();
@@ -980,7 +967,6 @@ public class EZShopTest {
 	
 	@Test
 	public void testReturnCreditCardPayment() throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
-		// TODO: to be implemented
 		// unauth (nobody logged)
 		Integer returnId=29;
 		String creditCard="5100293991053009";
@@ -1011,7 +997,6 @@ public class EZShopTest {
 	
 	@Test
 	public void testRecordBalanceUpdate() throws UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
-		// TODO: to be implemented
 		double toBeAdded=500.99;
 		double toBeSubtractedTooMuch=-100000.00;
 		// unauth (nobody logged)
