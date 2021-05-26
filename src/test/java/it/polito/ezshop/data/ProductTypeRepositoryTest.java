@@ -58,7 +58,7 @@ public class ProductTypeRepositoryTest {
         productType.setBarCode("123456789012");
         productType.setProductDescription("Pen");
         productType.setPricePerUnit(1.00);
-        assertTrue(repo.create(productType)>0);
+        assertTrue(repo.create(productType) > 0);
     }
 
     @Test

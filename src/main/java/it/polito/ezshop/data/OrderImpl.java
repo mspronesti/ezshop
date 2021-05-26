@@ -11,7 +11,7 @@ public class OrderImpl implements Order {
 	}
 	
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private Integer balanceId;
     private String status = "";

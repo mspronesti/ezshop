@@ -25,7 +25,7 @@ public class ProductTypeImpl implements ProductType {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private Integer quantity = 0;
     private String note = "";

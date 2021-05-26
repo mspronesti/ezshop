@@ -11,7 +11,7 @@ public class BalanceOperationImpl implements BalanceOperation {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private LocalDate date;
     private Double money = 0d;
