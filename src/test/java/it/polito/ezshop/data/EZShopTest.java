@@ -667,10 +667,10 @@ public class EZShopTest {
 	}
 	
 	@Test
-	public void testAddProductToSale() throws InvalidUsernameException, InvalidPasswordException {
+	public void testAddProductToSale() throws InvalidUsernameException, InvalidPasswordException, UnauthorizedException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductCodeException {
 		// DOVREBBERO essere validi
 		Integer transactionId = 7; 
-		String productCode = "012345678943";
+		String productCode = "012345678905";
 		int amount = 15;
 		
 		// unauth (nobody logged)
@@ -695,6 +695,10 @@ public class EZShopTest {
 		// resto ........
 
 		// TODO: to be implemented
+		int newId=ezshop.startSaleTransaction();
+		assertTrue(ezshop.addProductToSale(newId, productCode, 1));
+		assertFalse(ezshop.addProductToSale(newId, productCode, 1000));
+		assertFalse(ezshop.addProductToSale(7, productCode, 1));
 	}
 	
 	@Test
