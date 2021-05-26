@@ -4,6 +4,7 @@ package it.polito.ezshop.data;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -19,10 +20,11 @@ public class SaleTransactionRepositoryTest {
 
     @Test
     public void findAll() {
-        assertEquals(ArrayList.class, repo.findAll().getClass());
-        assertTrue(repo.findAll().get(0).getClass().equals(SaleTransaction.class)||
-                repo.findAll().get(0).getClass().equals(ReturnTransactionImpl.class));
+        assertTrue(repo.findAll() instanceof ArrayList);
+        assertTrue(repo.findAll().get(0) instanceof SaleTransaction ||
+                repo.findAll().get(0) instanceof ReturnTransactionImpl);
     }
+
     @Test
     public void update() {
         List<TicketEntry> ticketList = new ArrayList<>();
