@@ -2,7 +2,6 @@ package it.polito.ezshop.data;
 
 import static org.junit.Assert.*;
 
-import java.lang.ModuleLayer.Controller;
 import java.util.List;
 
 import org.junit.After;
@@ -460,7 +459,6 @@ public class EZShopControllerImplTest {
 		
 		// duplication attempt
 		assert(controller.defineCustomer(customerName) == -1);
-
 	}
 	
 	@Test
@@ -592,6 +590,54 @@ public class EZShopControllerImplTest {
 	    assertTrue(controller.modifyPointsOnCard(customerCard, pointsToBeAdded));
 	}
 	
+
+	
+	
+	@Test
+	public void testComputeBalance() throws InvalidUsernameException, InvalidPasswordException, UnauthorizedException {
+		// nobody logged
+		assertThrows(UnauthorizedException.class, () -> controller.computeBalance());
+		
+		// unauth
+		controller.login("Franco", "1234");
+		assertThrows(UnauthorizedException.class, () -> controller.computeBalance());
+		controller.logout();
+		
+		controller.login("Marco", "1234");
+		double currentBalance = balanceOperationRepository.findAll()
+                .stream()
+                .mapToDouble(BalanceOperation::getMoney)
+                .sum();
+		
+		assertEquals(currentBalance, controller.computeBalance(), .1);
+	}
+	
+	@Test
+	public void testStartEndSaleTransaction() throws UnauthorizedException, InvalidUsernameException, InvalidPasswordException, InvalidTransactionIdException {
+		// unauth (nobody logged)
+		assertThrows(UnauthorizedException.class, () -> controller.startSaleTransaction());
+		// cashier 
+		controller.login("Franco", "1234");
+		
+		/* --- start ---*/
+		Integer transactionId = controller.startSaleTransaction();
+		assert(transactionId >= 0);
+		
+		/* --- end ---*/
+		// invalid transaction id
+		assertThrows(InvalidTransactionIdException.class, () -> controller.endSaleTransaction(-1));
+		assertThrows(InvalidTransactionIdException.class, () -> controller.endSaleTransaction(0));
+		assertThrows(InvalidTransactionIdException.class, () -> controller.endSaleTransaction(null));
+
+		// inexistent sale transaction
+		assertFalse(controller.endSaleTransaction(180));
+		
+		// correct transaction end
+		assertTrue(controller.endSaleTransaction(transactionId));
+		
+		// attempt to close it again
+		assertFalse(controller.endSaleTransaction(transactionId));	
+	}
 	
 	
 	@After
