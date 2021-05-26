@@ -30,7 +30,7 @@ public class LoyaltyCardImpl implements LoyaltyCard {
 
     @Override
     public Integer getPoints() {
-        return points;
+        return points != null ? points : 0;
     }
 
     @Override

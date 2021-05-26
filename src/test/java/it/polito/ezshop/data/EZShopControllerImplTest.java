@@ -15,18 +15,18 @@ public class EZShopControllerImplTest {
     
     private static UserRepository userRepository;
     private static ProductTypeRepository productTypeRepository;
-    private static OrderRepository orderRepository; 
     private static BalanceOperationRepository balanceOperationRepository;
     private static CustomerRepository customerRepository;
+    private static OrderRepository orderRepository ;
     
     @BeforeClass
     static public void init() {
     	controller =  EZShopControllerFactory.create();
     	userRepository = new UserRepository();
     	productTypeRepository = new ProductTypeRepository();
-    	orderRepository = new OrderRepository();
         balanceOperationRepository = new BalanceOperationRepository();
         customerRepository  = new CustomerRepository();
+        orderRepository = new OrderRepository();
     }
 
 	@Test
@@ -369,12 +369,14 @@ public class EZShopControllerImplTest {
 		assert( controller.issueOrder("123456789999", 10, 10.24) == -1 );
 		
 		// correct order
-		assert(controller.issueOrder(productCode, quantity, pricePerUnit) != -1);
+		Integer orderId = controller.issueOrder(productCode, quantity, pricePerUnit);
+		assert(orderId != -1);
+		assertEquals(orderRepository.find(orderId).getStatus(), "ISSUED");
 	}
 	
 	@Test
 	public void testPayOrderFor() throws InvalidUsernameException, InvalidPasswordException, InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
-		String productCode = "012345678912";
+		String productCode = "012345678905";
 		Integer quantity = 5;
 		double pricePerUnit = 1.78;
 		
@@ -403,7 +405,9 @@ public class EZShopControllerImplTest {
 		assert(controller.payOrderFor(productCode, quantity*100, pricePerUnit) == -1);
 		
 		// correct order
-		assert(controller.payOrderFor(productCode, quantity, pricePerUnit) != -1);
+		Integer orderId =  controller.payOrderFor(productCode, quantity, pricePerUnit);
+		assert(orderId != -1);
+		assertEquals(orderRepository.find(orderId).getStatus(), "PAYED");
 		
 	}
 	
@@ -423,7 +427,8 @@ public class EZShopControllerImplTest {
 		// order not in ISSUED/PAYED state 
 		assertFalse(controller.payOrder(14));
 		// correct pay
-		assertTrue(controller.payOrder(6)); 
+		assertTrue(controller.payOrder(6));
+		assertEquals(orderRepository.find(6).getStatus(), "PAYED");
 	}
 	
 	@Test
@@ -450,7 +455,7 @@ public class EZShopControllerImplTest {
 		
 		// correct register
 		assertTrue(controller.recordOrderArrival(7));
-		
+		assertEquals(orderRepository.find(7).getStatus(), "COMPLETED");		
 	}
 	
 	@Test
