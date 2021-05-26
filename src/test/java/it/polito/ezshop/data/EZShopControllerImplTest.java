@@ -795,13 +795,27 @@ public class EZShopControllerImplTest {
 		//assertThrows(UnauthorizedException.class, () -> controller.computePointsForSale());
 
 	}
-	
+
 	@Test
-	public void testDeleteSaleTransaction() throws InvalidTransactionIdException, UnauthorizedException{
+	public void testDeleteSaleTransaction() throws InvalidTransactionIdException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
 		// TODO: to be implemented
 		// unauth (nobody logged)
-		//assertThrows(UnauthorizedException.class, () -> controller.deleteSaleTransaction());
+		assertThrows(UnauthorizedException.class, () -> controller.deleteSaleTransaction(900));
 
+		controller.login("Franco", "1234");
+
+		// invalidTransactionId
+		assertThrows(InvalidTransactionIdException.class, ()-> controller.deleteSaleTransaction(0));
+		assertThrows(InvalidTransactionIdException.class, ()-> controller.deleteSaleTransaction(-1));
+		assertThrows(InvalidTransactionIdException.class, ()-> controller.deleteSaleTransaction(null));
+
+
+
+		assertFalse(controller.deleteSaleTransaction(25)); //payed
+		assertFalse(controller.deleteSaleTransaction(900)); //don't exist
+
+		int newId=controller.startSaleTransaction();
+		assertTrue(controller.deleteSaleTransaction(newId));
 	}
 	
 	
