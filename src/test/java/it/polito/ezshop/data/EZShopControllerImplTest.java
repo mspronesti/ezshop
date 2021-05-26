@@ -900,8 +900,7 @@ public class EZShopControllerImplTest {
 		assertFalse(controller.deleteReturnTransaction(31));
 		int newId=controller.startReturnTransaction(27);
 		controller.returnProduct(newId,"012345678905", 1);
-		controller.endReturnTransaction(newId, false);
-		assertTrue(controller.deleteSaleTransaction(29));
+		assertTrue(controller.deleteReturnTransaction(newId));
 	}
 	
 	@Test
