@@ -789,11 +789,23 @@ public class EZShopControllerImplTest {
 	}
 	
 	@Test
-	public void testComputePointsForSale()  throws InvalidTransactionIdException, UnauthorizedException {
-		// TODO: to be implemented
-		// unauth (nobody logged)
-		//assertThrows(UnauthorizedException.class, () -> controller.computePointsForSale());
+	public void testComputePointsForSale() throws InvalidTransactionIdException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
+		Integer transactionId = 27;
 
+		// unauth (nobody logged)
+		assertThrows(UnauthorizedException.class, () -> controller.computePointsForSale(transactionId));
+
+		// cashier
+		controller.login("Franco", "1234");
+
+		// InvalidTransactionIdException
+		assertThrows(InvalidTransactionIdException.class, () -> controller.computePointsForSale(-1));
+		assertThrows(InvalidTransactionIdException.class, () -> controller.computePointsForSale(0));
+		assertThrows(InvalidTransactionIdException.class, () -> controller.computePointsForSale(null));
+
+		assertEquals(controller.computePointsForSale(29474), -1);
+
+		assertEquals(controller.computePointsForSale(transactionId), 1);
 	}
 	
 	@Test
