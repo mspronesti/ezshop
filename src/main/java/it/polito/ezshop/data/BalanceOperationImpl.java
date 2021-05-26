@@ -61,4 +61,17 @@ public class BalanceOperationImpl implements BalanceOperation {
     public void setType(Type type) {
         this.type = type.name();
     }
+    
+    @Override
+    public boolean equals(Object o) {
+    	if(o == this) 
+    		return true;
+    	if(!(o instanceof BalanceOperation))
+    		return false;
+    	
+    	BalanceOperation other = (BalanceOperationImpl)o;
+    	
+    	return this.date.equals(other.getDate()) && this.id == other.getBalanceId()
+    			 && this.money == other.getMoney() && this.type.equals(other.getType());
+    }
 }

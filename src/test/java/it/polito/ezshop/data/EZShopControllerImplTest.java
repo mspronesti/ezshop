@@ -11,6 +11,8 @@ import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.sun.el.stream.Stream;
+
 import it.polito.ezshop.exceptions.*;
 
 public class EZShopControllerImplTest {
@@ -668,8 +670,82 @@ public class EZShopControllerImplTest {
 	
 	@Test
 	public void testAddProductToSale() {
-		
+		// TODO: to be implemented
 	}
+	
+	@Test
+	public void testDeleteProductFromSale() {
+		// TODO: to be implemented
+	}
+	
+	@Test
+	public void testApplyDiscountRateToProduct() {
+		// TODO: to be implemented
+	}
+	
+	@Test
+	public void testApplyDiscountRateToSale() {
+		// TODO: to be implemented
+	}
+	
+	@Test
+	public void computePointsForSale() {
+		// TODO: to be implemented
+	}
+	
+	@Test
+	public void deleteSaleTransaction() {
+		// TODO: to be implemented
+	}
+	
+	
+	@Test
+	public void getSaleTransaction() {
+		// TODO: to be implemented
+	}
+	
+	@Test
+	public void startReturnTransaction() {
+		// TODO: to be implemented
+	}
+	
+	@Test
+	public void endReturnTransaction() {
+		// TODO: to be implemented
+	}
+	
+	
+	@Test
+	public void deleteReturnTransaction() {
+		// TODO: to be implemented
+	}
+	
+	@Test
+	public void receiveCashPayment() {
+		// TODO: to be implemented
+	}
+	
+	
+	@Test
+	public void receiveCreditCardPayment() {
+		// TODO: to be implemented
+	}
+	
+	@Test
+	public void returnCashPayment() {
+		// TODO: to be implemented
+	}
+	
+	@Test
+	public void returnCreditCardPayment() {
+		// TODO: to be implemented
+	}
+	
+	@Test
+	public void recordBalanceUpdate() {
+		// TODO: to be implemented
+	}
+	
 	
 	@Test
 	public void testGetCreditsAndDebits() throws InvalidUsernameException, InvalidPasswordException, UnauthorizedException {
@@ -688,14 +764,8 @@ public class EZShopControllerImplTest {
 		List<BalanceOperation> ops = controller.getCreditsAndDebits(from,to );
 		List<BalanceOperation> expected = balanceOperationRepository.findAllBetweenDates(to, from);
 		
-		// deep compare items
-		for(int i = 0 ; i < ops.size(); ++i) {
-			assertEquals(ops.get(i).getBalanceId() , expected.get(i).getBalanceId());
-			assertEquals(ops.get(i).getMoney() , expected.get(i).getMoney(), .1);
-			assertEquals(ops.get(i).getType(), expected.get(i).getType());
-			assertEquals(ops.get(i).getDate(), ops.get(i).getDate());
-
-		}
+		
+		assertEquals(ops, expected);
 	}
 	
 	
