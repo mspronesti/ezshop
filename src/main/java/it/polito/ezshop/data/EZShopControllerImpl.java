@@ -185,7 +185,7 @@ public class EZShopControllerImpl implements EZShopController {
     @AcceptRoles({Role.Administrator, Role.ShopManager})
     @FallbackBooleanValue
     public boolean deleteProductType(
-            @NotNull @Min(0) @Throw(InvalidProductIdException.class) Integer id
+            @NotNull @Min(1) @Throw(InvalidProductIdException.class) Integer id
     ) throws InvalidProductIdException, UnauthorizedException {
         ProductType productType = productTypeRepository.find(id);
         if (productType != null) {
@@ -342,7 +342,11 @@ public class EZShopControllerImpl implements EZShopController {
         Order order = orderRepository.find(orderId);
         if (order != null) {
             String status = order.getStatus();
-
+            ProductType product = productTypeRepository.findByBarcode(order.getProductCode());
+            
+            if(product.getLocation().isEmpty())
+            	throw new InvalidLocationException();
+            
             if (status.equals(OrderImpl.Status.COMPLETED.name()))
                 return true;
 
@@ -351,7 +355,6 @@ public class EZShopControllerImpl implements EZShopController {
                 order.setStatus(OrderImpl.Status.COMPLETED.name());
                 orderRepository.update(order);
 
-                ProductType product = productTypeRepository.findByBarcode(order.getProductCode());
                 if (product != null) {
                     // update quantity
                     product.setQuantity(product.getQuantity() + order.getQuantity());

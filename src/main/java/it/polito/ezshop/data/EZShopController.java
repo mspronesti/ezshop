@@ -68,7 +68,7 @@ public interface EZShopController {
     @AcceptRoles({ Role.Administrator, Role.ShopManager })
     @FallbackBooleanValue
     public boolean deleteProductType(
-            @NotNull @Min(0) @Throw(InvalidProductIdException.class) Integer id
+            @NotNull @Min(1) @Throw(InvalidProductIdException.class) Integer id
     ) throws InvalidProductIdException, UnauthorizedException;
 
     @AcceptRoles({ Role.Administrator, Role.ShopManager, Role.Cashier })

@@ -12,6 +12,7 @@ import it.polito.ezshop.exceptions.*;
 
 public class EZShopControllerImplTest {
     private static EZShopController controller;
+    
     private static UserRepository userRepository;
     private static ProductTypeRepository productTypeRepository;
     private static OrderRepository orderRepository; 
@@ -88,7 +89,7 @@ public class EZShopControllerImplTest {
 		assertThrows(InvalidUserIdException.class, () -> controller.deleteUser(0));
         
 		// user doesn't exist
-		assertFalse(controller.deleteUser(10));
+		assertFalse(controller.deleteUser(13));
 		// correct delete
 		assertTrue(controller.deleteUser(id2));
 	}
@@ -119,7 +120,7 @@ public class EZShopControllerImplTest {
 		assertThrows(InvalidUserIdException.class, () -> controller.getUser(null));
 		
 		// inexistent id
-		assertNull(controller.getUser(10));
+		assertNull(controller.getUser(13));
 		// correct id
 		assertNotNull(controller.getUser(id));
 	}
@@ -146,8 +147,8 @@ public class EZShopControllerImplTest {
 		assertThrows(InvalidRoleException.class,  () -> controller.updateUserRights(id, "fakeRole"));
 		
 		// inexistent user
-		assertFalse(controller.updateUserRights( 10, newRole));
-		
+		assertFalse(controller.updateUserRights( 13, newRole));
+		// correct update
 		assertTrue(controller.updateUserRights(id, newRole));
 	}
 	
@@ -181,7 +182,7 @@ public class EZShopControllerImplTest {
 		
 		
 		// correct product creation
-		assert(controller.createProductType(description, productCode, pricePerUnit, note) != -1);
+		//assert(controller.createProductType(description, productCode, pricePerUnit, note) != -1);
 		// attempt to duplicate
 		assert(controller.createProductType(description, productCode, pricePerUnit, note) == -1);
 	}
@@ -239,8 +240,7 @@ public class EZShopControllerImplTest {
 		controller.login("Marco", "1234");
 		// invalid product type (null, 0 , negative)
 		assertThrows(InvalidProductIdException.class, () -> controller.deleteProductType(-1));
-		// change annotation to Min(1)
-//		assertThrows(InvalidProductIdException.class, () -> controller.deleteProductType(0)); 
+		assertThrows(InvalidProductIdException.class, () -> controller.deleteProductType(0)); 
 		assertThrows(InvalidProductIdException.class, () -> controller.deleteProductType(null));
 
 	}
@@ -273,7 +273,7 @@ public class EZShopControllerImplTest {
 		assertThrows(InvalidProductCodeException.class, () -> controller.getProductTypeByBarCode("012345678906"));
 		
 		// inexisting product
-		assertNull(controller.getProductTypeByBarCode("012345678943"));
+		assertNull(controller.getProductTypeByBarCode("9999999999994"));
 		assertNotNull(controller.getProductTypeByBarCode(barCode));
 	}
 	
@@ -308,7 +308,7 @@ public class EZShopControllerImplTest {
 		assertFalse(controller.updateQuantity(1, -200));
 		
 		// update product without given location
-		assertFalse(controller.updateQuantity(2, 5));
+		assertFalse(controller.updateQuantity(13, 5));
 		
 		// correct update
 		assertTrue(controller.updateQuantity(1, 10));
@@ -418,18 +418,39 @@ public class EZShopControllerImplTest {
 		assertThrows(InvalidOrderIdException.class, () -> controller.payOrder(0));
 		assertThrows(InvalidOrderIdException.class, () -> controller.payOrder(null));
 
-		
 		// inexistent order
 		assertFalse(controller.payOrder(8));
-		// order not in ISSUED state (ne va creato un'altro nel db)
-		// ...
+		// order not in ISSUED/PAYED state 
+		assertFalse(controller.payOrder(14));
 		// correct pay
 		assertTrue(controller.payOrder(6)); 
 	}
 	
 	@Test
-	public void testRecordOrderArrival() throws InvalidUsernameException, InvalidPasswordException {
-		// creare nel db un prodotto nello stato PAYED e CON LOCATION ASSEGNATA
+	public void testRecordOrderArrival() throws InvalidUsernameException, InvalidPasswordException, InvalidOrderIdException, UnauthorizedException, InvalidLocationException {
+		// unauth
+		controller.login("Franco", "1234"); 
+		assertThrows(UnauthorizedException.class, () -> controller.recordOrderArrival(7));
+		
+		controller.login("Marco", "1234");
+		
+		// wrong id
+		assertThrows(InvalidOrderIdException.class, () -> controller.recordOrderArrival(-1));
+		assertThrows(InvalidOrderIdException.class, () -> controller.recordOrderArrival(0));
+		assertThrows(InvalidOrderIdException.class, () -> controller.recordOrderArrival(null));
+		
+		// order refers to product without given location
+	//	assertThrows(InvalidLocationException.class, () -> controller.recordOrderArrival(40));
+		
+		// order doesn't exist
+//		assertFalse(controller.recordOrderArrival(50));
+//		
+//		// order is not in the PAYED state
+//		assertFalse(controller.recordOrderArrival(42));
+		
+		// correct register
+		//assertFalse(controller.recordOrderArrival(7));
+		
 	}
 	
 	@Test
