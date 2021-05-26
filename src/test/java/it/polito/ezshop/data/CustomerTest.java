@@ -33,8 +33,11 @@ public class CustomerTest {
 		LoyaltyCardImpl loyaltyCard = new LoyaltyCardImpl();
 
 		String customerCard="6723006599";
-
+		loyaltyCard.setCustomer(customer);
+		loyaltyCard.setId(customerCard);
 		customer.setCustomerCard(customerCard);
+		customer.loyaltyCard=loyaltyCard;
+
 		assertEquals(customerCard, customer.getCustomerCard());
 	}
 
@@ -42,12 +45,28 @@ public class CustomerTest {
 	public void testSetPoints(){
 		CustomerImpl customer = new CustomerImpl();
 		LoyaltyCardImpl loyaltyCard = new LoyaltyCardImpl();
+
 		String customerCard="6723006599";
-		Integer points=141;
-
+		Integer points=30;
+		loyaltyCard.setCustomer(customer);
+		loyaltyCard.setId(customerCard);
 		customer.setCustomerCard(customerCard);
-
-		customer.setPoints(points);
+		customer.loyaltyCard=loyaltyCard;
 		assertEquals(customerCard, customer.getCustomerCard());
+		customer.setPoints(points);
+
+		assertEquals(customerCard, customer.getCustomerCard());
+	}
+
+
+	//Test for integration test of LoyaltyCard which has circular dependency with Customer class
+
+	@Test
+	public void testSetCustomerImpl() {
+		LoyaltyCardImpl loyaltyC = new LoyaltyCardImpl();
+		CustomerImpl customer = new CustomerImpl();
+
+		loyaltyC.setCustomer(customer);
+		assertEquals(customer, loyaltyC.getCustomer());
 	}
 }
