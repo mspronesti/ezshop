@@ -14,13 +14,13 @@ public class ProductTypeRepositoryTest {
 
     @Test
     public void find() {
-        Integer productTypeId=13;
+        Integer productTypeId=37;
         assertEquals(productTypeId,repo.find(productTypeId).getId());
     }
 
     @Test
     public void findByBarcode() {
-        String barcode="012345678936";
+        String barcode="012345678950";
         assertEquals(barcode,repo.findByBarcode(barcode).getBarCode());
     }
 
@@ -37,7 +37,7 @@ public class ProductTypeRepositoryTest {
         double newPrice=12.99;
         Integer newQuantity=15;
 
-        ProductType productType = repo.find(13);
+        ProductType productType = repo.find(37);
 
         productType.setNote(newNote);
         productType.setLocation(newLocation);
@@ -63,7 +63,7 @@ public class ProductTypeRepositoryTest {
 
     @Test
     public void delete() {
-        repo.delete(repo.find(12));
-        assertNull(repo.find(12));
+        repo.delete(repo.find(39));
+        assertNull(repo.find(39));
     }
 }

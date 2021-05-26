@@ -19,8 +19,9 @@ public class SaleTransactionRepositoryTest {
 
     @Test
     public void findAll() {
-        assertEquals(repo.findAll().getClass(), ArrayList.class);
-        assertEquals(repo.findAll().get(0).getClass(), SaleTransactionImpl.class);
+        assertEquals(ArrayList.class, repo.findAll().getClass());
+        assertTrue(repo.findAll().get(0).getClass().equals(SaleTransaction.class)||
+                repo.findAll().get(0).getClass().equals(ReturnTransactionImpl.class));
     }
     @Test
     public void update() {
@@ -44,7 +45,7 @@ public class SaleTransactionRepositoryTest {
         double newPrice = 50;
         double newDiscountRate = 12.50;
 
-        SaleTransaction saleTransaction = repo.find(54);
+        SaleTransaction saleTransaction = repo.find(52);
         saleTransaction.setDiscountRate(newDiscountRate);
         saleTransaction.setPrice(newPrice);
         saleTransaction.setEntries(ticketList);
@@ -61,14 +62,15 @@ public class SaleTransactionRepositoryTest {
     }
 
 
-    @Test
+ @Test
     public void create() {
         assertTrue(repo.create(new SaleTransactionImpl())>0);
     }
 
     @Test
     public void delete() {
-        repo.delete(repo.find(56));
-        assertNull(repo.find(56));
+        repo.delete(repo.find(54));
+        assertNull(repo.find(54));
     }
+
 }

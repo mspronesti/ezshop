@@ -102,14 +102,14 @@ EZshopControllerImpl --|>  UserRepository
 
 @enduml
 ```
-     
+
 # Integration approach
 
     <Write here the integration sequence you adopted, in general terms (top down, bottom up, mixed) and as sequence
     (ex: step1: class A, step 2: class A+B, step 3: class A+B+C, etc)> 
     <Some steps may  correspond to unit testing (ex step1 in ex above), presented in other document UnitTestReport.md>
     <One step will  correspond to API testing>
-    
+
 
 
 #  Tests
@@ -149,11 +149,11 @@ EZshopControllerImpl --|>  UserRepository
 ## Scenario UCx.y
 
 | Scenario |  name |
-| ------------- |:-------------:| 
+| ------------- |:-------------:|
 |  Precondition     |  |
 |  Post condition     |   |
 | Step#        | Description  |
-|  1     |  ... |  
+|  1     |  ... |
 |  2     |  ... |
 
 
@@ -167,16 +167,38 @@ Report also for each of the scenarios the (one or more) API JUnit tests that cov
 
 
 
-| Scenario ID | Functional Requirements covered | JUnit  Test(s) | 
-| ----------- | ------------------------------- | ----------- | 
-|  ..         | FRx                             |             |             
-|  ..         | FRy                             |             |             
-| ...         |                                 |             |             
-| ...         |                                 |             |             
-| ...         |                                 |             |             
-| ...         |                                 |             |             
-
-
+| Scenario ID | Functional Requirements covered | JUnit  Test(s) |
+| ----------- | ------------------------------- | ----------- |
+|  Scenario 1-1  | FR3.1<br />FR1.5               | testCreateProductType<br />ProductTypeRepositoryTest.testCreate<br />ProductTypeTest.testSetProductDescription<br />ProductTypeTest.testSetPricePerUnit<br />testSetNote<br />ProductTypeTest.testSetBarCode<br /> |
+|  Scenario 1-2  | FR3.1<br />FR3.4               | testUpdatePosition<br />ProductTypeRepositoryTest.testUpdate<br />ProductTypeRepositoryTest.testFind<br />ProductTypeTest.testSetLocation<br /> |
+| Scenario 1-3 | FR4.2<br />FR3.4 | testUpdatePosition<br />ProductTypeRepositoryTest.testUpdate<br />ProductTypeRepositoryTest.testFind<br />ProductTypeTest.testSetPricePerUnit<br /> |
+| Scenario 2-1 | FR1.1<br />FR1.4<br />FR1.5 | testCreateUser<br />UserRepositoryTest.testFindByUsername<br />UserTest.testSetUsername<br />UserTest.testSetPassword<br />UserTest.testSetRole<br />UserRepositoryTest.testCreate |
+| Scenario 2-2 | FR1.4<br />FR1.2 | UserRepositoryTest.testFind<br />UserRepositoryTest.testCreate |
+| Scenario 2-3 | FR1.1<br />FR1.4<br />FR1.5 | testUpdateUserRights<br />UserRepositoryTest.testFind<br />UserTest.testSetRole<br />UserRepositoryTest.testUpdate |
+| Scenario 3-1 | FR4.3 | testIssueOrder<br />ProductTypeRepository.testFindByBarcode<br />OrderTest.testSetPricePerUnit<br />OrderTest.testSetQuantity<br />OrderTest.testSetProductCode<br />OrderTest.testSetStatus<br />OrderRepositoryTest.testCreate |
+| Scenario 3-2 | FR4.4<br />FR7.1<br />FR7.2 | testPayOrderFor<br />testPayOrder<br />testIssueOrder<br />ProductTypeRepositoryTest.testFindByBarCode<br />OrderRepositoryTest.testFind<br />testComputeBalance<br />BalanceOperationTest.testSetDate<br />BalanceOperationTest.testSetType<br />BalanceOperationTest.testSetMoney<br />BalanceOperationRepositoryTest.testCreate<br />OrderTest.testSetStatus<br />OrderTest.SetBalanceId<br />OrderRepositoryTest.testUpdate |
+| Scenario 3-3 | FR4.6 | testRecordOrderArrival<br />OrderRepositoryTest.testFind<br />OrderTest.testSetStatus<br />OrderRepositoryTest.testUpdate<br />ProductTypeRepository.testFindByBarcode<br />ProductTypeTest.testSetQuantity<br />ProductTypeRepository.testUpdate<br /> |
+| Scenario 4-1 | FR5.1<br />FR5.3 | testDefineCustomer<br />CustomerRepositoryTest.testFindByName<br />CustomerTest.testSetCustomerName<br />CustomerRepositoryTest.testCreate |
+| Scenario 4-2 | FR5.3<br />FR5.5<br />FR5.6 | testCreateCard<br />LoyaltyCardRepositoryTest.testCreate<br />testAttachCardToCustomer<br />CustomerRepositoryTest.testFind<br />CustomerTest.testSetCustomerCard<br />CustomerRepositoryTest.testUpdate |
+| Scenario 4-3 | non esiste fr che chieda la detach però c'é lo scenario, bah | testAttachCardToCustomer<br />CustomerRepositoryTest.testFind<br />CustomerTest.testSetCustomerCard<br />CustomerRepositoryTest.testUpdate |
+| Scenario 4-4 | 5.1 | testModifyCustomer<br />CustomerRepositoryTest.testFind<br />CustomerTest.testSetCustomerCard<br />CustomerTest.testSetCustomerName<br />CustomerRepositoryTest.testUpdate |
+| Scenario 5-1 | FR1.4 | testLogin<br />UserRepositoryTest.testFindByUsername<br /> |
+| Scenario 5-2 | - | testLogout<br /> |
+| Scenario 6-1 | FR6.1<br />FR6.2<br />FR6.7<br />FR6.8<br />FR6.10<br />FR7.1<br />FR7.2<br />FR8.1<br />FR8.2<br />FR8.4 | testStartSaleTransaction<br />SaleTransactionRepositoryTest.testCreate<br />testAddProductToSale<br />ProductTypeRepositoryTest.testFindByBarcode<br />TicketEntryTest.testSetBarCode<br />TicketEntryTest.testSetAmount<br />TicketEntryTest.testSetPricePerUnit<br />TicketEntryTest.testSetQuantity<br />ProductTypeRepositoryTest.testUpdate<br />testEndSaleTransaction<br />SaleTransactionRepositoryTest.testUpdate<br />testReceiveCreditCardPayment<br />BalanceOperationRepositoryTest.testCreate<br />BalanceOperationTest.testSetDate<br />BalanceOperationTest.testSetType<br />BalanceOperationTest.testSetMoney<br />testRecordBalanceUpdate<br />testComputeBalance |
+| Scenario 6-2 | FR6.1<br />FR6.2<br />FR6.5<br />FR6.7<br />FR6.8<br />FR6.10<br />FR7.2<br />FR8.1<br />FR8.2<br />FR8.4 | testStartSaleTransaction<br />SaleTransactionRepositoryTest.testCreate<br />testAddProductToSale<br />ProductTypeRepositoryTest.testFindByBarcode<br />TicketEntryTest.testSetBarCode<br />TicketEntryTest.testSetAmount<br />TicketEntryTest.testSetPricePerUnit<br />TicketEntryTest.testSetQuantity<br />ProductTypeRepositoryTest.testUpdate<br />testEndSaleTransaction<br />SaleTransactionRepositoryTest.testUpdate<br />testReceiveCreditCardPayment<br />BalanceOperationRepositoryTest.testCreate<br />BalanceOperationTest.testSetDate<br />BalanceOperationTest.testSetType<br />BalanceOperationTest.testSetMoney<br />testRecordBalanceUpdate<br />testComputeBalance<br />testApplyDiscountRateToProduct<br /> |
+| Scenario 6-3 | FR6.1<br />FR6.2<br />FR6.4<br />FR6.7<br />FR6.8<br />FR6.10<br />FR7.2<br />FR8.1<br />FR8.2<br />FR8.4 | testStartSaleTransaction<br />SaleTransactionRepositoryTest.testCreate<br />testAddProductToSale<br />ProductTypeRepositoryTest.testFindByBarcode<br />TicketEntryTest.testSetBarCode<br />TicketEntryTest.testSetAmount<br />TicketEntryTest.testSetPricePerUnit<br />TicketEntryTest.testSetQuantity<br />ProductTypeRepositoryTest.testUpdate<br />testEndSaleTransaction<br />SaleTransactionRepositoryTest.testUpdate<br />testReceiveCreditCardPayment<br />BalanceOperationRepositoryTest.testCreate<br />BalanceOperationTest.testSetDate<br />BalanceOperationTest.testSetType<br />BalanceOperationTest.testSetMoney<br />testRecordBalanceUpdate<br />testComputeBalance<br />testApplyDiscountRateToSale<br /> |
+| Scenario 6-4 | FR4.1<br />FR6.1<br />FR6.2<br />FR6.6<br />FR6.7<br />FR6.8<br />FR6.10<br />FR7.2<br />FR8.1<br />FR8.2<br />FR8.4 | testStartSaleTransaction<br />SaleTransactionRepositoryTest.testCreate<br />testAddProductToSale<br />ProductTypeRepositoryTest.testFindByBarcode<br />TicketEntryTest.testSetBarCode<br />TicketEntryTest.testSetAmount<br />TicketEntryTest.testSetPricePerUnit<br />TicketEntryTest.testSetQuantity<br />ProductTypeRepositoryTest.testUpdate<br />testEndSaleTransaction<br />SaleTransactionRepositoryTest.testUpdate<br />testReceiveCreditCardPayment<br />BalanceOperationRepositoryTest.testCreate<br />BalanceOperationTest.testSetDate<br />BalanceOperationTest.testSetType<br />BalanceOperationTest.testSetMoney<br />testRecordBalanceUpdate<br />testComputeBalance<br />testcomputePointsForSale<br /> |
+| Scenario 6-5 | FR6.1<br />FR6.7<br />FR6.2<br />FR4.1<br /> | testStartSaleTransaction<br />SaleTransactionRepositoryTest.testCreate<br />testAddProductToSale<br />ProductTypeRepositoryTest.testFindByBarcode<br />TicketEntryTest.testSetBarCode<br />TicketEntryTest.testSetAmount<br />TicketEntryTest.testSetPricePerUnit<br />TicketEntryTest.testSetQuantity<br />ProductTypeRepositoryTest.testUpdate<br />testEndSaleTransaction<br />SaleTransactionRepositoryTest.testUpdate<br />testDeleteSaleTransaction |
+| Scenario 6-6 | | testStartSaleTransaction<br />SaleTransactionRepositoryTest.testCreate<br />testAddProductToSale<br />ProductTypeRepositoryTest.testFindByBarcode<br />TicketEntryTest.testSetBarCode<br />TicketEntryTest.testSetAmount<br />TicketEntryTest.testSetPricePerUnit<br />TicketEntryTest.testSetQuantity<br />ProductTypeRepositoryTest.testUpdate<br />testEndSaleTransaction<br />SaleTransactionRepositoryTest.testUpdate<br />testReceiveCashPayment<br />BalanceOperationRepositoryTest.testCreate<br />BalanceOperationTest.testSetDate<br />BalanceOperationTest.testSetType<br />BalanceOperationTest.testSetMoney<br />testRecordBalanceUpdate<br />testComputeBalance<br /> |
+| Scenario 7-1 | FR7.2 | testReceiveCreditCardPayment<br />BalanceOperationRepositoryTest.testCreate<br />BalanceOperationTest.testSetDate<br />BalanceOperationTest.testSetType<br />BalanceOperationTest.testSetMoney<br />SaleTransactionRepositoryTest.testUpdate<br />SaleTransactionTest.testSetPayment |
+| Scenario 7-2 | FR7.2 | testReceiveCreditCardPayment |
+| Scenario 7-3 | FR7.2 | testReceiveCreditCardPayment |
+| Scenario 7-4 | FR7.1 | testReceiveCashPayment<br />BalanceOperationRepositoryTest.testCreate<br />BalanceOperationTest.testSetDate<br />BalanceOperationTest.testSetType<br />BalanceOperationTest.testSetMoney<br />SaleTransactionRepositoryTest.testUpdate<br />SaleTransactionTest.testSetPayment |
+| Scenario 8-1 | FR6.12<br />FR6.13<br />FR6.14<br />FR6.15<br />FR7.4 | testStartReturnTransaction<br />SaleTransactionRepositoryTest.testFind<br />ReturnTransactionTest.testSetSaleTransaction<br />ReturnTransactionRepositoryTest.testCreate<br />TicketEntryTest.testSetBarCode<br />TicketEntryTest.testSetAmount<br />TicketEntryTest.testSetDiscountrate<br />TicketEntryTest.testSetPricePerUnit<br />testReturnProduct<br />UC10-1<br />testEndReturnTransaction<br />testRecordBalanceUpdate |
+| Scenario 8-2 | FR6.12<br />FR6.13<br />FR6.14<br />FR6.15<br />FR7.3 | testStartReturnTransaction<br />SaleTransactionRepositoryTest.testFind<br />ReturnTransactionTest.testSetSaleTransaction<br />ReturnTransactionRepositoryTest.testCreate<br />TicketEntryTest.testSetBarCode<br />TicketEntryTest.testSetAmount<br />TicketEntryTest.testSetDiscountrate<br />TicketEntryTest.testSetPricePerUnit<br />testReturnProduct<br />UC10-2<br />testEndReturnTransaction<br />testRecordBalanceUpdate |
+| Scenario 9-1 | FR8.3 | testGetCreditsAndDebits<br />BalanceOperationRepositoryTest.testFindAllBetweenDates |
+| Scenario 10-1 | FR7.4 | testReceiveCreditCardPayment<br />BalanceOperationRepositoryTest.testCreate<br />BalanceOperationTest.testSetDate<br />BalanceOperationTest.testSetType<br />BalanceOperationTest.testSetMoney<br />SaleTransactionRepositoryTest.testUpdate<br />SaleTransactionTest.testSetPayment<br />testReturnCashPayment<br />ReturnTransactionRepositoryTest.testUpdate<br />ReturnTransactionTest.testSetPayment |
+| Scenario 10-2 | | testReceiveCashPayment<br />BalanceOperationRepositoryTest.testCreate<br />BalanceOperationTest.testSetDate<br />BalanceOperationTest.testSetType<br />BalanceOperationTest.testSetMoney<br />SaleTransactionRepositoryTest.testUpdate<br />SaleTransactionTest.testSetPayment<br />testReturnCashPayment<br />ReturnTransactionRepositoryTest.testUpdate<br />ReturnTransactionTest.testSetPayment |
 
 # Coverage of Non Functional Requirements
 
@@ -189,5 +211,4 @@ Report also for each of the scenarios the (one or more) API JUnit tests that cov
 | Non Functional Requirement | Test name |
 | -------------------------- | --------- |
 |                            |           |
-
 
