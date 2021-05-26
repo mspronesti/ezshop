@@ -178,28 +178,48 @@ A bottom-up approach was adopted. To solve the circular dependency involving ```
 # Scenarios
 
 
-<If needed, define here additional scenarios for the application. Scenarios should be named
- referring the UC in the OfficialRequirements that they detail>
+##### Scenario 2-4
 
-## Scenario UCx.y
+| Scenario       | List all users                       |
+| -------------- | ------------------------------------ |
+| Precondition   | Admin A exists and is logged in      |
+|                | A certain number X of account exists |
+| Post condition | a list of X account is displayed     |
+| Step#          | Description                          |
+| 1              | A selects the list of all the users  |
+| 3              | a list of X account is displayed     |
 
-| Scenario |  name |
-| ------------- |:-------------:|
-|  Precondition     |  |
-|  Post condition     |   |
-| Step#        | Description  |
-|  1     |  ... |
-|  2     |  ... |
+
+
+##### Scenario 3-4
+
+| Scenario       | Delete a product type                 |
+| -------------- | ------------------------------------- |
+| Precondition   | ShopManager S exists and is logged in |
+|                | Product type X exists                 |
+| Post condition | Product type X has been deleted       |
+|                | Balance not changed                   |
+|                | X.units not changed                   |
+| Step#          | Description                           |
+| 1              | S searches X                          |
+| 1              | S deletes X                           |
+
+
+
+##### Scenario 3-5
+
+| Scenario       | List all product type                     |
+| -------------- | ----------------------------------------- |
+| Precondition   | ShopManager S exists and is logged in     |
+|                | A certain number X of Product type exists |
+| Post condition | a list of X Product type is displayed     |
+| Step#          | Description                               |
+| 1              | A selects the list of all the productType |
+| 1              | a list of X Product type is displayed     |
 
 
 
 # Coverage of Scenarios and FR
-
-
-<Report in the following table the coverage of  scenarios (from official requirements and from above) vs FR. 
-Report also for each of the scenarios the (one or more) API JUnit tests that cover it. >
-
-
 
 
 | Scenario ID | Functional Requirements covered | JUnit  Test(s) |
