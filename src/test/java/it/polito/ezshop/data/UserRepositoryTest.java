@@ -9,90 +9,55 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class UserRepositoryTest {
-
-    private static UserRepository repo = new UserRepository();
-    private static List<User> userList=new ArrayList<>();
-    private static UserImpl user;
-    private static Integer userId;
-    private static String username="MarcoC";
-
-    @Before
-    public void init(){
-        user = new UserImpl();
-        user.setUsername(username);
-        user.setPassword("password");
-        user.setRole("Cashier");
-        userId=repo.create(user);
-    }
-
+    private static final UserRepository repo = new UserRepository();
 
     @Test
     public void find() {
+        Integer userId=5;
         assertEquals(userId,repo.find(userId).getId());
     }
 
     @Test
-    public void findByUsername() {
-        assertEquals(username,repo.findByUsername(username).getUsername());
+    public void findAll() {
+        assertEquals(repo.findAll().getClass(), ArrayList.class);
+        assertEquals(repo.findAll().get(0).getClass(), UserImpl.class);
     }
 
     @Test
-    public void findAll() {
-        List<Integer> idArray = new ArrayList<>();
-        UserImpl user2 = new UserImpl();
-        UserImpl user3 = new UserImpl();
+    public void findByUsername() {
+        String username = "Beatrice";
+        assertEquals(username, repo.findByUsername(username).getUsername());
+    }
 
-        userList.add(user2);
-        userList.add(user3);
 
-        idArray.add(userId);
+    @Test
+    public void update() {
+        String newUsername="PaoloM";
+        String newPassword="2345";
+        String newRole="ShopManager";
 
-        for (User entry:userList) {
-            idArray.add((repo.create(entry)));
-        }
+        User user = repo.find(6);
 
-        userList=repo.findAll();
+        user.setUsername(newUsername);
+        user.setRole(newRole);
+        user.setPassword(newPassword);
 
-        for (User entry:userList) {
-            assertTrue(idArray.contains(entry.getId()));
-        }
+        User updated=repo.update(user);
 
+        assertEquals(newPassword, updated.getPassword());
+        assertEquals(newRole, updated.getRole());
+        assertEquals(newUsername, updated.getUsername());
     }
 
     @Test
     public void create() {
-        assertTrue(userId>0);
-    }
-
-    @Test
-    public void update() {
-        String newRole = "Administrator";
-        String newUsername = "DavideM";
-        String newPassword = "Fe29dqh^ad3_ad";
-
-        user.setRole(newRole);
-        user.setUsername(newUsername);
-        user.setPassword(newPassword);
-
-        User updated = repo.update(user);
-
-        assertEquals(newRole,updated.getRole());
-        assertEquals(newUsername,updated.getUsername());
-        assertEquals(newPassword,updated.getPassword());
+        assertTrue(repo.create(new UserImpl())>0);
     }
 
     @Test
     public void delete() {
-        repo.delete(user);
-        assertNull(repo.find(userId));
-    }
-
-    @After
-    public void stop(){
-        userList=repo.findAll();
-        for (User u:userList) {
-            repo.delete(u);
-        }
-        userList.clear();
+        int id;
+        repo.delete(repo.find(id=repo.create(new UserImpl())));
+        assertNull(repo.find(id));
     }
 }

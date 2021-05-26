@@ -10,104 +10,60 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class ProductTypeRepositoryTest {
-    
-    private static ProductTypeRepository repo = new ProductTypeRepository();
-    private static List<ProductType> productTypeList=new ArrayList<>();
-    private static ProductTypeImpl productType;
-    private static Integer productTypeId;
-    private static String productTypeBarcode="012345678905";
-
-    @Before
-    public void init(){
-        productType = new ProductTypeImpl();
-        productType.setBarCode(productTypeBarcode);
-        productType.setProductDescription("T-shirt");
-        productType.setNote("Blue");
-        productType.setQuantity(12);
-        productType.setPricePerUnit(2.50);
-        productType.setLocation("3-a-12");
-        productTypeId=repo.create(productType);
-    }
-
+    private static final ProductTypeRepository repo = new ProductTypeRepository();
 
     @Test
     public void find() {
+        Integer productTypeId=13;
         assertEquals(productTypeId,repo.find(productTypeId).getId());
     }
 
     @Test
     public void findByBarcode() {
-        assertEquals(productTypeBarcode,repo.findByBarcode(productTypeBarcode).getBarCode());
+        String barcode="012345678936";
+        assertEquals(barcode,repo.findByBarcode(barcode).getBarCode());
     }
 
     @Test
     public void findAll() {
-        List<Integer> idArray = new ArrayList<>();
-        ProductTypeImpl productType2 = new ProductTypeImpl();
-        productType2.setBarCode("978073562153");
-        ProductTypeImpl productType3 = new ProductTypeImpl();
-        productType3.setBarCode("7891234567897");
-
-        productTypeList.add(productType2);
-        productTypeList.add(productType3);
-
-        idArray.add(productTypeId);
-
-        for (ProductType entry:productTypeList) {
-            idArray.add((repo.create(entry)));
-        }
-
-        productTypeList=repo.findAll();
-
-        for (ProductType entry:productTypeList) {
-            assertTrue(idArray.contains(entry.getId()));
-        }
-
-    }
-
-    @Test
-    public void create() {
-        assertTrue(productTypeId>0);
+        assertEquals(repo.findAll().getClass(), ArrayList.class);
+        assertEquals(repo.findAll().get(0).getClass(), ProductTypeImpl.class);
     }
 
     @Test
     public void update() {
-        Integer newQuantity=4;
-        String newLocation = "3-a-15";
-        String newNote = "Yellow";
-        String newDescription = "Shirt";
-        String newBarcode = "13148419";
-        double newPrice = 15.24;
+        String newNote="Recycled";
+        String newLocation="12-b-2";
+        double newPrice=12.99;
+        Integer newQuantity=15;
 
-        productType.setQuantity(newQuantity);
-        productType.setLocation(newLocation);
+        ProductType productType = repo.find(13);
+
         productType.setNote(newNote);
-        productType.setProductDescription(newDescription);
-        productType.setBarCode(newBarcode);
+        productType.setLocation(newLocation);
         productType.setPricePerUnit(newPrice);
+        productType.setQuantity(newQuantity);
 
-        ProductType updated = repo.update(productType);
+        ProductType updated=repo.update(productType);
 
-        assertEquals(newQuantity,updated.getQuantity());
+        assert(newPrice==updated.getPricePerUnit());
         assertEquals(newLocation,updated.getLocation());
+        assertEquals(newQuantity,updated.getQuantity());
         assertEquals(newNote,updated.getNote());
-        assertEquals(newDescription,updated.getProductDescription());
-        assertEquals(newBarcode,updated.getBarCode());
-        assert(newPrice == updated.getPricePerUnit());
     }
-    
+
+    @Test
+    public void create() {
+        ProductTypeImpl productType= new ProductTypeImpl();
+        productType.setBarCode("012345678943");
+        productType.setProductDescription("Pen");
+        productType.setPricePerUnit(1.00);
+        assertTrue(repo.create(productType)>0);
+    }
+
     @Test
     public void delete() {
-        repo.delete(productType);
-        assertNull(repo.find(productTypeId));
-    }
-
-    @After
-    public void stop(){
-        productTypeList=repo.findAll();
-        for (ProductType p:productTypeList) {
-            repo.delete(p);
-        }
-        productTypeList.clear();
+        repo.delete(repo.find(12));
+        assertNull(repo.find(12));
     }
 }
