@@ -209,7 +209,7 @@ public class EZShopControllerImplTest {
 		
 		// invalid description (null, empty)
 		assertThrows(InvalidProductDescriptionException.class, () -> controller.updateProduct(id, "", newCode, newPrice, newNote));
-//		assertThrows(InvalidProductDescriptionException.class, () -> controller.updateProduct(id, "null", newCode, newPrice, newNote));
+		assertThrows(InvalidProductDescriptionException.class, () -> controller.updateProduct(id, null, newCode, newPrice, newNote));
 		
 		// invalid barcode (null, empty, invalid gtin)
 		assertThrows(InvalidProductCodeException.class, () -> controller.updateProduct(id, newDescription, "", newPrice, newNote));
@@ -222,7 +222,7 @@ public class EZShopControllerImplTest {
 		// product doesn't exist
 		assertFalse(controller.updateProduct(10, newDescription, newCode, newPrice, newNote));
 		// barcode already assigned
-//		assertFalse(controller.updateProduct(id, newDescription, "012345678912", newPrice, newNote));
+		assertFalse(controller.updateProduct(id, newDescription, "012345678912", newPrice, newNote));
 		// correct update
 		assertTrue(controller.updateProduct(id, newDescription, newCode, newPrice, newNote));
 	}
@@ -636,7 +636,11 @@ public class EZShopControllerImplTest {
 		// attempt to close it again
 		assertFalse(controller.endSaleTransaction(transactionId));	
 	}
-
+	
+	@Test
+	public void testAddProductToSale() {
+		
+	}
 	
 	
 	@After

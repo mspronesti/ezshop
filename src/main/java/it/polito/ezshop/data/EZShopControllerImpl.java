@@ -16,6 +16,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -166,12 +167,16 @@ public class EZShopControllerImpl implements EZShopController {
     ) throws InvalidProductIdException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException {
         ProductType product = productTypeRepository.find(id);
         if (product != null) {
-            product.setProductDescription(newDescription);
-            product.setBarCode(newCode);
-            product.setPricePerUnit(newPrice);
-            product.setNote(newNote);
-            productTypeRepository.update(product);
-            return true;
+        	try {
+	            product.setProductDescription(newDescription);
+	            product.setBarCode(newCode);
+	            product.setPricePerUnit(newPrice);
+	            product.setNote(newNote);
+	            productTypeRepository.update(product);
+	            return true;
+        	}catch(Exception exception) {
+        		return false;
+        	}
         }
         return false;
     }
@@ -1000,4 +1005,5 @@ public class EZShopControllerImpl implements EZShopController {
     private boolean isAssignedPosition(String location) {
         return productTypeRepository.findAll().stream().anyMatch(p -> p.getLocation().equals(location));
     }
+    
 }
