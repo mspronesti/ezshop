@@ -22,6 +22,9 @@ public class GtinBarcodeValidator implements ConstraintValidator<GtinBarcode, St
      */
     @Override
     public boolean isValid(String object, ConstraintValidatorContext constraintContext) {
+        if (object == null) {
+            return false;
+        }
         if (!Pattern.matches("^\\d{12,14}$", object)) {
             return false;
         }

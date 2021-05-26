@@ -733,20 +733,59 @@ public class EZShopControllerImplTest {
 	}
 	
 	@Test
-	public void testApplyDiscountRateToProduct() throws InvalidTransactionIdException, InvalidProductCodeException, InvalidDiscountRateException, UnauthorizedException {
-		// TODO: to be implemented
+	public void testApplyDiscountRateToProduct() throws InvalidTransactionIdException, InvalidProductCodeException, InvalidDiscountRateException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException, InvalidQuantityException {
+		String productCode = "012345678905";
+		Double discountRate = 0.1d;
+
 		// unauth (nobody logged)
+		assertThrows(UnauthorizedException.class, () -> controller.applyDiscountRateToProduct(19, productCode, discountRate));
 
-		//assertThrows(UnauthorizedException.class, () -> controller.applyDiscountRateToProduct());
+		// cashier
+		controller.login("Franco", "1234");
 
+		Integer transactionId = controller.startSaleTransaction();
+		controller.addProductToSale(transactionId, productCode, 1);
+
+		// InvalidTransactionIdException
+		assertThrows(InvalidTransactionIdException.class, () -> controller.applyDiscountRateToProduct(-1, productCode, discountRate));
+		assertThrows(InvalidTransactionIdException.class, () -> controller.applyDiscountRateToProduct(0, productCode, discountRate));
+		assertThrows(InvalidTransactionIdException.class, () -> controller.applyDiscountRateToProduct(null, productCode, discountRate));
+		// InvalidProductCodeException
+		assertThrows(InvalidProductCodeException.class, () -> controller.applyDiscountRateToProduct(transactionId, "", discountRate));
+		assertThrows(InvalidProductCodeException.class, () -> controller.applyDiscountRateToProduct(transactionId, null, discountRate));
+		assertThrows(InvalidProductCodeException.class, () -> controller.applyDiscountRateToProduct(transactionId, "012345678949", discountRate));
+		// InvalidDiscountRateException
+		assertThrows(InvalidDiscountRateException.class, () -> controller.applyDiscountRateToProduct(transactionId, productCode, -1d));
+		assertThrows(InvalidDiscountRateException.class, () -> controller.applyDiscountRateToProduct(transactionId, productCode, 1d));
+		assertThrows(InvalidDiscountRateException.class, () -> controller.applyDiscountRateToProduct(transactionId, productCode, 2.3d));
+
+		assertFalse(controller.applyDiscountRateToProduct(1039495, productCode, discountRate));
+		assertTrue(controller.applyDiscountRateToProduct(transactionId, productCode, discountRate));
 	}
 	
 	@Test
-	public void testApplyDiscountRateToSale()  throws InvalidTransactionIdException, InvalidDiscountRateException, UnauthorizedException {
-		// TODO: to be implemented
-		// unauth (nobody logged)
-		//assertThrows(UnauthorizedException.class, () -> controller.applyDiscountRateToSale());
+	public void testApplyDiscountRateToSale() throws InvalidTransactionIdException, InvalidDiscountRateException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
+		Double discountRate = 0.1d;
 
+		// unauth (nobody logged)
+		assertThrows(UnauthorizedException.class, () -> controller.applyDiscountRateToSale(19, discountRate));
+
+		// cashier
+		controller.login("Franco", "1234");
+
+		Integer transactionId = controller.startSaleTransaction();
+
+		// InvalidTransactionIdException
+		assertThrows(InvalidTransactionIdException.class, () -> controller.applyDiscountRateToSale(-1, discountRate));
+		assertThrows(InvalidTransactionIdException.class, () -> controller.applyDiscountRateToSale(0, discountRate));
+		assertThrows(InvalidTransactionIdException.class, () -> controller.applyDiscountRateToSale(null, discountRate));
+		// InvalidDiscountRateException
+		assertThrows(InvalidDiscountRateException.class, () -> controller.applyDiscountRateToSale(transactionId, -1d));
+		assertThrows(InvalidDiscountRateException.class, () -> controller.applyDiscountRateToSale(transactionId, 1d));
+		assertThrows(InvalidDiscountRateException.class, () -> controller.applyDiscountRateToSale(transactionId, 1.2d));
+
+		assertFalse(controller.applyDiscountRateToSale(1039495, discountRate));
+		assertTrue(controller.applyDiscountRateToSale(transactionId, discountRate));
 	}
 	
 	@Test
