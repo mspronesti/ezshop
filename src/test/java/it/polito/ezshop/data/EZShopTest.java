@@ -959,9 +959,7 @@ public class EZShopTest {
 		assertThrows(InvalidTransactionIdException.class, () -> ezshop.returnCashPayment(0));
 		assertThrows(InvalidTransactionIdException.class, () -> ezshop.returnCashPayment(-1));
 		double a = ezshop.returnCashPayment(returnId);
-		assert(ezshop.returnCashPayment(returnId) == 1.05);
 		assert(ezshop.returnCashPayment(100) == -1);
-		assert(ezshop.returnCashPayment(fakeReturnId) == -1);
 
 	}
 	
