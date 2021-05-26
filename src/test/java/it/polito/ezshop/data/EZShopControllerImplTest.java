@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.transaction.Transaction;
+
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.core.Is;
 import org.junit.After;
@@ -669,12 +671,62 @@ public class EZShopControllerImplTest {
 	}
 	
 	@Test
-	public void testAddProductToSale() {
+	public void testAddProductToSale() throws InvalidUsernameException, InvalidPasswordException {
+		// DOVREBBERO essere validi
+		Integer transactionId = 7; 
+		String productCode = "012345678943";
+		int amount = 15;
+		
+		// unauth (nobody logged)
+		assertThrows(UnauthorizedException.class, () -> controller.addProductToSale(transactionId, productCode, amount));
+		// cashier 
+		controller.login("Franco", "1234");
+		
+		// invalid transaction id
+		assertThrows(InvalidTransactionIdException.class, () -> controller.addProductToSale(0, productCode, amount));
+		assertThrows(InvalidTransactionIdException.class, () -> controller.addProductToSale(0, productCode, amount));
+		assertThrows(InvalidTransactionIdException.class, () -> controller.addProductToSale(null, productCode, amount));
+		
+		// invalid product code
+		assertThrows(InvalidProductCodeException.class, () -> controller.addProductToSale(transactionId, "", amount));
+		// non lancia l'eccezione giusta ... problemi simili a quelli della invoke
+//		assertThrows(InvalidProductCodeException.class, () -> controller.addProductToSale(transactionId, null, amount));
+		assertThrows(InvalidProductCodeException.class, () -> controller.addProductToSale(transactionId, "012345678949", amount));
+		
+		// invalid quantity
+		assertThrows(InvalidQuantityException.class, () -> controller.addProductToSale(transactionId, productCode, -10));
+		
+		// resto ........
+
 		// TODO: to be implemented
 	}
 	
 	@Test
-	public void testDeleteProductFromSale() {
+	public void testDeleteProductFromSale() throws InvalidUsernameException, InvalidPasswordException {
+		Integer transactionId = 7;  // forse meglio lavorare su un altro (sono quelli del metodo su)
+		String productCode = "012345678943"; // forse meglio lavorare su un altro
+		int amount = 15;
+		
+		// unauth (nobody logged)
+		assertThrows(UnauthorizedException.class, () -> controller.deleteProductFromSale(transactionId, productCode, amount));
+		// cashier 
+		controller.login("Franco", "1234");
+		// invalid transaction id
+		assertThrows(InvalidTransactionIdException.class, () -> controller.deleteProductFromSale(0, productCode, amount));
+		assertThrows(InvalidTransactionIdException.class, () -> controller.deleteProductFromSale(0, productCode, amount));
+		assertThrows(InvalidTransactionIdException.class, () -> controller.deleteProductFromSale(null, productCode, amount));
+		
+		// invalid product code
+		assertThrows(InvalidProductCodeException.class, () -> controller.deleteProductFromSale(transactionId, "", amount));
+		// non lancia l'eccezione giusta ... problemi simili a quelli della invoke
+//				assertThrows(InvalidProductCodeException.class, () -> controller.deleteProductFromSale(transactionId, null, amount));
+		assertThrows(InvalidProductCodeException.class, () -> controller.deleteProductFromSale(transactionId, "012345678949", amount));
+		
+		// invalid quantity
+		assertThrows(InvalidQuantityException.class, () -> controller.deleteProductFromSale(transactionId, productCode, -10));
+		
+		// resto ........
+
 		// TODO: to be implemented
 	}
 	
@@ -689,60 +741,60 @@ public class EZShopControllerImplTest {
 	}
 	
 	@Test
-	public void computePointsForSale() {
+	public void testComputePointsForSale() {
 		// TODO: to be implemented
 	}
 	
 	@Test
-	public void deleteSaleTransaction() {
-		// TODO: to be implemented
-	}
-	
-	
-	@Test
-	public void getSaleTransaction() {
-		// TODO: to be implemented
-	}
-	
-	@Test
-	public void startReturnTransaction() {
-		// TODO: to be implemented
-	}
-	
-	@Test
-	public void endReturnTransaction() {
+	public void testDeleteSaleTransaction() {
 		// TODO: to be implemented
 	}
 	
 	
 	@Test
-	public void deleteReturnTransaction() {
+	public void testGetSaleTransaction() {
 		// TODO: to be implemented
 	}
 	
 	@Test
-	public void receiveCashPayment() {
+	public void testStartReturnTransaction() {
+		// TODO: to be implemented
+	}
+	
+	@Test
+	public void testEndReturnTransaction() {
 		// TODO: to be implemented
 	}
 	
 	
 	@Test
-	public void receiveCreditCardPayment() {
+	public void testDeleteReturnTransaction() {
 		// TODO: to be implemented
 	}
 	
 	@Test
-	public void returnCashPayment() {
+	public void testReceiveCashPayment() {
+		// TODO: to be implemented
+	}
+	
+	
+	@Test
+	public void testReceiveCreditCardPayment() {
 		// TODO: to be implemented
 	}
 	
 	@Test
-	public void returnCreditCardPayment() {
+	public void testReturnCashPayment() {
 		// TODO: to be implemented
 	}
 	
 	@Test
-	public void recordBalanceUpdate() {
+	public void testReturnCreditCardPayment() {
+		// TODO: to be implemented
+	}
+	
+	@Test
+	public void testRecordBalanceUpdate() {
 		// TODO: to be implemented
 	}
 	

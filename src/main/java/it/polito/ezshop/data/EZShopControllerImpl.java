@@ -344,7 +344,7 @@ public class EZShopControllerImpl implements EZShopController {
             String status = order.getStatus();
             ProductType product = productTypeRepository.findByBarcode(order.getProductCode());
             
-            if(product.getLocation().isBlank())
+            if(product.getLocation().isEmpty())
 				throw new InvalidLocationException();
             
             if (status.equals(OrderImpl.Status.COMPLETED.name()))
