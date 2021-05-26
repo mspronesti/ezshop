@@ -12,7 +12,7 @@ public class ReturnTransactionRepositoryTest {
 
     @Test
     public void find() {
-        Integer returnTransactionId=33;
+        Integer returnTransactionId=35;
         assertEquals(returnTransactionId,repo.find(returnTransactionId).getTicketNumber());
     }
 
@@ -24,11 +24,6 @@ public class ReturnTransactionRepositoryTest {
 
     @Test
     public void update() {
-        BalanceOperationImpl newBalanceOp = new BalanceOperationImpl();
-        BalanceOperationRepository balanceOperationRepository = new BalanceOperationRepository();
-        SaleTransactionImpl newSaleTransaction = new SaleTransactionImpl();
-        SaleTransactionRepository saleTransactionRepository = new SaleTransactionRepository();
-
         List<TicketEntry> ticketList = new ArrayList<>();
         List<String> idArray=new ArrayList<>();
 
@@ -48,22 +43,16 @@ public class ReturnTransactionRepositoryTest {
 
         double newPrice = 50;
         double newDiscountRate = 12.50;
-        int newBalanceId = balanceOperationRepository.create(newBalanceOp);
-        Integer newTicketNumber = saleTransactionRepository.create(newSaleTransaction);
 
-        ReturnTransactionImpl returnTransaction = repo.find(33);
+        ReturnTransactionImpl returnTransaction = repo.find(48);
         returnTransaction.setDiscountRate(newDiscountRate);
         returnTransaction.setPrice(newPrice);
         returnTransaction.setEntries(ticketList);
-        returnTransaction.setPayment(newBalanceOp);
-        returnTransaction.setSaleTransaction(newSaleTransaction);
 
         ReturnTransactionImpl updated = repo.update(returnTransaction);
 
         assert(newPrice == updated.getPrice());
         assert(newDiscountRate == updated.getDiscountRate());
-        assertEquals(newBalanceId, updated.getPayment().getBalanceId());
-        assertEquals(newTicketNumber, updated.getSaleTransaction().getTicketNumber());
         for (TicketEntry entry:updated.getEntries()) {
             assertTrue(idArray.contains(entry.getBarCode()));
         }
@@ -76,7 +65,7 @@ public class ReturnTransactionRepositoryTest {
 
     @Test
     public void delete() {
-        repo.delete(repo.find(35));
-        assertNull(repo.find(35));
+        repo.delete(repo.find(50));
+        assertNull(repo.find(50));
     }
 }

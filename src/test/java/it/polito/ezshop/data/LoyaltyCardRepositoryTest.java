@@ -14,7 +14,7 @@ public class LoyaltyCardRepositoryTest {
 
     @Test
     public void find() {
-        String loyaltyCardId="8819278768";
+        String loyaltyCardId="4635815042";
         assertEquals(loyaltyCardId,repo.find(loyaltyCardId).getId());
     }
 
@@ -27,12 +27,10 @@ public class LoyaltyCardRepositoryTest {
     @Test
     public void update() {
         CustomerRepository customerRepository = new CustomerRepository();
-        Customer newCustomer=new CustomerImpl();
-        Integer customerId=customerRepository.create(newCustomer);
+        Customer newCustomer=customerRepository.find(17);
+        Integer customerId=17;
         int newPoint=312;
-        customerRepository.update(newCustomer);
-
-        LoyaltyCard loyaltyCard = repo.find("8819278768");
+        LoyaltyCard loyaltyCard = repo.find("8477972267");
 
         loyaltyCard.setCustomer(newCustomer);
         loyaltyCard.setPoints(newPoint);
@@ -40,7 +38,7 @@ public class LoyaltyCardRepositoryTest {
         LoyaltyCard updated=repo.update(loyaltyCard);
 
         assert(newPoint==updated.getPoints());
-        assertEquals(newCustomer.getId(), updated.getCustomer().getId());
+        assertEquals(customerId, updated.getCustomer().getId());
     }
 
     @Test
@@ -50,8 +48,8 @@ public class LoyaltyCardRepositoryTest {
 
     @Test
     public void delete() {
-        String id;
-        repo.delete(repo.find(id=repo.create(new LoyaltyCardImpl())));
+        String id ="6419247644";
+        repo.delete(repo.find(id));
         assertNull(repo.find(id));
     }
 }
