@@ -443,7 +443,8 @@ public class EZShopControllerImpl implements EZShopController {
             @NotNull @Min(1) @Throw(InvalidCustomerIdException.class) Integer customerId
     ) throws InvalidCustomerIdException, InvalidCustomerCardException, UnauthorizedException {
         Customer customer = this.customerRepository.find(customerId);
-        if (customer != null) {
+        LoyaltyCard loyaltyCard = this.loyaltyCardRepository.find(customerCard);
+        if (customer != null && (loyaltyCard == null || loyaltyCard.getCustomer() == null)) {
             customer.setCustomerCard(customerCard);
             this.customerRepository.update(customer);
             return true;
@@ -458,12 +459,13 @@ public class EZShopControllerImpl implements EZShopController {
             @NotNull @NotEmpty @Pattern(regexp = LoyaltyCardImpl.PATTERN) @Throw(InvalidCustomerCardException.class) String customerCard,
             int pointsToBeAdded
     ) throws InvalidCustomerCardException, UnauthorizedException {
-        if (pointsToBeAdded < 0) {
-            return false;
-        }
         LoyaltyCard loyaltyCard = this.loyaltyCardRepository.find(customerCard);
         if (loyaltyCard != null) {
-            loyaltyCard.setPoints(loyaltyCard.getPoints() + pointsToBeAdded);
+        	int pointsToUpdate = loyaltyCard.getPoints() + pointsToBeAdded;
+        	if(pointsToUpdate < 0)
+        		return false;
+        	
+            loyaltyCard.setPoints(pointsToUpdate);
             this.loyaltyCardRepository.update(loyaltyCard);
             return true;
         }
