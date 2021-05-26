@@ -2,8 +2,11 @@ package it.polito.ezshop.data;
 
 import static org.junit.Assert.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.core.Is;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -445,7 +448,7 @@ public class EZShopControllerImplTest {
 		assertThrows(InvalidOrderIdException.class, () -> controller.recordOrderArrival(null));
 		
 		// order refers to product without given location
-		//assertThrows(InvalidLocationException.class, () -> controller.recordOrderArrival(42));
+		assertThrows(InvalidLocationException.class, () -> controller.recordOrderArrival(40));
 		
 		// order doesn't exist
 		assertFalse(controller.recordOrderArrival(50));
@@ -666,6 +669,33 @@ public class EZShopControllerImplTest {
 	@Test
 	public void testAddProductToSale() {
 		
+	}
+	
+	@Test
+	public void testGetCreditsAndDebits() throws InvalidUsernameException, InvalidPasswordException, UnauthorizedException {
+		LocalDate to = LocalDate.of(2021, 5, 25);
+		LocalDate from  = LocalDate.now();
+		
+		// unauth (nobody logged)
+		assertThrows(UnauthorizedException.class, () -> controller.getCreditsAndDebits(from, to));
+		
+		// unauth (cashier) 
+		controller.login("Franco", "1234");
+		assertThrows(UnauthorizedException.class, () -> controller.getCreditsAndDebits(from, to));
+		controller.logout();
+		
+		controller.login("Marco", "1234");
+		List<BalanceOperation> ops = controller.getCreditsAndDebits(from,to );
+		List<BalanceOperation> expected = balanceOperationRepository.findAllBetweenDates(to, from);
+		
+		// deep compare items
+		for(int i = 0 ; i < ops.size(); ++i) {
+			assertEquals(ops.get(i).getBalanceId() , expected.get(i).getBalanceId());
+			assertEquals(ops.get(i).getMoney() , expected.get(i).getMoney(), .1);
+			assertEquals(ops.get(i).getType(), expected.get(i).getType());
+			assertEquals(ops.get(i).getDate(), ops.get(i).getDate());
+
+		}
 	}
 	
 	
