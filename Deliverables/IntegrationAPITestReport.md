@@ -118,26 +118,58 @@ EZshopControllerImpl --|>  UserRepository
      JUnit test cases applied to them> JUnit test classes should be here src/test/java/it/polito/ezshop
 
 ## Step 1
-| Classes  | JUnit test cases |
-|--|--|
-|||
+| Classes  | JUnit test cases | 
+| ------------- |:-------------:|
+|LoyaltyCardImpl|it.polito.ezshop.data.LoyaltyCardTest|
+|BalanceOperationImpl|it.polito.ezshop.data.BalanceOperationTest|
+|OrderImpl|it.polito.ezshop.data.OrderTest|
+|ProductTypeImpl|it.polito.ezshop.data.ProductTypeTest|
+|TicketEntryImpl|it.polito.ezshop.data.TicketEntryTest|
+|UserImpl|it.polito.ezshop.data.UserTest|
 
 
 ## Step 2
 | Classes  | JUnit test cases |
-|--|--|
-|||
+| ------------- |:-------------:|
+|CustomerImpl|it.polito.ezshop.data.CustomerTest|
+|SaleTransactionImpl|it.polito.ezshop.data.SaleTransactionTest|
 
 
-## Step n 
-
-   
-
+## Step 3
 | Classes  | JUnit test cases |
-|--|--|
-|||
+| ------------- |:-------------:|
+|ReturnTransactionImpl|it.polito.ezshop.data.ReturnTransactionImpl|
 
 
+## Step 4
+| Classes  | JUnit test cases |
+| ------------- |:-------------:|
+|BalanceOperationRepository|it.polito.ezshop.data.BalanceOperationRepositoryTest|
+|CustomerRepository|it.polito.ezshop.data.CustomerRepositoryTest|
+|LoyaltyCardRepository|it.polito.ezshop.data.LoyaltyCardRepositoryTest|
+|OrderRepository|it.polito.ezshop.data.OrderRepositoryTest|
+|ProductTypeRepository|it.polito.ezshop.data.ProductTypeRepositoryTest|
+|ReturnTransactionRepository|it.polito.ezshop.data.ReturnTransactionRepositoryTest|
+|SaleTransactionRepository|it.polito.ezshop.data.SaleTransactionRepositoryTest|
+|UserRepository|it.polito.ezshop.data.UserRepositoryTest|
+
+
+## Step 5
+| Classes  | JUnit test cases |
+| ------------- |:-------------:|
+|EZShopControllerImpl|it.polito.ezshop.data.EZShopControllerImpl|
+
+
+## Step 6
+| Classes  | JUnit test cases |
+| ------------- |:-------------:|
+|EZShopControllerFactory|it.polito.ezshop.data.EZShopControllerFactory|
+
+
+## Step 7
+| Classes  | JUnit test cases |
+| ------------- |:-------------:|
+|EZShop|*|
 
 
 # Scenarios
