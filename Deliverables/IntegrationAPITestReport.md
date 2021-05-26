@@ -23,7 +23,6 @@ Version: 1.0
 
 # Dependency graph 
 
-     <report the here the dependency graph of the classes in EzShop, using plantuml>
 ```plantuml
 @startuml
 top to bottom direction
@@ -104,18 +103,21 @@ EZshopControllerImpl --|>  UserRepository
 ```
 
 # Integration approach
+A bottom-up approach was adopted. To solve the circular dependency involving ```LoyaltyCardImpl``` and ```CustomerImpl```, we chose to treat this specific case as a unique system to be tested simultaneously.
 
-    <Write here the integration sequence you adopted, in general terms (top down, bottom up, mixed) and as sequence
-    (ex: step1: class A, step 2: class A+B, step 3: class A+B+C, etc)> 
-    <Some steps may  correspond to unit testing (ex step1 in ex above), presented in other document UnitTestReport.md>
-    <One step will  correspond to API testing>
-
+## Sequence
+|Step#|Classes|
+|-----|-------|
+|Step1|LoyaltyCardImpl+BalanceOperationImpl+OrderImpl+ProductTypeImpl+TicketEntryImpl+UserImpl|
+|Step2|CustomerImpl+SaleTransactionImpl|
+|Step3|ReturnTransactionImpl|
+|Step4|BalanceOperationRepository+CustomerRepository+LoyaltyCardRepository+OrderRepository+ProductTypeRepository+ReturnTransactionRepository+SaleTransactionRepository+UserRepository|
+|Step5|EZShopControllerImpl|
+|Step6|EZShopControllerFactory|
+|Step7|EZshop|
 
 
 #  Tests
-
-   <define below a table for each integration step. For each integration step report the group of classes under test, and the names of
-     JUnit test cases applied to them> JUnit test classes should be here src/test/java/it/polito/ezshop
 
 ## Step 1
 | Classes  | JUnit test cases | 
@@ -157,7 +159,7 @@ EZshopControllerImpl --|>  UserRepository
 ## Step 5
 | Classes  | JUnit test cases |
 | ------------- |:-------------:|
-|EZShopControllerImpl|it.polito.ezshop.data.EZShopControllerImpl|
+|EZShopControllerImpl|*|
 
 
 ## Step 6
@@ -169,8 +171,9 @@ EZshopControllerImpl --|>  UserRepository
 ## Step 7
 | Classes  | JUnit test cases |
 | ------------- |:-------------:|
-|EZShop|*|
+|EZShop| it.polito.ezshop.data.EZShopTest|
 
+**Notice:** Since ```EZShop``` only calls ```EZShopControllerImpl``` methods, we chose not to duplicate the testcases.  
 
 # Scenarios
 
