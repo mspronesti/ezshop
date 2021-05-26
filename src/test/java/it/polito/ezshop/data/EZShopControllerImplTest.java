@@ -774,39 +774,68 @@ public class EZShopControllerImplTest {
 		assertThrows(UnauthorizedException.class, () -> controller.getSaleTransaction(saleTransId));
 
 		controller.login("Franco", "1234");
-		// invalidTransaction
+		// invalidTransactionId
 		assertThrows(InvalidTransactionIdException.class, ()-> controller.getSaleTransaction(0));
 		assertThrows(InvalidTransactionIdException.class, ()-> controller.getSaleTransaction(-1));
 		assertThrows(InvalidTransactionIdException.class, ()-> controller.getSaleTransaction(null));
 
 		assertEquals(saleTransactionRepository.find(saleTransId).getTicketNumber(), controller.getSaleTransaction(saleTransId).getTicketNumber());
 		int newId=controller.startSaleTransaction();
-		//assertNull(controller.getSaleTransaction(newId));
+		assertNull(controller.getSaleTransaction(newId));
 	}
 	
 	@Test
-	public void testStartReturnTransaction()  throws InvalidTransactionIdException, UnauthorizedException {
+	public void testStartReturnTransaction() throws InvalidTransactionIdException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
 		// TODO: to be implemented
+		Integer transactionId = 27;
 		// unauth (nobody logged)
-		//assertThrows(UnauthorizedException.class, () -> controller.startSaleTransaction());
+		assertThrows(UnauthorizedException.class, () -> controller.startReturnTransaction(transactionId));
 
+		controller.login("Franco", "1234");
+		// invalidTransactionId
+		assertThrows(InvalidTransactionIdException.class, ()-> controller.startReturnTransaction(0));
+		assertThrows(InvalidTransactionIdException.class, ()-> controller.startReturnTransaction(-1));
+		assertThrows(InvalidTransactionIdException.class, ()-> controller.startReturnTransaction(null));
+
+		assertTrue(controller.startReturnTransaction(transactionId)>0);
+		assertTrue(controller.startReturnTransaction(900)==-1);
 	}
 	
 	@Test
-	public void testEndReturnTransaction()  throws InvalidTransactionIdException, UnauthorizedException {
+	public void testEndReturnTransaction() throws InvalidTransactionIdException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
 		// TODO: to be implemented
 		// unauth (nobody logged)
-		//assertThrows(UnauthorizedException.class, () -> controller.endReturnTransaction());
+		assertThrows(UnauthorizedException.class, () -> controller.endReturnTransaction(900, true));
 
+		controller.login("Franco", "1234");
+		// invalidTransactionId
+		assertThrows(InvalidTransactionIdException.class, ()-> controller.endReturnTransaction(0, true));
+		assertThrows(InvalidTransactionIdException.class, ()-> controller.endReturnTransaction(-1, true));
+		assertThrows(InvalidTransactionIdException.class, ()-> controller.endReturnTransaction(null, true));
+
+		assertFalse(controller.endReturnTransaction(12,true));
+		int newId=controller.startReturnTransaction(27);
+		assertTrue(controller.endReturnTransaction(newId,false));
 	}
 	
 	
 	@Test
-	public void testDeleteReturnTransaction() throws InvalidTransactionIdException, UnauthorizedException{
+	public void testDeleteReturnTransaction() throws InvalidTransactionIdException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
 		// TODO: to be implemented
 		// unauth (nobody logged)
-		//assertThrows(UnauthorizedException.class, () -> controller.deleteReturnTransaction());
+		assertThrows(UnauthorizedException.class, () -> controller.deleteReturnTransaction(900));
 
+		controller.login("Franco", "1234");
+		// invalidTransactionId
+		assertThrows(InvalidTransactionIdException.class, ()-> controller.deleteReturnTransaction(0));
+		assertThrows(InvalidTransactionIdException.class, ()-> controller.deleteReturnTransaction(-1));
+		assertThrows(InvalidTransactionIdException.class, ()-> controller.deleteReturnTransaction(null));
+
+		assertFalse(controller.deleteReturnTransaction(900));
+		assertFalse(controller.deleteReturnTransaction(31));
+		int newId=controller.startReturnTransaction(27);
+		controller.endReturnTransaction(newId,false);
+		assertTrue(controller.deleteSaleTransaction(newId));
 	}
 	
 	@Test
