@@ -165,7 +165,7 @@ A bottom-up approach was adopted. To solve the circular dependency involving ```
 ## Step 6
 | Classes  | JUnit test cases |
 | ------------- |:-------------:|
-|EZShopControllerFactory|it.polito.ezshop.data.EZShopControllerFactory|
+|EZShopControllerFactory|**|
 
 
 ## Step 7
@@ -173,8 +173,8 @@ A bottom-up approach was adopted. To solve the circular dependency involving ```
 | ------------- |:-------------:|
 |EZShop| it.polito.ezshop.data.EZShopTest|
 
-**Notice:** Since ```EZShop``` only calls ```EZShopControllerImpl``` methods, we chose not to duplicate the testcases.  
-
+**Notice:** *Since ```EZShop``` only calls ```EZShopControllerImpl``` methods, we chose not to duplicate the testcases.  
+**Also, since the EZShopControllerFactory only consists of a constructor, we chose not to test it
 # Scenarios
 
 
@@ -265,5 +265,4 @@ A bottom-up approach was adopted. To solve the circular dependency involving ```
 
 | Non Functional Requirement | Test name |
 | -------------------------- | --------- |
-|                            |           |
-
+|         NFR2                   |      All tests    |
