@@ -16,7 +16,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -343,9 +342,6 @@ public class EZShopControllerImpl implements EZShopController {
         if (order != null) {
             String status = order.getStatus();
             ProductType product = productTypeRepository.findByBarcode(order.getProductCode());
-            
-            if(product.getLocation().isEmpty())
-            	throw new InvalidLocationException();
             
             if (status.equals(OrderImpl.Status.COMPLETED.name()))
                 return true;

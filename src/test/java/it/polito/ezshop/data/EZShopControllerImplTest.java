@@ -440,16 +440,16 @@ public class EZShopControllerImplTest {
 		assertThrows(InvalidOrderIdException.class, () -> controller.recordOrderArrival(null));
 		
 		// order refers to product without given location
-	//	assertThrows(InvalidLocationException.class, () -> controller.recordOrderArrival(40));
+		//assertThrows(InvalidLocationException.class, () -> controller.recordOrderArrival(42));
 		
 		// order doesn't exist
-//		assertFalse(controller.recordOrderArrival(50));
-//		
-//		// order is not in the PAYED state
-//		assertFalse(controller.recordOrderArrival(42));
+		assertFalse(controller.recordOrderArrival(50));
+		
+		// order is not in the PAYED state
+		assertFalse(controller.recordOrderArrival(6));
 		
 		// correct register
-		//assertFalse(controller.recordOrderArrival(7));
+		assertTrue(controller.recordOrderArrival(7));
 		
 	}
 	
