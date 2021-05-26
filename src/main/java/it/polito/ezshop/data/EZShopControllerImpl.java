@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.time.LocalDate;
@@ -342,7 +343,10 @@ public class EZShopControllerImpl implements EZShopController {
         if (order != null) {
             String status = order.getStatus();
             ProductType product = productTypeRepository.findByBarcode(order.getProductCode());
-
+            
+            if(product.getLocation().isBlank())
+				throw new InvalidLocationException();
+            
             if (status.equals(OrderImpl.Status.COMPLETED.name()))
                 return true;
 
@@ -975,7 +979,13 @@ public class EZShopControllerImpl implements EZShopController {
                         }
                     }
                 }
-                return method.invoke(target, args);
+       
+                try {
+                    return method.invoke(target, args);
+                } catch (InvocationTargetException e) {
+                    throw e.getCause();
+                }
+                
             } catch (JDBCConnectionException exception) {
                 FallbackStringValue fallbackStringAnnotation = method.getAnnotation(FallbackStringValue.class);
                 if (fallbackStringAnnotation != null) {
