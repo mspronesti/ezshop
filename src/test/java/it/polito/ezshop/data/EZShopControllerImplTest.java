@@ -2,6 +2,8 @@ package it.polito.ezshop.data;
 
 import static org.junit.Assert.*;
 
+import java.util.jar.Pack200;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -11,13 +13,16 @@ public class EZShopControllerImplTest {
     private static EZShopController controller;
     private static UserRepository userRepository;
     private static ProductTypeRepository productTypeRepository;
+    private static OrderRepository orderRepository; 
+    private static BalanceOperationRepository balanceOperationRepository;
     
     @BeforeClass
     static public void init() {
     	controller =  EZShopControllerFactory.create();
     	userRepository = new UserRepository();
     	productTypeRepository = new ProductTypeRepository();
-    
+    	orderRepository = new OrderRepository();
+        balanceOperationRepository = new BalanceOperationRepository();
     }
 
 	@Test
@@ -114,6 +119,8 @@ public class EZShopControllerImplTest {
 		assertNull(controller.getUser(10));
 		// correct id
 		assertNotNull(controller.getUser(id));
+		controller.logout();
+
 	}
 
 	@Test 
@@ -141,11 +148,12 @@ public class EZShopControllerImplTest {
 		assertFalse(controller.updateUserRights( 10, newRole));
 		
 		assertTrue(controller.updateUserRights(id, newRole));
+		controller.logout();
 	}
 	
 	@Test 
 	public void testCreateProductType() throws InvalidUsernameException, InvalidPasswordException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException {
-		String description = "pasta";
+		String description = "Pasta";
 		String productCode = "012345678967";
 		double pricePerUnit = 1.23;
 		String note = "";
@@ -171,9 +179,8 @@ public class EZShopControllerImplTest {
 		assertThrows(InvalidPricePerUnitException.class, () -> controller.createProductType(description, productCode, 0, note));
 		
 		
-		// correct product creating
-		Integer id = controller.createProductType(description, productCode, pricePerUnit, note);
-		assert(id != -1);
+		// correct product creation
+		assert(controller.createProductType(description, productCode, pricePerUnit, note) != -1);
 		// attempt to duplicate
 		assert(controller.createProductType(description, productCode, pricePerUnit, note) == -1);
 		controller.logout();
@@ -222,7 +229,7 @@ public class EZShopControllerImplTest {
 	
 	@Test
 	public void testDeleteProduct() {
-		
+		// eliminare il terzo (012345678929)
 	}
 	
 	@Test
@@ -271,6 +278,107 @@ public class EZShopControllerImplTest {
 		
 	}
 	
+	@Test 
+	public void testIssueOrder() throws InvalidUsernameException, InvalidPasswordException, InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
+		String productCode = "012345678912";
+		Integer quantity = 5;
+		double pricePerUnit = 1.78;
+		
+		controller.login("Franco", "1234"); // unauth
+		assertThrows(UnauthorizedException.class, () -> controller.issueOrder(productCode, quantity, pricePerUnit));
+		
+		controller.login("Marco", "1234");
+		
+		// invalid bar code (null, empty, invalid gtin)
+		assertThrows(InvalidProductCodeException.class, () -> controller.issueOrder("", quantity, pricePerUnit));
+		assertThrows(InvalidProductCodeException.class, () -> controller.issueOrder("null", quantity, pricePerUnit));
+		assertThrows(InvalidProductCodeException.class, () -> controller.issueOrder("012345678906", quantity, pricePerUnit));
+		
+		// negative or 0 quantity
+		assertThrows(InvalidQuantityException.class, () -> controller.issueOrder(productCode, -1, pricePerUnit));
+		assertThrows(InvalidQuantityException.class, () -> controller.issueOrder(productCode, 0, pricePerUnit));
+
+		//negative or 0 price
+		assertThrows(InvalidPricePerUnitException.class, () -> controller.issueOrder(productCode, quantity, -1.84));
+		assertThrows(InvalidPricePerUnitException.class, () -> controller.issueOrder(productCode, quantity, 0));
+		
+		// inexistent product
+		assert( controller.issueOrder("123456789999", 10, 10.24) == -1 );
+		
+		// correct order
+		assert(controller.issueOrder(productCode, quantity, pricePerUnit) != -1);
+		controller.logout();
+	}
 	
+	@Test
+	public void testPayOrderFor() throws InvalidUsernameException, InvalidPasswordException, InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
+		String productCode = "012345678912";
+		Integer quantity = 5;
+		double pricePerUnit = 1.78;
+		
+		controller.login("Franco", "1234"); // unauth
+		assertThrows(UnauthorizedException.class, () -> controller.payOrderFor(productCode, quantity, pricePerUnit));
+		
+		controller.login("Marco", "1234");
+		
+		// invalid bar code (null, empty, invalid gtin)
+		assertThrows(InvalidProductCodeException.class, () -> controller.payOrderFor("", quantity, pricePerUnit));
+		assertThrows(InvalidProductCodeException.class, () -> controller.payOrderFor("null", quantity, pricePerUnit));
+		assertThrows(InvalidProductCodeException.class, () -> controller.payOrderFor("012345678906", quantity, pricePerUnit));
+		
+		// negative or 0 quantity
+		assertThrows(InvalidQuantityException.class, () -> controller.payOrderFor(productCode, -1, pricePerUnit));
+		assertThrows(InvalidQuantityException.class, () -> controller.payOrderFor(productCode, 0, pricePerUnit));
+
+		//negative or 0 price
+		assertThrows(InvalidPricePerUnitException.class, () -> controller.payOrderFor(productCode, quantity, -1.84));
+		assertThrows(InvalidPricePerUnitException.class, () -> controller.payOrderFor(productCode, quantity, 0));
+		
+		// inexistent product
+		assert( controller.payOrderFor("123456789999", 10, 10.24) == -1 );
+		
+		// not enough balance
+		assert(controller.payOrderFor(productCode, quantity*100, pricePerUnit) == -1);
+		
+		// correct order
+		assert(controller.payOrderFor(productCode, quantity, pricePerUnit) != -1);
+		
+		controller.logout();
+	}
+	
+	@Test
+	public void testPayOrder() throws InvalidUsernameException, InvalidPasswordException, InvalidOrderIdException, UnauthorizedException {
+		controller.login("Franco", "1234"); // unauth
+		assertThrows(UnauthorizedException.class, () -> controller.payOrder(6));
+		
+		controller.login("Marco", "1234");
+		// wrong id
+		assertThrows(InvalidOrderIdException.class, () -> controller.payOrder(-1));
+		assertThrows(InvalidOrderIdException.class, () -> controller.payOrder(0));
+		assertThrows(InvalidOrderIdException.class, () -> controller.payOrder(null));
+
+		
+		// inexistent order
+		assertFalse(controller.payOrder(8));
+		// order not in ISSUED state (ne va creato un'altro nel db)
+		// ...
+		// correct pay
+		assertTrue(controller.payOrder(6)); 
+	}
+	
+	@Test
+	public void testRecordOrderArrival() throws InvalidUsernameException, InvalidPasswordException {
+		// creare nel db un prodotto nello stato PAYED e CON LOCATION ASSEGNATA
+	}
+	
+	@Test
+	public void testGetAllOrders() throws InvalidUsernameException, InvalidPasswordException, UnauthorizedException {
+		controller.login("Franco", "1234"); // unauth
+		assertThrows(UnauthorizedException.class, () -> controller.payOrder(6));
+		
+		controller.login("Marco", "1234");
+		assertTrue(controller.getAllOrders().stream().allMatch(p -> p instanceof Order));
+		controller.logout();
+	}
 
 }
