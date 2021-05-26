@@ -2,6 +2,8 @@ package it.polito.ezshop.data;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
+import java.util.function.Predicate;
 import java.util.jar.Pack200;
 
 import org.junit.BeforeClass;
@@ -248,10 +250,10 @@ public class EZShopControllerImplTest {
 	public void testGetProductByBarCode() throws InvalidUsernameException, InvalidPasswordException, InvalidProductCodeException, UnauthorizedException {
 		String barCode = "012345678912";
 		// unauth 
-		User loggedUser = controller.login("Franco", "1234");
+		controller.login("Franco", "1234");
 		assertThrows(UnauthorizedException.class, () -> controller.getProductTypeByBarCode(barCode));
 				
-		loggedUser = controller.login("Marco", "1234");
+		controller.login("Marco", "1234");
 		// invalid bar code (null, empty, invalid gtin)
 		assertThrows(InvalidProductCodeException.class, () -> controller.getProductTypeByBarCode(""));
 		assertThrows(InvalidProductCodeException.class, () -> controller.getProductTypeByBarCode("null"));
@@ -264,13 +266,43 @@ public class EZShopControllerImplTest {
 	}
 	
 	@Test
-	public void testgetProductTypesByDescription() {
+	public void testGetProductTypesByDescription() throws InvalidUsernameException, InvalidPasswordException, UnauthorizedException {
+		String description = "Glasses";
+		// unauth 
+		controller.login("Franco", "1234");
+		assertThrows(UnauthorizedException.class, () -> controller.getProductTypesByDescription(description));
+				
+		controller.login("Marco", "1234");
+		List<ProductType> products = controller.getProductTypesByDescription(description);
 		
+		assertTrue(products.isEmpty() || products.stream().allMatch( p -> p instanceof ProductType));
+		controller.logout();
 	}
 	
 	@Test
-	public void testUpdateQuantity() {
+	public void testUpdateQuantity() throws InvalidUsernameException, InvalidPasswordException, InvalidProductIdException, UnauthorizedException {
+		// unauth 
+		controller.login("Franco", "1234");
+		assertThrows(UnauthorizedException.class, () -> controller.updateQuantity(1, 10));
+		controller.logout();
 		
+		controller.login("Marco", "1234");
+		
+		// invalid id (negative, 0, null)
+		assertThrows(InvalidProductIdException.class, () -> controller.updateQuantity(-1, 10));
+		assertThrows(InvalidProductIdException.class, () -> controller.updateQuantity(0, 10));
+		assertThrows(InvalidProductIdException.class, () -> controller.updateQuantity(null, 10));
+		
+		// negative quantity implying negative total quantity 
+		assertFalse(controller.updateQuantity(1, -200));
+		
+		// update product without given location
+		assertFalse(controller.updateQuantity(2, 5));
+		
+		// correct update
+		assertTrue(controller.updateQuantity(1, 10));
+		
+		controller.logout();
 	}
 	
 	@Test
@@ -379,6 +411,11 @@ public class EZShopControllerImplTest {
 		controller.login("Marco", "1234");
 		assertTrue(controller.getAllOrders().stream().allMatch(p -> p instanceof Order));
 		controller.logout();
+	}
+	
+	@Test
+	public void testDefineCustomer() {
+		
 	}
 
 }
