@@ -720,7 +720,6 @@ public class EZShopControllerImplTest {
 		
 		// invalid product code
 		assertThrows(InvalidProductCodeException.class, () -> controller.deleteProductFromSale(transactionId, "", amount));
-		// non lancia l'eccezione giusta ... problemi simili a quelli della invoke
 		assertThrows(InvalidProductCodeException.class, () -> controller.deleteProductFromSale(transactionId, null, amount));
 		assertThrows(InvalidProductCodeException.class, () -> controller.deleteProductFromSale(transactionId, "012345678949", amount));
 		
@@ -734,7 +733,7 @@ public class EZShopControllerImplTest {
 	
 	@Test
 	public void testApplyDiscountRateToProduct() throws InvalidTransactionIdException, InvalidProductCodeException, InvalidDiscountRateException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException, InvalidQuantityException {
-		String productCode = "012345678905";
+		String productCode = "012345678912";
 		Double discountRate = 0.1d;
 
 		// unauth (nobody logged)
