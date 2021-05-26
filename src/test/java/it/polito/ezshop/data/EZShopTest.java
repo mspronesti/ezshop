@@ -702,9 +702,9 @@ public class EZShopTest {
 	}
 	
 	@Test
-	public void testDeleteProductFromSale() throws InvalidUsernameException, InvalidPasswordException {
+	public void testDeleteProductFromSale() throws InvalidUsernameException, InvalidPasswordException, InvalidQuantityException, InvalidTransactionIdException, UnauthorizedException, InvalidProductCodeException {
 		Integer transactionId = 7;  // forse meglio lavorare su un altro (sono quelli del metodo su)
-		String productCode = "012345678943"; // forse meglio lavorare su un altro
+		String productCode = "012345678912"; // forse meglio lavorare su un altro
 		int amount = 15;
 		
 		// unauth (nobody logged)
@@ -727,6 +727,9 @@ public class EZShopTest {
 		// resto ........
 
 		// TODO: to be implemented
+		//Integer newId=ezshop.startSaleTransaction();
+		//ezshop.addProductToSale(newId, productCode, 10);
+		//assertTrue(ezshop.deleteProductFromSale(newId, productCode, 1));
 	}
 	
 	@Test
