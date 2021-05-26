@@ -956,10 +956,25 @@ public class EZShopControllerImplTest {
 
 	
 	@Test
-	public void testReturnCashPayment()  throws InvalidTransactionIdException, UnauthorizedException {
+	public void testReturnCashPayment() throws InvalidTransactionIdException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
 		// TODO: to be implemented
 		// unauth (nobody logged)
-		//assertThrows(UnauthorizedException.class, () -> controller.returnCashPayment());
+		Integer returnId= 23;
+		ReturnTransactionRepository repo = new ReturnTransactionRepository();
+		ReturnTransactionImpl returnTransaction = new ReturnTransactionImpl();
+		Integer fakeReturnId = repo.create(returnTransaction);
+		assertThrows(UnauthorizedException.class, () -> controller.returnCashPayment(returnId));
+
+		controller.login("Franco", "1234");
+
+		//InvalidTransactionId
+		assertThrows(InvalidTransactionIdException.class, () -> controller.returnCashPayment(0));
+		assertThrows(InvalidTransactionIdException.class, () -> controller.returnCashPayment(-1));
+		double a = controller.returnCashPayment(returnId);
+		//assert(controller.returnCashPayment(returnId) == 1.05);
+		assert(controller.returnCashPayment(100) == -1);
+		double b = controller.returnCashPayment(fakeReturnId);
+		assert(controller.returnCashPayment(fakeReturnId) == -1);
 
 	}
 	
