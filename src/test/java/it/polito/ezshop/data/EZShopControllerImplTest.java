@@ -500,6 +500,62 @@ public class EZShopControllerImplTest {
         assertTrue(controller.getAllCustomers().stream().allMatch(p -> p instanceof Customer));
 	}
 	
+	@Test
+	public void testCreateAndAttachCard() throws InvalidUsernameException, InvalidPasswordException, UnauthorizedException, InvalidCustomerIdException, InvalidCustomerCardException {
+		Integer customerId = customerRepository.findByName("Gianni").getId();
+		
+		// unauth (nobody logged)
+		assertThrows(UnauthorizedException.class, () -> controller.createCard());
+		
+		// attempt with cashier (minimum permissions)
+        controller.login("Franco", "1234");
+       
+        String customerCard = controller.createCard(); 
+		assertNotEquals(customerCard, "");
+		
+		// invalid customer id (null, negative, 0)
+		assertThrows(InvalidCustomerIdException.class, () -> controller.attachCardToCustomer(customerCard, -1));
+		assertThrows(InvalidCustomerIdException.class, () -> controller.attachCardToCustomer(customerCard, 0));
+		assertThrows(InvalidCustomerIdException.class, () -> controller.attachCardToCustomer(customerCard, null));
+
+		// attach
+		// customer doesn't exist
+		assertFalse(controller.attachCardToCustomer(customerCard, 6));
+		
+		// card already assigned
+		assertFalse(controller.attachCardToCustomer("4017008113", customerId));
+		
+		// correct attach
+		assertTrue(controller.attachCardToCustomer(customerCard, customerId));
+
+	}
+	
+	@Test
+	public void modifyPointsOnCard() throws InvalidUsernameException, InvalidPasswordException, InvalidCustomerCardException, UnauthorizedException {
+		String customerCard = "4017008113";
+		int pointsToBeAdded = 7;
+		
+		// unauth (nobody logged)
+		assertThrows(UnauthorizedException.class, () -> controller.modifyPointsOnCard(customerCard, pointsToBeAdded));
+		// attempt with cashier (minimum permissions)
+	    controller.login("Franco", "1234");
+	    
+	    // invalid card( null, empty, invalid format)
+	    assertThrows(InvalidCustomerCardException.class, () -> controller.modifyPointsOnCard("", pointsToBeAdded));
+	    assertThrows(InvalidCustomerCardException.class, () -> controller.modifyPointsOnCard(null, pointsToBeAdded));
+	    assertThrows(InvalidCustomerCardException.class, () -> controller.modifyPointsOnCard("11", pointsToBeAdded));
+	    
+	    // inexistent card number 
+	    assertFalse(controller.modifyPointsOnCard("0000000000", pointsToBeAdded));
+	    
+	    // negative points implying negative total points
+	    assertFalse(controller.modifyPointsOnCard(customerCard, -50));
+	    
+	    // correct modify
+	    assertTrue(controller.modifyPointsOnCard(customerCard, pointsToBeAdded));
+	}
+	
+	
 	
 	@After
 	public void after() {
