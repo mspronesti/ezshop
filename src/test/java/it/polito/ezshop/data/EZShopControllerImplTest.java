@@ -73,15 +73,16 @@ public class EZShopControllerImplTest {
 	
 	@Test
 	public void testDeleteUser() throws InvalidUsernameException, InvalidPasswordException, InvalidUserIdException, UnauthorizedException {
-		User logged = controller.login("Franco", "1234");
+		
 		Integer id1 = userRepository.findByUsername("Marco").getId();
 		Integer id2 = userRepository.findByUsername("Giovanna").getId();
 	    
 		// unauth attempt to delete user
+		controller.login("Franco", "1234");
 		assertThrows(UnauthorizedException.class, () -> controller.deleteUser(id1));
 		controller.logout();
 		
-		logged = controller.login("Marco", "1234");
+		controller.login("Marco", "1234");
 		// id null, negative or 0
 		assertThrows(InvalidUserIdException.class, () -> controller.deleteUser(null));
 		assertThrows(InvalidUserIdException.class, () -> controller.deleteUser(-1));
@@ -95,23 +96,23 @@ public class EZShopControllerImplTest {
 	
 	@Test
 	public void testGetAllUsers() throws InvalidUsernameException, InvalidPasswordException, UnauthorizedException {
-		User loggedUser = controller.login("Franco", "1234");
+		controller.login("Franco", "1234");
 		assertThrows(UnauthorizedException.class, () -> controller.getAllUsers());
 		controller.logout();
 		
-		loggedUser = controller.login("Marco", "1234");
+		controller.login("Marco", "1234");
 		assertTrue(controller.getAllUsers().stream().allMatch(p -> p instanceof User));
 	}
 	
 	@Test
 	public void testGetUser() throws InvalidUsernameException, InvalidPasswordException, InvalidUserIdException, UnauthorizedException {
-		User logged = controller.login("Franco", "1234");
 		Integer id = userRepository.findByUsername("Anna").getId();
 		
+		controller.login("Franco", "1234");
 		assertThrows(UnauthorizedException.class, () -> controller.getUser(id));
 		controller.logout();
 		
-		logged = controller.login("Marco", "1234");
+		controller.login("Marco", "1234");
 		
 		// wrong id (negative, 0, null)
 		assertThrows(InvalidUserIdException.class, () -> controller.getUser(-1));
@@ -130,12 +131,12 @@ public class EZShopControllerImplTest {
 		Integer id = userRepository.findByUsername("Anna").getId();
 		
 		// attempt with unauth user
-		User loggedUser = controller.login("Franco", "1234");
+		controller.login("Franco", "1234");
 		assertThrows(UnauthorizedException.class, () -> controller.updateUserRights(id, newRole));
 		controller.logout();
 		
 		// attempt with auth user
-		loggedUser = controller.login("Marco", "1234");
+		controller.login("Marco", "1234");
 		
 		// invalid id
 		assertThrows(InvalidUserIdException.class, () -> controller.updateUserRights(null, newRole));
@@ -159,11 +160,12 @@ public class EZShopControllerImplTest {
 		String note = "";
 		
 		// unauth 
-		User loggedUser = controller.login("Franco", "1234");
+		controller.login("Franco", "1234");
 		assertThrows(UnauthorizedException.class, () -> controller.createProductType(description, productCode, pricePerUnit, note));
-		
+		controller.logout();
+
 		// auth
-		loggedUser = controller.login("Marco", "1234");
+		controller.login("Marco", "1234");
 				
 		// empty/null description
 		assertThrows(InvalidProductDescriptionException.class, () -> controller.createProductType("", productCode, pricePerUnit, note));
@@ -195,10 +197,11 @@ public class EZShopControllerImplTest {
 		Integer id = productTypeRepository.findByBarcode("012345678905").getId();
 		
 		// unauth 
-		User loggedUser = controller.login("Franco", "1234");
+		controller.login("Franco", "1234");
 		assertThrows(UnauthorizedException.class, () -> controller.updateProduct(id, newDescription, newCode, newPrice, newNote));
-				
-		loggedUser = controller.login("Marco", "1234");
+		controller.logout();
+
+		controller.login("Marco", "1234");
 		
 		// invalid id (null, negative, 0)
 		assertThrows(InvalidProductIdException.class, () -> controller.updateProduct(null, newDescription, newCode, newPrice, newNote));
@@ -226,8 +229,21 @@ public class EZShopControllerImplTest {
 	}
 	
 	@Test
-	public void testDeleteProduct() {
-		// eliminare il terzo (012345678929)
+	public void testDeleteProduct() throws InvalidUsernameException, InvalidPasswordException {
+		Integer id = productTypeRepository.findByBarcode("012345678929").getId();
+		
+		// unauth
+		controller.login("Franco", "1234");
+		assertThrows(UnauthorizedException.class, () -> controller.deleteProductType(id));
+		controller.logout();
+		
+		controller.login("Marco", "1234");
+		// invalid product type (null, 0 , negative)
+		assertThrows(InvalidProductIdException.class, () -> controller.deleteProductType(-1));
+		// change annotation to Min(1)
+//		assertThrows(InvalidProductIdException.class, () -> controller.deleteProductType(0)); 
+		assertThrows(InvalidProductIdException.class, () -> controller.deleteProductType(null));
+
 	}
 	
 	@Test
@@ -301,8 +317,29 @@ public class EZShopControllerImplTest {
 	}
 	
 	@Test
-	public void testUpdatePosition() {
+	public void testUpdatePosition() throws InvalidUsernameException, InvalidPasswordException, InvalidProductIdException, InvalidLocationException, UnauthorizedException {
+		Integer productId = productTypeRepository.findByBarcode("012345678929").getId();
+		String newPos = "18-C-9";
 		
+		// unauth 
+		controller.login("Franco", "1234");
+		assertThrows(UnauthorizedException.class, () -> controller.updatePosition(productId, newPos));
+		controller.logout();
+		
+		controller.login("Marco", "1234");
+		
+		// invalid id (negative, 0, null)
+		assertThrows(InvalidProductIdException.class, () -> controller.updatePosition(-1, newPos));
+		assertThrows(InvalidProductIdException.class, () -> controller.updatePosition(0, newPos));
+		assertThrows(InvalidProductIdException.class, () -> controller.updatePosition(null, newPos));
+		
+		// invalid location
+		assertThrows(InvalidLocationException.class, () -> controller.updatePosition(productId, "aa-1-1"));
+		assertThrows(InvalidLocationException.class, () -> controller.updatePosition(productId, "1-ddc-88"));
+		assertThrows(InvalidLocationException.class, () -> controller.updatePosition(productId, "1A88"));
+
+		// correct update
+		assertTrue(controller.updatePosition(productId, newPos));
 	}
 	
 	@Test 
