@@ -9,70 +9,29 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class SaleTransactionRepositoryTest {
-
-
-
+    private static final SaleTransactionRepository repo = new SaleTransactionRepository();
 
     @Test
     public void find() {
-        SaleTransactionImpl saleTr = new SaleTransactionImpl();
-        SaleTransactionRepository repo= new SaleTransactionRepository();
-        Integer id= repo.create(saleTr);
-        assertEquals(id,repo.find(id).getTicketNumber());
-        repo.delete(saleTr);
+        Integer saleTransactionId=25;
+        assertEquals(saleTransactionId,repo.find(saleTransactionId).getTicketNumber());
     }
 
     @Test
     public void findAll() {
-        SaleTransactionRepository saleTransactionRepository = new SaleTransactionRepository();
-        List<SaleTransaction> saleTransactionList = new ArrayList<>();
-        List<Integer> idArray = new ArrayList<>();
-        
-        SaleTransactionImpl tr1 = new SaleTransactionImpl();
-        SaleTransactionImpl tr2 = new SaleTransactionImpl();
-        SaleTransactionImpl tr3 = new SaleTransactionImpl();
-        
-        saleTransactionList.add(tr1);
-        saleTransactionList.add(tr2);
-        saleTransactionList.add(tr3);
-
-        for (SaleTransaction entry:saleTransactionList){
-            idArray.add(saleTransactionRepository.create(entry));
-        }
-
-        for (SaleTransaction entry:saleTransactionList) {
-            assertTrue(idArray.contains(entry.getTicketNumber()));
-        }
-
-        for (SaleTransaction entry:saleTransactionList){
-            saleTransactionRepository.delete(entry);
-        }
+        assertEquals(repo.findAll().getClass(), ArrayList.class);
+        assertEquals(repo.findAll().get(0).getClass(), SaleTransactionImpl.class);
     }
-
-    @Test
-    public void create() {
-        SaleTransactionImpl saleTr = new SaleTransactionImpl();
-        SaleTransactionRepository repo= new SaleTransactionRepository();
-        Integer id= repo.create(saleTr);
-        assertEquals(id,saleTr.getTicketNumber());
-        repo.delete(saleTr);
-    }
-
     @Test
     public void update() {
-        SaleTransactionImpl saleTransaction = new SaleTransactionImpl();
-        SaleTransactionRepository saleTransactionRepository = new SaleTransactionRepository();
-        BalanceOperationImpl balanceOp = new BalanceOperationImpl();
-        BalanceOperationRepository balanceOperationRepository = new BalanceOperationRepository();
-
         List<TicketEntry> ticketList = new ArrayList<>();
         List<String> idArray=new ArrayList<>();
 
 
         TicketEntryImpl tk1 = new TicketEntryImpl();
         TicketEntryImpl tk2 = new TicketEntryImpl();
-        String barcode1="313151";
-        String barcode2="313191";
+        String barcode1="012345678905";
+        String barcode2="012345678936";
         tk1.setBarCode(barcode1);
         tk2.setBarCode(barcode2);
         ticketList.add(tk1);
@@ -82,43 +41,34 @@ public class SaleTransactionRepositoryTest {
             idArray.add(entry.getBarCode());
         }
 
-        double price = 50;
-        double discountRate = 12.50;
+        double newPrice = 50;
+        double newDiscountRate = 12.50;
 
-        Integer id = saleTransactionRepository.create(saleTransaction);
-        saleTransaction.setDiscountRate(discountRate);
-        saleTransaction.setPrice(price);
+        SaleTransaction saleTransaction = repo.find(25);
+        saleTransaction.setDiscountRate(newDiscountRate);
+        saleTransaction.setPrice(newPrice);
         saleTransaction.setEntries(ticketList);
-        saleTransaction.setPayment(balanceOp);
-
-        int balanceId = balanceOperationRepository.create(balanceOp);
 
 
         saleTransaction.setEntries(ticketList);
+        SaleTransaction updated = repo.update(saleTransaction);
 
-        SaleTransaction saleTransaction2 = saleTransactionRepository.update(saleTransaction);
-
-        assertEquals(id,saleTransactionRepository.find(id).getTicketNumber());
-        assertEquals(balanceId, saleTransaction.getPayment().getBalanceId());
-        assert(price == saleTransaction2.getPrice());
-        assert(discountRate == saleTransaction2.getDiscountRate());
-
-        for (TicketEntry entry:ticketList) {
+        assert(newPrice == updated.getPrice());
+        assert(newDiscountRate == updated.getDiscountRate());
+        for (TicketEntry entry:updated.getEntries()) {
             assertTrue(idArray.contains(entry.getBarCode()));
         }
-
-        balanceOperationRepository.delete(balanceOp);
-        saleTransactionRepository.delete(saleTransaction);
-
     }
 
 
     @Test
+    public void create() {
+        assertTrue(repo.create(new SaleTransactionImpl())>0);
+    }
+
+    @Test
     public void delete() {
-        SaleTransactionImpl saleTr = new SaleTransactionImpl();
-        SaleTransactionRepository repo= new SaleTransactionRepository();
-        Integer id= repo.create(saleTr);
-        repo.delete(saleTr);
-        assertNull(repo.find(id));
+        repo.delete(repo.find(27));
+        assertNull(repo.find(27));
     }
 }

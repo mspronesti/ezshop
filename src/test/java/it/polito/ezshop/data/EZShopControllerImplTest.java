@@ -591,8 +591,6 @@ public class EZShopControllerImplTest {
 	}
 	
 
-	
-	
 	@Test
 	public void testComputeBalance() throws InvalidUsernameException, InvalidPasswordException, UnauthorizedException {
 		// nobody logged
@@ -638,6 +636,7 @@ public class EZShopControllerImplTest {
 		// attempt to close it again
 		assertFalse(controller.endSaleTransaction(transactionId));	
 	}
+
 	
 	
 	@After
