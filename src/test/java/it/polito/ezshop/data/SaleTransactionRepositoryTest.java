@@ -13,14 +13,15 @@ public class SaleTransactionRepositoryTest {
 
     @Test
     public void find() {
-        Integer saleTransactionId=27;
+        Integer saleTransactionId=52;
         assertEquals(saleTransactionId,repo.find(saleTransactionId).getTicketNumber());
     }
 
     @Test
     public void findAll() {
-        assertEquals(repo.findAll().getClass(), ArrayList.class);
-        assertEquals(repo.findAll().get(0).getClass(), SaleTransactionImpl.class);
+        assertEquals(ArrayList.class, repo.findAll().getClass());
+        assertTrue(repo.findAll().get(0).getClass().equals(SaleTransaction.class)||
+                repo.findAll().get(0).getClass().equals(ReturnTransactionImpl.class));
     }
     @Test
     public void update() {
@@ -61,7 +62,7 @@ public class SaleTransactionRepositoryTest {
     }
 
 
-    @Test
+ @Test
     public void create() {
         assertTrue(repo.create(new SaleTransactionImpl())>0);
     }
@@ -71,4 +72,5 @@ public class SaleTransactionRepositoryTest {
         repo.delete(repo.find(54));
         assertNull(repo.find(54));
     }
+
 }
