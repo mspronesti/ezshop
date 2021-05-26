@@ -781,7 +781,8 @@ public class EZShopControllerImplTest {
 
 		assertEquals(saleTransactionRepository.find(saleTransId).getTicketNumber(), controller.getSaleTransaction(saleTransId).getTicketNumber());
 		int newId=controller.startSaleTransaction();
-		assertNull(controller.getSaleTransaction(newId));
+
+		assertNull(controller.getSaleTransaction(900));
 	}
 	
 	@Test
@@ -820,7 +821,7 @@ public class EZShopControllerImplTest {
 	
 	
 	@Test
-	public void testDeleteReturnTransaction() throws InvalidTransactionIdException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
+	public void testDeleteReturnTransaction() throws InvalidTransactionIdException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException, InvalidQuantityException, InvalidProductCodeException {
 		// TODO: to be implemented
 		// unauth (nobody logged)
 		assertThrows(UnauthorizedException.class, () -> controller.deleteReturnTransaction(900));
@@ -834,8 +835,9 @@ public class EZShopControllerImplTest {
 		assertFalse(controller.deleteReturnTransaction(900));
 		assertFalse(controller.deleteReturnTransaction(31));
 		int newId=controller.startReturnTransaction(27);
-		controller.endReturnTransaction(newId,false);
-		assertTrue(controller.deleteSaleTransaction(newId));
+		controller.returnProduct(newId,"012345678905", 1);
+		controller.endReturnTransaction(newId, false);
+		assertTrue(controller.deleteSaleTransaction(29));
 	}
 	
 	@Test
