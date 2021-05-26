@@ -342,7 +342,7 @@ public class EZShopControllerImpl implements EZShopController {
         if (order != null) {
             String status = order.getStatus();
             ProductType product = productTypeRepository.findByBarcode(order.getProductCode());
-            
+
             if (status.equals(OrderImpl.Status.COMPLETED.name()))
                 return true;
 
