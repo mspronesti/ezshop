@@ -721,7 +721,7 @@ public class EZShopControllerImplTest {
 		// invalid product code
 		assertThrows(InvalidProductCodeException.class, () -> controller.deleteProductFromSale(transactionId, "", amount));
 		// non lancia l'eccezione giusta ... problemi simili a quelli della invoke
-//				assertThrows(InvalidProductCodeException.class, () -> controller.deleteProductFromSale(transactionId, null, amount));
+		assertThrows(InvalidProductCodeException.class, () -> controller.deleteProductFromSale(transactionId, null, amount));
 		assertThrows(InvalidProductCodeException.class, () -> controller.deleteProductFromSale(transactionId, "012345678949", amount));
 		
 		// invalid quantity
@@ -810,7 +810,6 @@ public class EZShopControllerImplTest {
 
 	@Test
 	public void testDeleteSaleTransaction() throws InvalidTransactionIdException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
-		// TODO: to be implemented
 		// unauth (nobody logged)
 		assertThrows(UnauthorizedException.class, () -> controller.deleteSaleTransaction(900));
 
@@ -822,9 +821,8 @@ public class EZShopControllerImplTest {
 		assertThrows(InvalidTransactionIdException.class, ()-> controller.deleteSaleTransaction(null));
 
 
-
 		assertFalse(controller.deleteSaleTransaction(25)); //payed
-		assertFalse(controller.deleteSaleTransaction(900)); //don't exist
+		assertFalse(controller.deleteSaleTransaction(900)); //doesn't exist
 
 		int newId=controller.startSaleTransaction();
 		assertTrue(controller.deleteSaleTransaction(newId));
@@ -833,7 +831,6 @@ public class EZShopControllerImplTest {
 	
 	@Test
 	public void testGetSaleTransaction() throws InvalidTransactionIdException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
-		// TODO: to be implemented
 		int saleTransId = 23;
 		// unauth (nobody logged)
 		assertThrows(UnauthorizedException.class, () -> controller.getSaleTransaction(saleTransId));
@@ -845,14 +842,13 @@ public class EZShopControllerImplTest {
 		assertThrows(InvalidTransactionIdException.class, ()-> controller.getSaleTransaction(null));
 
 		assertEquals(saleTransactionRepository.find(saleTransId).getTicketNumber(), controller.getSaleTransaction(saleTransId).getTicketNumber());
-		int newId=controller.startSaleTransaction();
+		int newId = controller.startSaleTransaction();
 
 		assertNull(controller.getSaleTransaction(900));
 	}
 	
 	@Test
 	public void testStartReturnTransaction() throws InvalidTransactionIdException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
-		// TODO: to be implemented
 		Integer transactionId = 27;
 		// unauth (nobody logged)
 		assertThrows(UnauthorizedException.class, () -> controller.startReturnTransaction(transactionId));
@@ -869,7 +865,6 @@ public class EZShopControllerImplTest {
 	
 	@Test
 	public void testEndReturnTransaction() throws InvalidTransactionIdException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
-		// TODO: to be implemented
 		//unauth (nobody logged)
 		assertThrows(UnauthorizedException.class, () -> controller.endReturnTransaction(900, true));
 
@@ -887,11 +882,11 @@ public class EZShopControllerImplTest {
 	
 	@Test
 	public void testDeleteReturnTransaction() throws InvalidTransactionIdException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException, InvalidQuantityException, InvalidProductCodeException {
-		// TODO: to be implemented
 		Integer transactionId = 19;
 		String creditCard = "5100293991053009";
 		String creditCard2 = "4716258050958645";
 		String fakeCreditCard = "1234567812345670";
+		
 		// unauth (nobody logged)
 		assertThrows(UnauthorizedException.class, () -> controller.deleteReturnTransaction(900));
 
@@ -928,16 +923,14 @@ public class EZShopControllerImplTest {
 		assertThrows(InvalidPaymentException.class, () -> controller.receiveCashPayment(transactionId,0));
 		assertThrows(InvalidPaymentException.class, () -> controller.receiveCashPayment(transactionId,-1));
 
-		assert(controller.receiveCashPayment(10,cash) == -1);
-		assert(controller.receiveCashPayment(transactionId,0.5) == -1);
-		assert(controller.receiveCashPayment(transactionId,cash) == 0);
-
+		assert(controller.receiveCashPayment(10, cash) == -1);
+		assert(controller.receiveCashPayment(transactionId, 0.5) == -1);
+		assert(controller.receiveCashPayment(transactionId, cash) == 0);
     }
 	
 	
 	@Test
 	public void testReceiveCreditCardPayment() throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
-		// TODO: to be implemented
 		Integer transactionId=19;
 		String creditCard="5100293991053009";
 		String creditCard2="4716258050958645";
