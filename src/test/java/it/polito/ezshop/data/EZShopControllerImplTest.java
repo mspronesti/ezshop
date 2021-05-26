@@ -2,10 +2,10 @@ package it.polito.ezshop.data;
 
 import static org.junit.Assert.*;
 
+import java.lang.ModuleLayer.Controller;
 import java.util.List;
-import java.util.function.Predicate;
-import java.util.jar.Pack200;
 
+import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -17,6 +17,7 @@ public class EZShopControllerImplTest {
     private static ProductTypeRepository productTypeRepository;
     private static OrderRepository orderRepository; 
     private static BalanceOperationRepository balanceOperationRepository;
+    private static CustomerRepository customerRepository;
     
     @BeforeClass
     static public void init() {
@@ -25,6 +26,7 @@ public class EZShopControllerImplTest {
     	productTypeRepository = new ProductTypeRepository();
     	orderRepository = new OrderRepository();
         balanceOperationRepository = new BalanceOperationRepository();
+        customerRepository  = new CustomerRepository();
     }
 
 	@Test
@@ -89,7 +91,6 @@ public class EZShopControllerImplTest {
 		assertFalse(controller.deleteUser(10));
 		// correct delete
 		assertTrue(controller.deleteUser(id2));
-		controller.logout();	
 	}
 	
 	@Test
@@ -121,8 +122,6 @@ public class EZShopControllerImplTest {
 		assertNull(controller.getUser(10));
 		// correct id
 		assertNotNull(controller.getUser(id));
-		controller.logout();
-
 	}
 
 	@Test 
@@ -150,7 +149,6 @@ public class EZShopControllerImplTest {
 		assertFalse(controller.updateUserRights( 10, newRole));
 		
 		assertTrue(controller.updateUserRights(id, newRole));
-		controller.logout();
 	}
 	
 	@Test 
@@ -185,7 +183,6 @@ public class EZShopControllerImplTest {
 		assert(controller.createProductType(description, productCode, pricePerUnit, note) != -1);
 		// attempt to duplicate
 		assert(controller.createProductType(description, productCode, pricePerUnit, note) == -1);
-		controller.logout();
 	}
 	
 	@Test
@@ -226,7 +223,6 @@ public class EZShopControllerImplTest {
 //		assertFalse(controller.updateProduct(id, newDescription, "012345678912", newPrice, newNote));
 		// correct update
 		assertTrue(controller.updateProduct(id, newDescription, newCode, newPrice, newNote));
-		controller.logout();
 	}
 	
 	@Test
@@ -236,6 +232,8 @@ public class EZShopControllerImplTest {
 	
 	@Test
 	public void testGetAllProducts() throws UnauthorizedException, InvalidUsernameException, InvalidPasswordException, InvalidRoleException, InvalidUserIdException {
+		// nobody logged
+		assertThrows(UnauthorizedException.class, () -> controller.getAllProductTypes());
 		
 		String[] roles = {"Marco", "Anna", "Franco"}; // Administrator, ShopManager, Cashier
 		for (String role : roles) {
@@ -262,7 +260,6 @@ public class EZShopControllerImplTest {
 		// inexisting product
 		assertNull(controller.getProductTypeByBarCode("012345678943"));
 		assertNotNull(controller.getProductTypeByBarCode(barCode));
-		controller.logout();
 	}
 	
 	@Test
@@ -276,7 +273,6 @@ public class EZShopControllerImplTest {
 		List<ProductType> products = controller.getProductTypesByDescription(description);
 		
 		assertTrue(products.isEmpty() || products.stream().allMatch( p -> p instanceof ProductType));
-		controller.logout();
 	}
 	
 	@Test
@@ -302,7 +298,6 @@ public class EZShopControllerImplTest {
 		// correct update
 		assertTrue(controller.updateQuantity(1, 10));
 		
-		controller.logout();
 	}
 	
 	@Test
@@ -339,7 +334,6 @@ public class EZShopControllerImplTest {
 		
 		// correct order
 		assert(controller.issueOrder(productCode, quantity, pricePerUnit) != -1);
-		controller.logout();
 	}
 	
 	@Test
@@ -375,7 +369,6 @@ public class EZShopControllerImplTest {
 		// correct order
 		assert(controller.payOrderFor(productCode, quantity, pricePerUnit) != -1);
 		
-		controller.logout();
 	}
 	
 	@Test
@@ -410,12 +403,109 @@ public class EZShopControllerImplTest {
 		
 		controller.login("Marco", "1234");
 		assertTrue(controller.getAllOrders().stream().allMatch(p -> p instanceof Order));
-		controller.logout();
 	}
 	
 	@Test
-	public void testDefineCustomer() {
+	public void testDefineCustomer() throws InvalidUsernameException, InvalidPasswordException, InvalidCustomerNameException, UnauthorizedException {
+		String customerName = "Bob";
+		
+		// unauth (nobody logged)
+		assertThrows(UnauthorizedException.class, () -> controller.defineCustomer(customerName));
+		
+		// attempt with cashier (minimum permissions)
+		controller.login("Franco", "1234");
+		// null or empty name
+		assertThrows(InvalidCustomerNameException.class, () -> controller.defineCustomer(""));
+		assertThrows(InvalidCustomerNameException.class, () -> controller.defineCustomer(null));
+		
+		// correct creation
+		assert(controller.defineCustomer(customerName) != -1);
+		
+		// duplication attempt
+		assert(controller.defineCustomer(customerName) == -1);
+
+	}
+	
+	@Test
+	public void testModifyCustomer() throws InvalidUsernameException, InvalidPasswordException {
+		String newCustomerName = "John";
+		String newCustomerCard = "1111111111";
+		
+		// unauth (nobody logged)
+		assertThrows(UnauthorizedException.class, () -> controller.modifyCustomer(1, newCustomerName, newCustomerCard));
+		
+		// attempt with cashier (minimum permissions)
+		controller.login("Franco", "1234");
+		
+		// null or empty name
+		assertThrows(InvalidCustomerNameException.class, () -> controller.modifyCustomer(1, "", newCustomerCard));
+		assertThrows(InvalidCustomerNameException.class, () -> controller.modifyCustomer(1, null, newCustomerCard));
+		
+		// invalid card lenght (notice: null and empty are accepted)
+		assertThrows(InvalidCustomerCardException.class, () -> controller.modifyCustomer(1, newCustomerName, "11"));
 		
 	}
+	
+	@Test
+	public void testDeleteCustomer() throws InvalidUsernameException, InvalidPasswordException, InvalidCustomerIdException, UnauthorizedException {
+		Integer id = customerRepository.findByName("Fabiana").getId();
+		
+		// unauth (nobody logged)
+		assertThrows(UnauthorizedException.class, () -> controller.deleteCustomer(id));
+		
+		// attempt with cashier (minimum permissions)
+		controller.login("Franco", "1234");
+		
+		// not positive id
+		assertThrows(InvalidCustomerIdException.class, () -> controller.deleteCustomer(-1));
+		assertThrows(InvalidCustomerIdException.class, () -> controller.deleteCustomer(0));
+		assertThrows(InvalidCustomerIdException.class, () -> controller.deleteCustomer(null));
+
+		
+		// inexistent customer
+		assertFalse(controller.deleteCustomer(6));
+		
+		// correct delete
+		assertTrue(controller.deleteCustomer(id));
+	}
+	
+	@Test
+	public void testGetCustomer() throws InvalidUsernameException, InvalidPasswordException, InvalidCustomerIdException, UnauthorizedException {
+		Integer id = customerRepository.findByName("Giovanni").getId();
+		
+		// unauth (nobody logged)
+		assertThrows(UnauthorizedException.class, () -> controller.getCustomer(id));
+		
+		// attempt with cashier (minimum permissions)
+		controller.login("Franco", "1234");
+		
+		// not positive id
+		assertThrows(InvalidCustomerIdException.class, () -> controller.getCustomer(-1));
+		assertThrows(InvalidCustomerIdException.class, () -> controller.getCustomer(0));
+		assertThrows(InvalidCustomerIdException.class, () -> controller.getCustomer(null));
+		
+		// inexistent customer
+		assertNull(controller.getCustomer(6));
+		// corrrect get
+		assertNotNull(controller.getCustomer(id));
+	}
+
+	@Test
+	public void testGetAllCustomers() throws InvalidUsernameException, InvalidPasswordException, UnauthorizedException {
+		// unauth (nobody logged)
+		assertThrows(UnauthorizedException.class, () -> controller.getAllCustomers());
+		// attempt with cashier (minimum permissions)
+        controller.login("Franco", "1234");
+        
+        assertTrue(controller.getAllCustomers().stream().allMatch(p -> p instanceof Customer));
+	}
+	
+	
+	@After
+	public void after() {
+		controller.logout();
+	}
+	
+	
 
 }
