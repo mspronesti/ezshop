@@ -23,6 +23,7 @@ public class EZShopControllerImplTest {
     private static UserRepository userRepository;
     private static ProductTypeRepository productTypeRepository;
     private static BalanceOperationRepository balanceOperationRepository;
+	private static SaleTransactionRepository saleTransactionRepository;
     private static CustomerRepository customerRepository;
     private static OrderRepository orderRepository ;
     
@@ -32,6 +33,7 @@ public class EZShopControllerImplTest {
     	userRepository = new UserRepository();
     	productTypeRepository = new ProductTypeRepository();
         balanceOperationRepository = new BalanceOperationRepository();
+		saleTransactionRepository = new SaleTransactionRepository();
         customerRepository  = new CustomerRepository();
         orderRepository = new OrderRepository();
     }
@@ -731,71 +733,132 @@ public class EZShopControllerImplTest {
 	}
 	
 	@Test
-	public void testApplyDiscountRateToProduct() {
+	public void testApplyDiscountRateToProduct() throws InvalidTransactionIdException, InvalidProductCodeException, InvalidDiscountRateException, UnauthorizedException {
 		// TODO: to be implemented
+		// unauth (nobody logged)
+
+		//assertThrows(UnauthorizedException.class, () -> controller.applyDiscountRateToProduct());
+
 	}
 	
 	@Test
-	public void testApplyDiscountRateToSale() {
+	public void testApplyDiscountRateToSale()  throws InvalidTransactionIdException, InvalidDiscountRateException, UnauthorizedException {
 		// TODO: to be implemented
+		// unauth (nobody logged)
+		//assertThrows(UnauthorizedException.class, () -> controller.applyDiscountRateToSale());
+
 	}
 	
 	@Test
-	public void testComputePointsForSale() {
+	public void testComputePointsForSale()  throws InvalidTransactionIdException, UnauthorizedException {
 		// TODO: to be implemented
+		// unauth (nobody logged)
+		//assertThrows(UnauthorizedException.class, () -> controller.computePointsForSale());
+
 	}
 	
 	@Test
-	public void testDeleteSaleTransaction() {
+	public void testDeleteSaleTransaction() throws InvalidTransactionIdException, UnauthorizedException{
 		// TODO: to be implemented
-	}
-	
-	
-	@Test
-	public void testGetSaleTransaction() {
-		// TODO: to be implemented
-	}
-	
-	@Test
-	public void testStartReturnTransaction() {
-		// TODO: to be implemented
-	}
-	
-	@Test
-	public void testEndReturnTransaction() {
-		// TODO: to be implemented
+		// unauth (nobody logged)
+		//assertThrows(UnauthorizedException.class, () -> controller.deleteSaleTransaction());
+
 	}
 	
 	
 	@Test
-	public void testDeleteReturnTransaction() {
+	public void testGetSaleTransaction() throws InvalidTransactionIdException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
 		// TODO: to be implemented
+		int saleTransId = 23;
+		// unauth (nobody logged)
+		assertThrows(UnauthorizedException.class, () -> controller.getSaleTransaction(saleTransId));
+
+		controller.login("Franco", "1234");
+		// invalidTransaction
+		assertThrows(InvalidTransactionIdException.class, ()-> controller.getSaleTransaction(0));
+		assertThrows(InvalidTransactionIdException.class, ()-> controller.getSaleTransaction(-1));
+		assertThrows(InvalidTransactionIdException.class, ()-> controller.getSaleTransaction(null));
+
+		assertEquals(saleTransactionRepository.find(saleTransId).getTicketNumber(), controller.getSaleTransaction(saleTransId).getTicketNumber());
+		int newId=controller.startSaleTransaction();
+		//assertNull(controller.getSaleTransaction(newId));
 	}
 	
 	@Test
-	public void testReceiveCashPayment() {
+	public void testStartReturnTransaction()  throws InvalidTransactionIdException, UnauthorizedException {
 		// TODO: to be implemented
+		// unauth (nobody logged)
+		//assertThrows(UnauthorizedException.class, () -> controller.startSaleTransaction());
+
+	}
+	
+	@Test
+	public void testEndReturnTransaction()  throws InvalidTransactionIdException, UnauthorizedException {
+		// TODO: to be implemented
+		// unauth (nobody logged)
+		//assertThrows(UnauthorizedException.class, () -> controller.endReturnTransaction());
+
 	}
 	
 	
 	@Test
-	public void testReceiveCreditCardPayment() {
+	public void testDeleteReturnTransaction() throws InvalidTransactionIdException, UnauthorizedException{
 		// TODO: to be implemented
+		// unauth (nobody logged)
+		//assertThrows(UnauthorizedException.class, () -> controller.deleteReturnTransaction());
+
 	}
 	
 	@Test
-	public void testReturnCashPayment() {
+	public void testReceiveCashPayment() throws InvalidTransactionIdException, InvalidPaymentException, UnauthorizedException{
 		// TODO: to be implemented
+		// unauth (nobody logged)
+		//assertThrows(UnauthorizedException.class, () -> controller.receiveCashPayment());
+
+	}
+	
+	
+	@Test
+	public void testReceiveCreditCardPayment()  throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException{
+		// TODO: to be implemented
+		// unauth (nobody logged)
+		//assertThrows(UnauthorizedException.class, () -> controller.receiveCreditCardPayment());
+
 	}
 	
 	@Test
-	public void testReturnCreditCardPayment() {
+	public void testReturnCashPayment()  throws InvalidTransactionIdException, UnauthorizedException {
 		// TODO: to be implemented
+		// unauth (nobody logged)
+		//assertThrows(UnauthorizedException.class, () -> controller.returnCashPayment());
+
 	}
 	
 	@Test
-	public void testRecordBalanceUpdate() {
+	public void testReturnCreditCardPayment() throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException{
 		// TODO: to be implemented
+		// unauth (nobody logged)
+		//assertThrows(UnauthorizedException.class, () -> controller.returnCreditCardPayment());
+
+
+	}
+	
+	@Test
+	public void testRecordBalanceUpdate() throws UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
+		// TODO: to be implemented
+		double toBeAdded=500.99;
+		double toBeSubtractedTooMuch=-100000.00;
+		// unauth (nobody logged)
+		assertThrows(UnauthorizedException.class, () -> controller.recordBalanceUpdate(toBeAdded));
+
+		// unauth (cashier)
+		controller.login("Franco", "1234");
+		assertThrows(UnauthorizedException.class, () -> controller.recordBalanceUpdate(toBeAdded));
+		controller.logout();
+		controller.login("Marco", "1234");
+
+		assertTrue(controller.recordBalanceUpdate(toBeAdded));
+		assertFalse(controller.recordBalanceUpdate(toBeSubtractedTooMuch));
 	}
 	
 	
