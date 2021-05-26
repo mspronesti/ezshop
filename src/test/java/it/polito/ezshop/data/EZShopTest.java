@@ -960,7 +960,7 @@ public class EZShopTest {
 	public void testReturnCashPayment() throws InvalidTransactionIdException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
 		// TODO: to be implemented
 		// unauth (nobody logged)
-		Integer returnId= 23;
+		Integer returnId= 29;
 		ReturnTransactionRepository repo = new ReturnTransactionRepository();
 		ReturnTransactionImpl returnTransaction = new ReturnTransactionImpl();
 		Integer fakeReturnId = repo.create(returnTransaction);
@@ -972,21 +972,42 @@ public class EZShopTest {
 		assertThrows(InvalidTransactionIdException.class, () -> ezshop.returnCashPayment(0));
 		assertThrows(InvalidTransactionIdException.class, () -> ezshop.returnCashPayment(-1));
 		double a = ezshop.returnCashPayment(returnId);
-		//assert(controller.returnCashPayment(returnId) == 1.05);
+		assert(ezshop.returnCashPayment(returnId) == 1.05);
 		assert(ezshop.returnCashPayment(100) == -1);
-		double b = ezshop.returnCashPayment(fakeReturnId);
 		assert(ezshop.returnCashPayment(fakeReturnId) == -1);
 
 	}
 	
 	@Test
-	public void testReturnCreditCardPayment() throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException{
+	public void testReturnCreditCardPayment() throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
 		// TODO: to be implemented
 		// unauth (nobody logged)
-		//assertThrows(UnauthorizedException.class, () -> controller.returnCreditCardPayment());
+		Integer returnId=29;
+		String creditCard="5100293991053009";
+		String fakeCreditCard="1234567812345670";
+
+		ReturnTransactionRepository repo = new ReturnTransactionRepository();
+		ReturnTransactionImpl returnTransaction = new ReturnTransactionImpl();
+		Integer fakeReturnId = repo.create(returnTransaction);
+		assertThrows(UnauthorizedException.class, () -> ezshop.returnCreditCardPayment(returnId,creditCard));
+
+		ezshop.login("Franco", "1234");
+
+		//InvalidTransaction
+		assertThrows(InvalidTransactionIdException.class, () -> ezshop.returnCashPayment(0));
+		assertThrows(InvalidTransactionIdException.class, () -> ezshop.returnCashPayment(-1));
+
+		//Invalid CreditCard
+		assertThrows(InvalidCreditCardException.class,() -> ezshop.returnCreditCardPayment(returnId,"oggi"));
+		assertThrows(InvalidCreditCardException.class,() -> ezshop.returnCreditCardPayment(returnId,""));
+		assertThrows(InvalidCreditCardException.class,() -> ezshop.returnCreditCardPayment(returnId,null));
+
+		assert(ezshop.returnCreditCardPayment(returnId,creditCard)==1.05);
+		assert(ezshop.returnCreditCardPayment(1,creditCard)==-1);
+		assert(ezshop.returnCreditCardPayment(returnId,fakeCreditCard)==-1);
 
 
-	}
+    }
 	
 	@Test
 	public void testRecordBalanceUpdate() throws UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
