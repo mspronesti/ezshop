@@ -2,7 +2,6 @@ package it.polito.ezshop.data;
 
 import static org.junit.Assert.*;
 
-import java.lang.ModuleLayer.Controller;
 import java.util.List;
 
 import org.junit.After;
@@ -460,7 +459,6 @@ public class EZShopControllerImplTest {
 		
 		// duplication attempt
 		assert(controller.defineCustomer(customerName) == -1);
-
 	}
 	
 	@Test
@@ -592,6 +590,24 @@ public class EZShopControllerImplTest {
 	    assertTrue(controller.modifyPointsOnCard(customerCard, pointsToBeAdded));
 	}
 	
+	@Test
+	public void testComputeBalance() throws InvalidUsernameException, InvalidPasswordException, UnauthorizedException {
+		// nobody logged
+		assertThrows(UnauthorizedException.class, () -> controller.computeBalance());
+		
+		// unauth
+		controller.login("Franco", "1234");
+		assertThrows(UnauthorizedException.class, () -> controller.computeBalance());
+		controller.logout();
+		
+		controller.login("Marco", "1234");
+		double currentBalance = balanceOperationRepository.findAll()
+                .stream()
+                .mapToDouble(BalanceOperation::getMoney)
+                .sum();
+		
+		assertEquals(currentBalance, controller.computeBalance(), .1);
+	}
 	
 	
 	@After
