@@ -15,7 +15,7 @@ public class BalanceOperationRepositoryTest {
 
     @Test
     public void find() {
-        int balanceOperationId=36;
+        int balanceOperationId=55;
         assertEquals(balanceOperationId,repo.find(balanceOperationId).getBalanceId());
     }
 
@@ -44,7 +44,7 @@ public class BalanceOperationRepositoryTest {
         double newMoney=25.0;
         LocalDate newDate = LocalDate.of(2020,12,12);
         String newType = "CREDIT";
-        BalanceOperation balanceOperation = repo.find(36);
+        BalanceOperation balanceOperation = repo.find(55);
 
         balanceOperation.setMoney(newMoney);
         balanceOperation.setDate(newDate);
@@ -64,7 +64,7 @@ public class BalanceOperationRepositoryTest {
 
     @Test
     public void delete() {
-        repo.delete(repo.find(34));
-        assertNull(repo.find(34));
+        repo.delete(repo.find(53));
+        assertNull(repo.find(53));
     }
 }

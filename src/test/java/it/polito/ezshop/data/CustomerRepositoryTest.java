@@ -13,7 +13,7 @@ public class CustomerRepositoryTest {
 
     @Test
     public void find() {
-        Integer customerId=16;
+        Integer customerId=46;
         assertEquals(customerId,repo.find(customerId).getId());
     }
 
@@ -25,7 +25,7 @@ public class CustomerRepositoryTest {
 
     @Test
     public void findByName() {
-        String name = "Simone";
+        String name = "Gennaro";
         assertEquals(name, repo.findByName(name).getCustomerName());
     }
 
@@ -39,7 +39,7 @@ public class CustomerRepositoryTest {
         card.setPoints(newPoint);
         loyaltyCardRepository.update(card);
 
-        Customer customer = repo.find(16);
+        Customer customer = repo.find(46);
 
         customer.setCustomerCard(newCardId);
         customer.setPoints(newPoint);
@@ -57,7 +57,7 @@ public class CustomerRepositoryTest {
 
     @Test
     public void delete() {
-        repo.delete(repo.find(17));
-        assertNull(repo.find(17));
+        repo.delete(repo.find(47));
+        assertNull(repo.find(47));
     }
 }

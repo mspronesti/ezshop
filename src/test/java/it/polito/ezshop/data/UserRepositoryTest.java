@@ -13,7 +13,7 @@ public class UserRepositoryTest {
 
     @Test
     public void find() {
-        Integer userId=5;
+        Integer userId=9;
         assertEquals(userId,repo.find(userId).getId());
     }
 
@@ -25,18 +25,18 @@ public class UserRepositoryTest {
 
     @Test
     public void findByUsername() {
-        String username = "Beatrice";
+        String username = "Michela";
         assertEquals(username, repo.findByUsername(username).getUsername());
     }
 
 
     @Test
     public void update() {
-        String newUsername="PaoloM";
+        String newUsername="FrancescaM";
         String newPassword="2345";
-        String newRole="ShopManager";
+        String newRole="Administrator";
 
-        User user = repo.find(6);
+        User user = repo.find(9);
 
         user.setUsername(newUsername);
         user.setRole(newRole);
@@ -56,8 +56,8 @@ public class UserRepositoryTest {
 
     @Test
     public void delete() {
-        int id;
-        repo.delete(repo.find(id=repo.create(new UserImpl())));
+        int id=10;
+        repo.delete(repo.find(id));
         assertNull(repo.find(id));
     }
 }

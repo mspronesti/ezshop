@@ -13,7 +13,7 @@ public class SaleTransactionRepositoryTest {
 
     @Test
     public void find() {
-        Integer saleTransactionId=25;
+        Integer saleTransactionId=52;
         assertEquals(saleTransactionId,repo.find(saleTransactionId).getTicketNumber());
     }
 
@@ -44,7 +44,7 @@ public class SaleTransactionRepositoryTest {
         double newPrice = 50;
         double newDiscountRate = 12.50;
 
-        SaleTransaction saleTransaction = repo.find(25);
+        SaleTransaction saleTransaction = repo.find(54);
         saleTransaction.setDiscountRate(newDiscountRate);
         saleTransaction.setPrice(newPrice);
         saleTransaction.setEntries(ticketList);
@@ -68,7 +68,7 @@ public class SaleTransactionRepositoryTest {
 
     @Test
     public void delete() {
-        repo.delete(repo.find(27));
-        assertNull(repo.find(27));
+        repo.delete(repo.find(56));
+        assertNull(repo.find(56));
     }
 }

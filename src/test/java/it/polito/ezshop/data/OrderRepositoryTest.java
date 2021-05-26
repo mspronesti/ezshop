@@ -14,7 +14,7 @@ public class OrderRepositoryTest {
 
     @Test
     public void find() {
-        Integer orderId=14;
+        Integer orderId=40;
         assertEquals(orderId,repo.find(orderId).getOrderId());
     }
 
@@ -31,7 +31,7 @@ public class OrderRepositoryTest {
         double newPrice = 11.99;
         String newStatus="PAYED";
 
-        Order order = repo.find(14);
+        Order order = repo.find(40);
 
         order.setBalanceId(newBalanceId);
         order.setQuantity(newQuantity);
@@ -54,7 +54,7 @@ public class OrderRepositoryTest {
 
     @Test
     public void delete() {
-        repo.delete(repo.find(15));
-        assertNull(repo.find(15));
+        repo.delete(repo.find(43));
+        assertNull(repo.find(43));
     }
 }

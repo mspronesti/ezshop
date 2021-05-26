@@ -55,7 +55,7 @@ public class ProductTypeRepositoryTest {
     @Test
     public void create() {
         ProductTypeImpl productType= new ProductTypeImpl();
-        productType.setBarCode("012345678943");
+        productType.setBarCode("123456789012");
         productType.setProductDescription("Pen");
         productType.setPricePerUnit(1.00);
         assertTrue(repo.create(productType)>0);
