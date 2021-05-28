@@ -46,7 +46,7 @@ public class OrderTest {
 	public void testSetStatus() {
 		OrderImpl order = new OrderImpl();
 		
-		String status = "Pending";
+		String status = "PAYED";
 		order.setStatus(status);
 		assertEquals(status, order.getStatus());
 	}

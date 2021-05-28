@@ -19,22 +19,6 @@ public class SaleTransactionTest {
 	}
 
 	@Test
-	public void testSetEntries() {
-		SaleTransactionImpl saleTr = new SaleTransactionImpl();
-
-		List<TicketEntry> ticketList = new ArrayList<>();
-
-		TicketEntryImpl tk1 = new TicketEntryImpl();
-		TicketEntryImpl tk2 = new TicketEntryImpl();
-
-		ticketList.add(tk1);
-		ticketList.add(tk2);
-
-		saleTr.setEntries(ticketList);
-		assertEquals(ticketList, saleTr.getEntries());
-	}
-
-	@Test
 	public void testSetDiscountRate() {
 		SaleTransactionImpl saleTr = new SaleTransactionImpl();
 
@@ -50,6 +34,24 @@ public class SaleTransactionTest {
 		double price = 24.99;
 		saleTr.setPrice(price);
 		assert (price == saleTr.getPrice());
+	}
+
+	//Tests for integration test
+
+	@Test
+	public void testSetEntries() {
+		SaleTransactionImpl saleTr = new SaleTransactionImpl();
+
+		List<TicketEntry> ticketList = new ArrayList<>();
+
+		TicketEntryImpl tk1 = new TicketEntryImpl();
+		TicketEntryImpl tk2 = new TicketEntryImpl();
+
+		ticketList.add(tk1);
+		ticketList.add(tk2);
+
+		saleTr.setEntries(ticketList);
+		assertEquals(ticketList, saleTr.getEntries());
 	}
 
 	@Test

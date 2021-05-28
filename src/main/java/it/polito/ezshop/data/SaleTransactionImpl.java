@@ -10,7 +10,7 @@ import java.util.List;
 @DynamicInsert
 public class SaleTransactionImpl implements SaleTransaction {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @ElementCollection
     private List<TicketEntryImpl> entries = new ArrayList<>();

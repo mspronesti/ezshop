@@ -5,7 +5,7 @@ import javax.persistence.*;
 @Entity
 public class CustomerImpl implements Customer {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
     @OneToOne

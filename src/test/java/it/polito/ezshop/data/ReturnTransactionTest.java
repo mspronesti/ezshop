@@ -6,6 +6,8 @@ import org.junit.Test;
 
 public class ReturnTransactionTest {
 
+	//Tests for integration test
+
 	@Test
 	public void testSetSaleTransaction() {
 		ReturnTransactionImpl returnT = new ReturnTransactionImpl();

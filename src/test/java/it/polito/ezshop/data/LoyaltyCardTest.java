@@ -23,13 +23,4 @@ public class LoyaltyCardTest {
 		loyaltyC.setPoints(points);
 		assertEquals(points, loyaltyC.getPoints());
 	}
-	
-	@Test
-	public void testSetCustomerImpl() {
-		LoyaltyCardImpl loyaltyC = new LoyaltyCardImpl();
-		
-		CustomerImpl customer = new CustomerImpl();
-		loyaltyC.setCustomer(customer);
-		assertEquals(customer, loyaltyC.getCustomer());
-	}
 }

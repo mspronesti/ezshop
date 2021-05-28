@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.time.LocalDate;
@@ -45,6 +46,7 @@ public class EZShopControllerImpl implements EZShopController {
         this.returnTransactionRepository.findAll().forEach(returnTransactionRepository::delete);
         this.saleTransactionRepository.findAll().forEach(saleTransactionRepository::delete);
         this.balanceOperationRepository.findAll().forEach(balanceOperationRepository::delete);
+        this.userRepository.findAll().forEach(userRepository::delete);
     }
 
     @Override
@@ -165,12 +167,16 @@ public class EZShopControllerImpl implements EZShopController {
     ) throws InvalidProductIdException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException {
         ProductType product = productTypeRepository.find(id);
         if (product != null) {
-            product.setProductDescription(newDescription);
-            product.setBarCode(newCode);
-            product.setPricePerUnit(newPrice);
-            product.setNote(newNote);
-            productTypeRepository.update(product);
-            return true;
+        	try {
+	            product.setProductDescription(newDescription);
+	            product.setBarCode(newCode);
+	            product.setPricePerUnit(newPrice);
+	            product.setNote(newNote);
+	            productTypeRepository.update(product);
+	            return true;
+        	}catch(Exception exception) {
+        		return false;
+        	}
         }
         return false;
     }
@@ -179,7 +185,7 @@ public class EZShopControllerImpl implements EZShopController {
     @AcceptRoles({Role.Administrator, Role.ShopManager})
     @FallbackBooleanValue
     public boolean deleteProductType(
-            @NotNull @Min(0) @Throw(InvalidProductIdException.class) Integer id
+            @NotNull @Min(1) @Throw(InvalidProductIdException.class) Integer id
     ) throws InvalidProductIdException, UnauthorizedException {
         ProductType productType = productTypeRepository.find(id);
         if (productType != null) {
@@ -336,7 +342,11 @@ public class EZShopControllerImpl implements EZShopController {
         Order order = orderRepository.find(orderId);
         if (order != null) {
             String status = order.getStatus();
-
+            ProductType product = productTypeRepository.findByBarcode(order.getProductCode());
+            
+            if(product.getLocation().isEmpty())
+				throw new InvalidLocationException();
+            
             if (status.equals(OrderImpl.Status.COMPLETED.name()))
                 return true;
 
@@ -345,7 +355,6 @@ public class EZShopControllerImpl implements EZShopController {
                 order.setStatus(OrderImpl.Status.COMPLETED.name());
                 orderRepository.update(order);
 
-                ProductType product = productTypeRepository.findByBarcode(order.getProductCode());
                 if (product != null) {
                     // update quantity
                     product.setQuantity(product.getQuantity() + order.getQuantity());
@@ -442,7 +451,8 @@ public class EZShopControllerImpl implements EZShopController {
             @NotNull @Min(1) @Throw(InvalidCustomerIdException.class) Integer customerId
     ) throws InvalidCustomerIdException, InvalidCustomerCardException, UnauthorizedException {
         Customer customer = this.customerRepository.find(customerId);
-        if (customer != null) {
+        LoyaltyCard loyaltyCard = this.loyaltyCardRepository.find(customerCard);
+        if (customer != null && (loyaltyCard == null || loyaltyCard.getCustomer() == null)) {
             customer.setCustomerCard(customerCard);
             this.customerRepository.update(customer);
             return true;
@@ -457,12 +467,13 @@ public class EZShopControllerImpl implements EZShopController {
             @NotNull @NotEmpty @Pattern(regexp = LoyaltyCardImpl.PATTERN) @Throw(InvalidCustomerCardException.class) String customerCard,
             int pointsToBeAdded
     ) throws InvalidCustomerCardException, UnauthorizedException {
-        if (pointsToBeAdded < 0) {
-            return false;
-        }
         LoyaltyCard loyaltyCard = this.loyaltyCardRepository.find(customerCard);
         if (loyaltyCard != null) {
-            loyaltyCard.setPoints(loyaltyCard.getPoints() + pointsToBeAdded);
+        	int pointsToUpdate = loyaltyCard.getPoints() + pointsToBeAdded;
+        	if(pointsToUpdate < 0)
+        		return false;
+        	
+            loyaltyCard.setPoints(pointsToUpdate);
             this.loyaltyCardRepository.update(loyaltyCard);
             return true;
         }
@@ -968,7 +979,13 @@ public class EZShopControllerImpl implements EZShopController {
                         }
                     }
                 }
-                return method.invoke(target, args);
+       
+                try {
+                    return method.invoke(target, args);
+                } catch (InvocationTargetException e) {
+                    throw e.getCause();
+                }
+                
             } catch (JDBCConnectionException exception) {
                 FallbackStringValue fallbackStringAnnotation = method.getAnnotation(FallbackStringValue.class);
                 if (fallbackStringAnnotation != null) {
@@ -997,4 +1014,5 @@ public class EZShopControllerImpl implements EZShopController {
     private boolean isAssignedPosition(String location) {
         return productTypeRepository.findAll().stream().anyMatch(p -> p.getLocation().equals(location));
     }
+    
 }

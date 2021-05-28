@@ -69,3 +69,4 @@ data/*
 *.sqlite
 lib/
 !lib/ezshop-gui.jar
+.idea
