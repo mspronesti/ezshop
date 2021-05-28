@@ -213,7 +213,7 @@ public class EZShopControllerImpl implements EZShopController {
     @AcceptRoles({Role.Administrator, Role.ShopManager})
     public List<ProductType> getProductTypesByDescription(String description) throws UnauthorizedException {
         return productTypeRepository.findAll().stream()
-                .filter(t -> t.getProductDescription().contains(description))
+                .filter(t -> t.getProductDescription().contains(description == null ? "" : description))
                 .collect(Collectors.toList());
     }
 
@@ -225,11 +225,13 @@ public class EZShopControllerImpl implements EZShopController {
             int toBeAdded
     ) throws InvalidProductIdException, UnauthorizedException {
         ProductType product = this.productTypeRepository.find(productId);
-        int newQuantity = product.getQuantity() + toBeAdded;
-        if (newQuantity >= 0 && !product.getLocation().isEmpty()) {
-            product.setQuantity(newQuantity);
-            productTypeRepository.update(product);
-            return true;
+        if(product != null) {
+	        int newQuantity = product.getQuantity() + toBeAdded;
+	        if (newQuantity >= 0 && !product.getLocation().isEmpty() ) {
+	            product.setQuantity(newQuantity);
+	            productTypeRepository.update(product);
+	            return true;
+	        }
         }
         return false;
     }
