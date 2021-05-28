@@ -47,6 +47,7 @@ public class EZShopControllerImpl implements EZShopController {
         this.saleTransactionRepository.findAll().forEach(saleTransactionRepository::delete);
         this.balanceOperationRepository.findAll().forEach(balanceOperationRepository::delete);
         this.customerRepository.findAll().forEach(customerRepository::delete);
+        this.loyaltyCardRepository.findAll().forEach(loyaltyCardRepository::delete);
         this.userRepository.findAll().forEach(userRepository::delete);        
     }
 
@@ -681,7 +682,7 @@ public class EZShopControllerImpl implements EZShopController {
     public boolean returnProduct(
             @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer returnId,
             @NotNull @NotEmpty @GtinBarcode @Throw(InvalidProductCodeException.class) String productCode,
-            @NotNull @Min(0) @Throw(InvalidQuantityException.class) int amount
+            @NotNull @Min(1) @Throw(InvalidQuantityException.class) int amount
     ) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
         ReturnTransactionImpl returnTransaction = openReturnTransactions.get(returnId);
         if (returnTransaction == null) {
