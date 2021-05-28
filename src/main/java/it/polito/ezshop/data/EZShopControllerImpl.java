@@ -6,6 +6,7 @@ import it.polito.ezshop.utils.PaymentGateway;
 import jakarta.validation.*;
 import jakarta.validation.constraints.*;
 import jakarta.validation.executable.ExecutableValidator;
+
 import org.hibernate.exception.JDBCConnectionException;
 import org.hibernate.validator.constraints.CreditCardNumber;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -635,20 +636,25 @@ public class EZShopControllerImpl implements EZShopController {
     public boolean deleteSaleTransaction(
             @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer transactionId
     ) throws InvalidTransactionIdException, UnauthorizedException {
-        SaleTransactionImpl saleTransaction = openSaleTransactions.get(transactionId);
-        if (saleTransaction == null) {
-            return false;
-        }
-        for (TicketEntry entry : saleTransaction.getEntries()) {
-            ProductType product = productTypeRepository.findByBarcode(entry.getBarCode());
-            if (product == null) {
-                return false;
-            }
-            product.setQuantity(product.getQuantity() + entry.getAmount());
-            productTypeRepository.update(product);
-        }
-        openSaleTransactions.remove(transactionId);
-        return true;
+    	try {
+	        SaleTransactionImpl saleTransaction = openSaleTransactions.get(transactionId);
+	        if (saleTransaction == null) {
+	            return false;
+	        }
+	        for (TicketEntry entry : saleTransaction.getEntries()) {
+	            ProductType product = productTypeRepository.findByBarcode(entry.getBarCode());
+	            if (product == null) {
+	                return false;
+	            }
+	            product.setQuantity(product.getQuantity() + entry.getAmount());
+	            productTypeRepository.update(product);
+	        }
+	        
+        	openSaleTransactions.remove(transactionId);
+        	return true;
+    	}catch(JDBCConnectionException exception) {
+    		return false;
+    	}
     }
 
     @Override
@@ -656,7 +662,7 @@ public class EZShopControllerImpl implements EZShopController {
     public SaleTransaction getSaleTransaction(
             @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer transactionId
     ) throws InvalidTransactionIdException, UnauthorizedException {
-        return saleTransactionRepository.find(transactionId);
+        return openSaleTransactions.containsKey(transactionId) ? null : saleTransactionRepository.find(transactionId);
     }
 
     @Override

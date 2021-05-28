@@ -7,8 +7,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 public class UserImpl implements User {
     @Id
-    @GeneratedValue(generator = "increment")
-    @GenericGenerator(name = "increment", strategy = "increment")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
    
     @Column(unique = true)
