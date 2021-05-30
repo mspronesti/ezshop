@@ -637,10 +637,12 @@ public class EZShopControllerImpl implements EZShopController {
             @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer transactionId
     ) throws InvalidTransactionIdException, UnauthorizedException {
     	try {
-	        SaleTransactionImpl saleTransaction = openSaleTransactions.get(transactionId);
+	        SaleTransaction saleTransaction = openSaleTransactions.get(transactionId);
 	        if (saleTransaction == null) {
-	            return false;
+	        	return false;
 	        }
+	        
+	        
 	        for (TicketEntry entry : saleTransaction.getEntries()) {
 	            ProductType product = productTypeRepository.findByBarcode(entry.getBarCode());
 	            if (product == null) {
@@ -650,8 +652,10 @@ public class EZShopControllerImpl implements EZShopController {
 	            productTypeRepository.update(product);
 	        }
 	        
-        	openSaleTransactions.remove(transactionId);
+	        saleTransactionRepository.delete(saleTransaction);
+	         	
         	return true;
+	       
     	}catch(JDBCConnectionException exception) {
     		return false;
     	}
