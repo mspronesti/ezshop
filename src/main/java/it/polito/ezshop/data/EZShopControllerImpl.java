@@ -489,6 +489,7 @@ public class EZShopControllerImpl implements EZShopController {
     @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
     public Integer startSaleTransaction() throws UnauthorizedException {
         SaleTransactionImpl saleTransaction = new SaleTransactionImpl();
+        saleTransaction.setPrice(0.0d);
         Integer id = saleTransactionRepository.create(saleTransaction);
         openSaleTransactions.put(id, saleTransaction);
         return id;
@@ -516,6 +517,7 @@ public class EZShopControllerImpl implements EZShopController {
             entry.setBarCode(productCode);
             entry.setAmount(0);
             entry.setPricePerUnit(product.getPricePerUnit());
+            entry.setProductDescription(product.getProductDescription());
         }
         int newAmount = entry.getAmount() + amount;
         if (product.getQuantity() >= amount) {
@@ -578,7 +580,6 @@ public class EZShopControllerImpl implements EZShopController {
         }
         entry.setDiscountRate(discountRate);
         saleTransaction.updatePrice();
-        saleTransactionRepository.update(saleTransaction);
         return true;
     }
 
@@ -595,7 +596,6 @@ public class EZShopControllerImpl implements EZShopController {
         }
         saleTransaction.setDiscountRate(discountRate);
         saleTransaction.updatePrice();
-        saleTransactionRepository.update(saleTransaction);
         return true;
     }
 
@@ -625,8 +625,9 @@ public class EZShopControllerImpl implements EZShopController {
         if (saleTransaction == null) {
             return false;
         }
-        saleTransactionRepository.update(saleTransaction);
+
         openSaleTransactions.remove(transactionId);
+        saleTransactionRepository.update(saleTransaction);
         return true;
     }
 
@@ -637,7 +638,7 @@ public class EZShopControllerImpl implements EZShopController {
             @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer transactionId
     ) throws InvalidTransactionIdException, UnauthorizedException {
     	try {
-	        SaleTransactionImpl saleTransaction = openSaleTransactions.get(transactionId);
+	        SaleTransaction saleTransaction = saleTransactionRepository.find(transactionId);
 	        if (saleTransaction == null) {
 	            return false;
 	        }
@@ -651,6 +652,7 @@ public class EZShopControllerImpl implements EZShopController {
 	        }
 	        
         	openSaleTransactions.remove(transactionId);
+	        saleTransactionRepository.delete(saleTransaction);
         	return true;
     	}catch(JDBCConnectionException exception) {
     		return false;
