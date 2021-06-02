@@ -16,6 +16,7 @@ with all elements explosed, all dependencies, NO tangles; and report it here as 
 ```
 <Applying Structure 101 to your project, version to be delivered on june 4, produce the structural over complexity chart; and report it here as a picture>
 ```
+
 ![](../assets/AssessmentDocument/structural-over-complexity-tangle.png)
 
 ![](../assets/AssessmentDocument/structural-over-complexity-no-tangle.png)
@@ -60,3 +61,10 @@ with all elements explosed, all dependencies, NO tangles; and report it here as 
 <Discuss here main differences of the current structure of your project vs the design delivered on April 30>
 <Discuss if the current structure shows weaknesses that should be fixed>
 ```
+We have seen that our project structure had very high tangle (96%) due to a backward dependency involving classes of two
+packages. It involves our custom java annotation to validate roles (placed in the annotations package), and the Role enum 
+that we placed in the data package.
+If we place the Role inside annotations (and we can because it has no dependency with anything but that annotation) 
+we get a 0% tangle, so we changed our project structure to get this result and as such we attached to this document screenshots 
+regarding the new project structure. As for the differences between our actual structure and the one described in the design 
+document delivered on April 30, we added the EZShopControllerImpl and EZShopControllerFactory.
