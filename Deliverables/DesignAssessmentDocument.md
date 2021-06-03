@@ -44,8 +44,7 @@ with all elements explosed, all dependencies, NO tangles; and report it here as 
 
 | Item | Tangled | Fat  | Size | XS   |
 | ---- | ------- | ---- | ---- | ---- |
-|      |         |      |      |      |
-|      |         |      |      |      |
+|  it.polito.ezshop    |   0%      |   6   |4,787      |6      |
 
 ![](../assets/AssessmentDocument/items-with-XS.png)
 
