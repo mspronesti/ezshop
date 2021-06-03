@@ -19,6 +19,7 @@ import java.lang.reflect.Parameter;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * EZShopController is a delegate for all EZShop's method implementations. It is initialized by means of a dedicated
@@ -973,17 +974,16 @@ public class EZShopControllerImpl implements EZShopController {
                 } else {
                     params = new Object[]{};
                 }
-                Set<ConstraintViolation<Object>> violations = validator.validateParameters(target, method, params);
+                Set<ConstraintViolation<EZShopControllerImpl>> violations = validator.validateParameters(target, method, params);
                 if (!violations.isEmpty()) {
-                    for (ConstraintViolation<Object> violation : violations) {
-                        Iterator<Path.Node> propertyPath = violation.getPropertyPath().iterator();
-                        Path.MethodNode methodNode = propertyPath.next().as(Path.MethodNode.class);
-                        String parameterName = propertyPath.next().as(Path.ParameterNode.class).getName();
-                        Optional<Parameter> parameter = Arrays.stream(method.getParameters())
-                                .filter(p -> p.getName().equals(parameterName))
-                                .findFirst();
-                        if (parameter.isPresent()) {
-                            Throw exceptionAnnotation = parameter.get().getAnnotation(Throw.class);
+                    for (Parameter parameter : method.getParameters()) {
+                        if (violations.stream().anyMatch(v -> {
+                            Iterator<Path.Node> propertyPath = v.getPropertyPath().iterator();
+                            Path.MethodNode methodNode = propertyPath.next().as(Path.MethodNode.class);
+                            String parameterName = propertyPath.next().as(Path.ParameterNode.class).getName();
+                            return parameter.getName().equals(parameterName);
+                        })) {
+                            Throw exceptionAnnotation = parameter.getAnnotation(Throw.class);
                             if (exceptionAnnotation != null) {
                                 Class<? extends Throwable> parameterConstraintException = exceptionAnnotation.value();
                                 throw parameterConstraintException.getDeclaredConstructor().newInstance();
