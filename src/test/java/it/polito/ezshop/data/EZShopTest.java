@@ -10,6 +10,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import it.polito.ezshop.exceptions.*;
+/**
+ * NOTICE: a custom db automatically generated after every run by hibernate
+ * has been employed to perform this tests.
+ * Have a look at src/test/resources/hibernate.cfg.xml for more
+ */
 
 public class EZShopTest {
     private static EZShop ezshop;
@@ -20,6 +25,13 @@ public class EZShopTest {
 	private static SaleTransactionRepository saleTransactionRepository;
     private static CustomerRepository customerRepository;
     private static OrderRepository orderRepository ;
+    private String admin = "Marco";
+    private String cashier = "Franco";
+    private String shopmanager = "Anna";
+    private String usrToDelete = "Giovanna";
+    private String passwd = "1234";
+    private String customerName = "Bob";
+    private String customerToDelete = "Fabiana";
     
     @BeforeClass
     static public void init() {
@@ -59,17 +71,15 @@ public class EZShopTest {
 		
 	@Test
 	public void testLoginLogout() throws InvalidUsernameException, InvalidPasswordException {
-		String username = "Marco";
-		String password = "1234";
 		
 		// empty username or empty password
-		assertThrows(InvalidUsernameException.class, () -> ezshop.login("", password));
-		assertThrows(InvalidPasswordException.class, () -> ezshop.login(username, ""));
+		assertThrows(InvalidUsernameException.class, () -> ezshop.login("", passwd));
+		assertThrows(InvalidPasswordException.class, () -> ezshop.login(admin, ""));
 		
 		// wrong password
-		assertNull(ezshop.login(username, "12345"));
+		assertNull(ezshop.login(admin, "12345"));
 		
-		User user = ezshop.login(username, password);
+		User user = ezshop.login(admin, passwd);
 		assertNotNull(user);
 		assertTrue(ezshop.logout());
 	}
@@ -77,15 +87,15 @@ public class EZShopTest {
 	@Test
 	public void testDeleteUser() throws InvalidUsernameException, InvalidPasswordException, InvalidUserIdException, UnauthorizedException {
 		
-		Integer id1 = userRepository.findByUsername("Marco").getId();
-		Integer id2 = userRepository.findByUsername("Giovanna").getId();
+		Integer id1 = userRepository.findByUsername(admin).getId();
+		Integer id2 = userRepository.findByUsername(usrToDelete).getId();
 	    
 		// unauth attempt to delete user
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 		assertThrows(UnauthorizedException.class, () -> ezshop.deleteUser(id1));
 		ezshop.logout();
 		
-		ezshop.login("Marco", "1234");
+		ezshop.login(admin, passwd);
 		// id null, negative or 0
 		assertThrows(InvalidUserIdException.class, () -> ezshop.deleteUser(null));
 		assertThrows(InvalidUserIdException.class, () -> ezshop.deleteUser(-1));
@@ -99,23 +109,23 @@ public class EZShopTest {
 	
 	@Test
 	public void testGetAllUsers() throws InvalidUsernameException, InvalidPasswordException, UnauthorizedException {
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 		assertThrows(UnauthorizedException.class, () -> ezshop.getAllUsers());
 		ezshop.logout();
 		
-		ezshop.login("Marco", "1234");
+		ezshop.login(admin, passwd);
 		assertTrue(ezshop.getAllUsers().stream().allMatch(p -> p instanceof User));
 	}
 	
 	@Test
 	public void testGetUser() throws InvalidUsernameException, InvalidPasswordException, InvalidUserIdException, UnauthorizedException {
-		Integer id = userRepository.findByUsername("Anna").getId();
+		Integer id = userRepository.findByUsername(shopmanager).getId();
 		
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 		assertThrows(UnauthorizedException.class, () -> ezshop.getUser(id));
 		ezshop.logout();
 		
-		ezshop.login("Marco", "1234");
+		ezshop.login(admin, passwd);
 		
 		// wrong id (negative, 0, null)
 		assertThrows(InvalidUserIdException.class, () -> ezshop.getUser(-1));
@@ -131,15 +141,15 @@ public class EZShopTest {
 	@Test 
 	public void testUpdateUserRight() throws InvalidUsernameException, InvalidPasswordException, InvalidUserIdException, InvalidRoleException, UnauthorizedException {
 		String newRole = "Administrator";
-		Integer id = userRepository.findByUsername("Anna").getId();
+		Integer id = userRepository.findByUsername(shopmanager).getId();
 		
 		// attempt with unauth user
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 		assertThrows(UnauthorizedException.class, () -> ezshop.updateUserRights(id, newRole));
 		ezshop.logout();
 		
 		// attempt with auth user
-		ezshop.login("Marco", "1234");
+		ezshop.login(admin, passwd);
 		
 		// invalid id
 		assertThrows(InvalidUserIdException.class, () -> ezshop.updateUserRights(null, newRole));
@@ -158,17 +168,17 @@ public class EZShopTest {
 	@Test 
 	public void testCreateProductType() throws InvalidUsernameException, InvalidPasswordException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException {
 		String description = "Pasta";
-		String productCode = "012345678967";
+		String productCode = "012345678110";
 		double pricePerUnit = 1.23;
 		String note = "";
 		
 		// unauth 
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 		assertThrows(UnauthorizedException.class, () -> ezshop.createProductType(description, productCode, pricePerUnit, note));
 		ezshop.logout();
 
 		// auth
-		ezshop.login("Marco", "1234");
+		ezshop.login(admin, passwd);
 				
 		// empty/null description
 		assertThrows(InvalidProductDescriptionException.class, () -> ezshop.createProductType("", productCode, pricePerUnit, note));
@@ -183,7 +193,9 @@ public class EZShopTest {
 		assertThrows(InvalidPricePerUnitException.class, () -> ezshop.createProductType(description, productCode, -5, note));
 		assertThrows(InvalidPricePerUnitException.class, () -> ezshop.createProductType(description, productCode, 0, note));
 		
-		
+		// correct creation
+		assert(ezshop.createProductType(description, productCode, pricePerUnit, note) != -1);
+
 		// attempt to duplicate
 		assert(ezshop.createProductType(description, productCode, pricePerUnit, note) == -1);
 	}
@@ -198,11 +210,11 @@ public class EZShopTest {
 		Integer id = productTypeRepository.findByBarcode("012345678905").getId();
 		
 		// unauth 
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 		assertThrows(UnauthorizedException.class, () -> ezshop.updateProduct(id, newDescription, newCode, newPrice, newNote));
 		ezshop.logout();
 
-		ezshop.login("Marco", "1234");
+		ezshop.login(admin, passwd);
 		
 		// invalid id (null, negative, 0)
 		assertThrows(InvalidProductIdException.class, () -> ezshop.updateProduct(null, newDescription, newCode, newPrice, newNote));
@@ -234,11 +246,11 @@ public class EZShopTest {
 		Integer id = productTypeRepository.findByBarcode("012345678929").getId();
 		
 		// unauth
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 		assertThrows(UnauthorizedException.class, () -> ezshop.deleteProductType(id));
 		ezshop.logout();
 		
-		ezshop.login("Marco", "1234");
+		ezshop.login(admin, passwd);
 		// invalid product type (null, 0 , negative)
 		assertThrows(InvalidProductIdException.class, () -> ezshop.deleteProductType(-1));
 		assertThrows(InvalidProductIdException.class, () -> ezshop.deleteProductType(0));
@@ -251,9 +263,9 @@ public class EZShopTest {
 		// nobody logged
 		assertThrows(UnauthorizedException.class, () -> ezshop.getAllProductTypes());
 		
-		String[] roles = {"Marco", "Anna", "Franco"}; // Administrator, ShopManager, Cashier
+		String[] roles = {admin, shopmanager, cashier}; // Administrator, ShopManager, Cashier
 		for (String role : roles) {
-			ezshop.login(role, "1234");
+			ezshop.login(role, passwd);
 			assertTrue(ezshop.getAllProductTypes().stream().allMatch(p -> p instanceof ProductType));
 			ezshop.logout();
 		}
@@ -264,10 +276,10 @@ public class EZShopTest {
 	public void testGetProductByBarCode() throws InvalidUsernameException, InvalidPasswordException, InvalidProductCodeException, UnauthorizedException {
 		String barCode = "012345678912";
 		// unauth 
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 		assertThrows(UnauthorizedException.class, () -> ezshop.getProductTypeByBarCode(barCode));
 				
-		ezshop.login("Marco", "1234");
+		ezshop.login(admin, passwd);
 		// invalid bar code (null, empty, invalid gtin)
 		assertThrows(InvalidProductCodeException.class, () -> ezshop.getProductTypeByBarCode(""));
 		assertThrows(InvalidProductCodeException.class, () -> ezshop.getProductTypeByBarCode("null"));
@@ -282,10 +294,10 @@ public class EZShopTest {
 	public void testGetProductTypesByDescription() throws InvalidUsernameException, InvalidPasswordException, UnauthorizedException {
 		String description = "Glasses";
 		// unauth 
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 		assertThrows(UnauthorizedException.class, () -> ezshop.getProductTypesByDescription(description));
 				
-		ezshop.login("Marco", "1234");
+		ezshop.login(admin, passwd);
 		List<ProductType> products = ezshop.getProductTypesByDescription(description);
 		
 		assertTrue(products.isEmpty() || products.stream().allMatch( p -> p instanceof ProductType));
@@ -294,11 +306,11 @@ public class EZShopTest {
 	@Test
 	public void testUpdateQuantity() throws InvalidUsernameException, InvalidPasswordException, InvalidProductIdException, UnauthorizedException {
 		// unauth 
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 		assertThrows(UnauthorizedException.class, () -> ezshop.updateQuantity(1, 10));
 		ezshop.logout();
 		
-		ezshop.login("Marco", "1234");
+		ezshop.login(admin, passwd);
 		
 		// invalid id (negative, 0, null)
 		assertThrows(InvalidProductIdException.class, () -> ezshop.updateQuantity(-1, 10));
@@ -322,11 +334,11 @@ public class EZShopTest {
 		String newPos = "18-C-9";
 		
 		// unauth 
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 		assertThrows(UnauthorizedException.class, () -> ezshop.updatePosition(productId, newPos));
 		ezshop.logout();
 		
-		ezshop.login("Marco", "1234");
+		ezshop.login(admin, passwd);
 		
 		// invalid id (negative, 0, null)
 		assertThrows(InvalidProductIdException.class, () -> ezshop.updatePosition(-1, newPos));
@@ -348,10 +360,10 @@ public class EZShopTest {
 		Integer quantity = 5;
 		double pricePerUnit = 1.78;
 		
-		ezshop.login("Franco", "1234"); // unauth
+		ezshop.login(cashier, passwd); // unauth
 		assertThrows(UnauthorizedException.class, () -> ezshop.issueOrder(productCode, quantity, pricePerUnit));
 		
-		ezshop.login("Marco", "1234");
+		ezshop.login(admin, passwd);
 		
 		// invalid bar code (null, empty, invalid gtin)
 		assertThrows(InvalidProductCodeException.class, () -> ezshop.issueOrder("", quantity, pricePerUnit));
@@ -381,10 +393,10 @@ public class EZShopTest {
 		Integer quantity = 5;
 		double pricePerUnit = 1.78;
 		
-		ezshop.login("Franco", "1234"); // unauth
+		ezshop.login(cashier, passwd); // unauth
 		assertThrows(UnauthorizedException.class, () -> ezshop.payOrderFor(productCode, quantity, pricePerUnit));
 		
-		ezshop.login("Marco", "1234");
+		ezshop.login(admin, passwd);
 		
 		// invalid bar code (null, empty, invalid gtin)
 		assertThrows(InvalidProductCodeException.class, () -> ezshop.payOrderFor("", quantity, pricePerUnit));
@@ -414,10 +426,10 @@ public class EZShopTest {
 	
 	@Test
 	public void testPayOrder() throws InvalidUsernameException, InvalidPasswordException, InvalidOrderIdException, UnauthorizedException {
-		ezshop.login("Franco", "1234"); // unauth
+		ezshop.login(cashier, passwd); // unauth
 		assertThrows(UnauthorizedException.class, () -> ezshop.payOrder(6));
 		
-		ezshop.login("Marco", "1234");
+		ezshop.login(admin, passwd);
 		// wrong id
 		assertThrows(InvalidOrderIdException.class, () -> ezshop.payOrder(-1));
 		assertThrows(InvalidOrderIdException.class, () -> ezshop.payOrder(0));
@@ -435,10 +447,10 @@ public class EZShopTest {
 	@Test
 	public void testRecordOrderArrival() throws InvalidUsernameException, InvalidPasswordException, InvalidOrderIdException, UnauthorizedException, InvalidLocationException {
 		// unauth
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 		assertThrows(UnauthorizedException.class, () -> ezshop.recordOrderArrival(7));
 		
-		ezshop.login("Marco", "1234");
+		ezshop.login(admin, passwd);
 		
 		// wrong id
 		assertThrows(InvalidOrderIdException.class, () -> ezshop.recordOrderArrival(-1));
@@ -461,22 +473,21 @@ public class EZShopTest {
 	
 	@Test
 	public void testGetAllOrders() throws InvalidUsernameException, InvalidPasswordException, UnauthorizedException {
-		ezshop.login("Franco", "1234"); // unauth
+		ezshop.login(cashier, passwd); // unauth
 		assertThrows(UnauthorizedException.class, () -> ezshop.payOrder(6));
 		
-		ezshop.login("Marco", "1234");
+		ezshop.login(admin, passwd);
 		assertTrue(ezshop.getAllOrders().stream().allMatch(p -> p instanceof Order));
 	}
 	
 	@Test
 	public void testDefineCustomer() throws InvalidUsernameException, InvalidPasswordException, InvalidCustomerNameException, UnauthorizedException {
-		String customerName = "Bob";
 		
 		// unauth (nobody logged)
 		assertThrows(UnauthorizedException.class, () -> ezshop.defineCustomer(customerName));
 		
 		// attempt with cashier (minimum permissions)
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 		// null or empty name
 		assertThrows(InvalidCustomerNameException.class, () -> ezshop.defineCustomer(""));
 		assertThrows(InvalidCustomerNameException.class, () -> ezshop.defineCustomer(null));
@@ -497,7 +508,7 @@ public class EZShopTest {
 		assertThrows(UnauthorizedException.class, () -> ezshop.modifyCustomer(1, newCustomerName, newCustomerCard));
 		
 		// attempt with cashier (minimum permissions)
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 		
 		// null or empty name
 		assertThrows(InvalidCustomerNameException.class, () -> ezshop.modifyCustomer(1, "", newCustomerCard));
@@ -510,13 +521,13 @@ public class EZShopTest {
 	
 	@Test
 	public void testDeleteCustomer() throws InvalidUsernameException, InvalidPasswordException, InvalidCustomerIdException, UnauthorizedException {
-		Integer id = customerRepository.findByName("Fabiana").getId();
+		Integer id = customerRepository.findByName(customerToDelete).getId();
 		
 		// unauth (nobody logged)
 		assertThrows(UnauthorizedException.class, () -> ezshop.deleteCustomer(id));
 		
 		// attempt with cashier (minimum permissions)
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 		
 		// not positive id
 		assertThrows(InvalidCustomerIdException.class, () -> ezshop.deleteCustomer(-1));
@@ -539,7 +550,7 @@ public class EZShopTest {
 		assertThrows(UnauthorizedException.class, () -> ezshop.getCustomer(id));
 		
 		// attempt with cashier (minimum permissions)
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 		
 		// not positive id
 		assertThrows(InvalidCustomerIdException.class, () -> ezshop.getCustomer(-1));
@@ -557,7 +568,7 @@ public class EZShopTest {
 		// unauth (nobody logged)
 		assertThrows(UnauthorizedException.class, () -> ezshop.getAllCustomers());
 		// attempt with cashier (minimum permissions)
-        ezshop.login("Franco", "1234");
+        ezshop.login(cashier, passwd);
         
         assertTrue(ezshop.getAllCustomers().stream().allMatch(p -> p instanceof Customer));
 	}
@@ -570,7 +581,7 @@ public class EZShopTest {
 		assertThrows(UnauthorizedException.class, () -> ezshop.createCard());
 		
 		// attempt with cashier (minimum permissions)
-        ezshop.login("Franco", "1234");
+        ezshop.login(cashier, passwd);
        
         String customerCard = ezshop.createCard();
 		assertNotEquals(customerCard, "");
@@ -600,7 +611,7 @@ public class EZShopTest {
 		// unauth (nobody logged)
 		assertThrows(UnauthorizedException.class, () -> ezshop.modifyPointsOnCard(customerCard, pointsToBeAdded));
 		// attempt with cashier (minimum permissions)
-	    ezshop.login("Franco", "1234");
+	    ezshop.login(cashier, passwd);
 	    
 	    // invalid card( null, empty, invalid format)
 	    assertThrows(InvalidCustomerCardException.class, () -> ezshop.modifyPointsOnCard("", pointsToBeAdded));
@@ -624,11 +635,11 @@ public class EZShopTest {
 		assertThrows(UnauthorizedException.class, () -> ezshop.computeBalance());
 		
 		// unauth
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 		assertThrows(UnauthorizedException.class, () -> ezshop.computeBalance());
 		ezshop.logout();
 		
-		ezshop.login("Marco", "1234");
+		ezshop.login(admin, passwd);
 		double currentBalance = balanceOperationRepository.findAll()
                 .stream()
                 .mapToDouble(BalanceOperation::getMoney)
@@ -642,7 +653,7 @@ public class EZShopTest {
 		// unauth (nobody logged)
 		assertThrows(UnauthorizedException.class, () -> ezshop.startSaleTransaction());
 		// cashier 
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 		
 		/* --- start ---*/
 		Integer transactionId = ezshop.startSaleTransaction();
@@ -673,7 +684,7 @@ public class EZShopTest {
 		// unauth (nobody logged)
 		assertThrows(UnauthorizedException.class, () -> ezshop.addProductToSale(transactionId, productCode, amount));
 		// cashier 
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 		
 		// invalid transaction id
 		assertThrows(InvalidTransactionIdException.class, () -> ezshop.addProductToSale(0, productCode, amount));
@@ -703,7 +714,7 @@ public class EZShopTest {
 		// unauth (nobody logged)
 		assertThrows(UnauthorizedException.class, () -> ezshop.deleteProductFromSale(transactionId, productCode, amount));
 		// cashier 
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 		// invalid transaction id
 		assertThrows(InvalidTransactionIdException.class, () -> ezshop.deleteProductFromSale(0, productCode, amount));
 		assertThrows(InvalidTransactionIdException.class, () -> ezshop.deleteProductFromSale(0, productCode, amount));
@@ -729,7 +740,7 @@ public class EZShopTest {
 		assertThrows(UnauthorizedException.class, () -> ezshop.applyDiscountRateToProduct(19, productCode, discountRate));
 
 		// cashier
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 
 		Integer transactionId = ezshop.startSaleTransaction();
 		ezshop.addProductToSale(transactionId, productCode, 1);
@@ -759,7 +770,7 @@ public class EZShopTest {
 		assertThrows(UnauthorizedException.class, () -> ezshop.applyDiscountRateToSale(19, discountRate));
 
 		// cashier
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 
 		Integer transactionId = ezshop.startSaleTransaction();
 
@@ -784,7 +795,7 @@ public class EZShopTest {
 		assertThrows(UnauthorizedException.class, () -> ezshop.computePointsForSale(transactionId));
 
 		// cashier
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 
 		// InvalidTransactionIdException
 		assertThrows(InvalidTransactionIdException.class, () -> ezshop.computePointsForSale(-1));
@@ -801,7 +812,7 @@ public class EZShopTest {
 		// unauth (nobody logged)
 		assertThrows(UnauthorizedException.class, () -> ezshop.deleteSaleTransaction(900));
 
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 
 		// invalidTransactionId
 		assertThrows(InvalidTransactionIdException.class, ()-> ezshop.deleteSaleTransaction(0));
@@ -823,7 +834,7 @@ public class EZShopTest {
 		// unauth (nobody logged)
 		assertThrows(UnauthorizedException.class, () -> ezshop.getSaleTransaction(saleTransId));
 
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 		// invalidTransactionId
 		assertThrows(InvalidTransactionIdException.class, ()-> ezshop.getSaleTransaction(0));
 		assertThrows(InvalidTransactionIdException.class, ()-> ezshop.getSaleTransaction(-1));
@@ -841,7 +852,7 @@ public class EZShopTest {
 		// unauth (nobody logged)
 		assertThrows(UnauthorizedException.class, () -> ezshop.startReturnTransaction(transactionId));
 
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 		// invalidTransactionId
 		assertThrows(InvalidTransactionIdException.class, ()-> ezshop.startReturnTransaction(0));
 		assertThrows(InvalidTransactionIdException.class, ()-> ezshop.startReturnTransaction(-1));
@@ -856,7 +867,7 @@ public class EZShopTest {
 		//unauth (nobody logged)
 		assertThrows(UnauthorizedException.class, () -> ezshop.endReturnTransaction(900, true));
 
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 		// invalidTransactionId
 		assertThrows(InvalidTransactionIdException.class, ()-> ezshop.endReturnTransaction(0, true));
 		assertThrows(InvalidTransactionIdException.class, ()-> ezshop.endReturnTransaction(-1, true));
@@ -878,7 +889,7 @@ public class EZShopTest {
 		// unauth (nobody logged)
 		assertThrows(UnauthorizedException.class, () -> ezshop.deleteReturnTransaction(900));
 
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 		// invalidTransactionId
 		assertThrows(InvalidTransactionIdException.class, ()-> ezshop.deleteReturnTransaction(0));
 		assertThrows(InvalidTransactionIdException.class, ()-> ezshop.deleteReturnTransaction(-1));
@@ -899,7 +910,7 @@ public class EZShopTest {
 		double cash= 0.924;
 		assertThrows(UnauthorizedException.class, () -> ezshop.receiveCashPayment(transactionId,cash));
 
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 
 		//invalidTransactionId
 		assertThrows(InvalidTransactionIdException.class, () -> ezshop.receiveCashPayment(0,100));
@@ -925,7 +936,7 @@ public class EZShopTest {
 		// unauth (nobody logged)
 		 assertThrows(UnauthorizedException.class, () -> ezshop.receiveCreditCardPayment(transactionId,creditCard));
 
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 
 		//Invalid CreditCard
 		assertThrows(InvalidCreditCardException.class,() -> ezshop.receiveCreditCardPayment(transactionId,"oggi"));
@@ -953,7 +964,7 @@ public class EZShopTest {
 		Integer fakeReturnId = repo.create(returnTransaction);
 		assertThrows(UnauthorizedException.class, () -> ezshop.returnCashPayment(returnId));
 
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 
 		//InvalidTransactionId
 		assertThrows(InvalidTransactionIdException.class, () -> ezshop.returnCashPayment(0));
@@ -975,7 +986,7 @@ public class EZShopTest {
 		Integer fakeReturnId = repo.create(returnTransaction);
 		assertThrows(UnauthorizedException.class, () -> ezshop.returnCreditCardPayment(returnId,creditCard));
 
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 
 		//InvalidTransaction
 		assertThrows(InvalidTransactionIdException.class, () -> ezshop.returnCashPayment(0));
@@ -1001,10 +1012,10 @@ public class EZShopTest {
 		assertThrows(UnauthorizedException.class, () -> ezshop.recordBalanceUpdate(toBeAdded));
 
 		// unauth (cashier)
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 		assertThrows(UnauthorizedException.class, () -> ezshop.recordBalanceUpdate(toBeAdded));
 		ezshop.logout();
-		ezshop.login("Marco", "1234");
+		ezshop.login(admin, passwd);
 
 		assertTrue(ezshop.recordBalanceUpdate(toBeAdded));
 		assertFalse(ezshop.recordBalanceUpdate(toBeSubtractedTooMuch));
@@ -1020,11 +1031,11 @@ public class EZShopTest {
 		assertThrows(UnauthorizedException.class, () -> ezshop.getCreditsAndDebits(from, to));
 		
 		// unauth (cashier) 
-		ezshop.login("Franco", "1234");
+		ezshop.login(cashier, passwd);
 		assertThrows(UnauthorizedException.class, () -> ezshop.getCreditsAndDebits(from, to));
 		ezshop.logout();
 		
-		ezshop.login("Marco", "1234");
+		ezshop.login(admin, passwd);
 		List<BalanceOperation> ops = ezshop.getCreditsAndDebits(from,to );
 		List<BalanceOperation> expected = balanceOperationRepository.findAllBetweenDates(to, from);
 		

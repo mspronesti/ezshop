@@ -241,7 +241,7 @@ public interface EZShopController {
     public boolean returnProduct(
             @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer returnId,
             @NotNull @NotEmpty @GtinBarcode @Throw(InvalidProductCodeException.class) String productCode,
-            @NotNull @Min(0) @Throw(InvalidQuantityException.class) int amount
+            @NotNull @Min(1) @Throw(InvalidQuantityException.class) int amount
     ) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException;
 
     @AcceptRoles({ Role.Administrator, Role.ShopManager, Role.Cashier })
