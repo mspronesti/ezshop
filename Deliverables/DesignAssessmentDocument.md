@@ -9,6 +9,10 @@ on April 30, discuss whether the design could be improved
 with all elements explosed, all dependencies, NO tangles; and report it here as a picture>
 ```
 ![](../assets/AssessmentDocument/levelized-structure-map.png)
+
+Since the dependencies cover the whole picture, we report the version without them below.
+
+![](../assets/AssessmentDocument/levelized-structure-map-no-dependencies.png)
 # Structural over complexity chart
 ```
 <Applying Structure 101 to your project, version to be delivered on june 4, produce the structural over complexity chart; and report it here as a picture>
