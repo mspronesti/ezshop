@@ -29,8 +29,8 @@ with all elements explosed, all dependencies, NO tangles; and report it here as 
 | Packages                                  |   7      |
 | Classes (outer)                           |     66    |
 | Classes (all)                             |     71    |
-| NI (number of bytecode instructions)      |    4697     |
-| LOC (non comment non blank lines of code) |    2020     |
+| NI (number of bytecode instructions)      |    4787     |
+| LOC (non comment non blank lines of code) |    2058     |
 
 ![](../assets/AssessmentDocument/size-metrics.png)
 
