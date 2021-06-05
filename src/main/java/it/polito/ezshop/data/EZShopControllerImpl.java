@@ -6,6 +6,7 @@ import it.polito.ezshop.utils.PaymentGateway;
 import jakarta.validation.*;
 import jakarta.validation.constraints.*;
 import jakarta.validation.executable.ExecutableValidator;
+
 import org.hibernate.exception.JDBCConnectionException;
 import org.hibernate.validator.constraints.CreditCardNumber;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -46,7 +47,9 @@ public class EZShopControllerImpl implements EZShopController {
         this.returnTransactionRepository.findAll().forEach(returnTransactionRepository::delete);
         this.saleTransactionRepository.findAll().forEach(saleTransactionRepository::delete);
         this.balanceOperationRepository.findAll().forEach(balanceOperationRepository::delete);
-        this.userRepository.findAll().forEach(userRepository::delete);
+        this.customerRepository.findAll().forEach(customerRepository::delete);
+        this.loyaltyCardRepository.findAll().forEach(loyaltyCardRepository::delete);
+        this.userRepository.findAll().forEach(userRepository::delete);        
     }
 
     @Override
@@ -213,7 +216,7 @@ public class EZShopControllerImpl implements EZShopController {
     @AcceptRoles({Role.Administrator, Role.ShopManager})
     public List<ProductType> getProductTypesByDescription(String description) throws UnauthorizedException {
         return productTypeRepository.findAll().stream()
-                .filter(t -> t.getProductDescription().contains(description))
+                .filter(t -> t.getProductDescription().contains(description == null ? "" : description))
                 .collect(Collectors.toList());
     }
 
@@ -225,11 +228,13 @@ public class EZShopControllerImpl implements EZShopController {
             int toBeAdded
     ) throws InvalidProductIdException, UnauthorizedException {
         ProductType product = this.productTypeRepository.find(productId);
-        int newQuantity = product.getQuantity() + toBeAdded;
-        if (newQuantity >= 0 && !product.getLocation().isEmpty()) {
-            product.setQuantity(newQuantity);
-            productTypeRepository.update(product);
-            return true;
+        if(product != null) {
+	        int newQuantity = product.getQuantity() + toBeAdded;
+	        if (newQuantity >= 0 && !product.getLocation().isEmpty() ) {
+	            product.setQuantity(newQuantity);
+	            productTypeRepository.update(product);
+	            return true;
+	        }
         }
         return false;
     }
@@ -484,6 +489,7 @@ public class EZShopControllerImpl implements EZShopController {
     @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
     public Integer startSaleTransaction() throws UnauthorizedException {
         SaleTransactionImpl saleTransaction = new SaleTransactionImpl();
+        saleTransaction.setPrice(0.0d);
         Integer id = saleTransactionRepository.create(saleTransaction);
         openSaleTransactions.put(id, saleTransaction);
         return id;
@@ -511,6 +517,7 @@ public class EZShopControllerImpl implements EZShopController {
             entry.setBarCode(productCode);
             entry.setAmount(0);
             entry.setPricePerUnit(product.getPricePerUnit());
+            entry.setProductDescription(product.getProductDescription());
         }
         int newAmount = entry.getAmount() + amount;
         if (product.getQuantity() >= amount) {
@@ -573,7 +580,6 @@ public class EZShopControllerImpl implements EZShopController {
         }
         entry.setDiscountRate(discountRate);
         saleTransaction.updatePrice();
-        saleTransactionRepository.update(saleTransaction);
         return true;
     }
 
@@ -590,7 +596,6 @@ public class EZShopControllerImpl implements EZShopController {
         }
         saleTransaction.setDiscountRate(discountRate);
         saleTransaction.updatePrice();
-        saleTransactionRepository.update(saleTransaction);
         return true;
     }
 
@@ -620,8 +625,9 @@ public class EZShopControllerImpl implements EZShopController {
         if (saleTransaction == null) {
             return false;
         }
-        saleTransactionRepository.update(saleTransaction);
+
         openSaleTransactions.remove(transactionId);
+        saleTransactionRepository.update(saleTransaction);
         return true;
     }
 
@@ -631,20 +637,26 @@ public class EZShopControllerImpl implements EZShopController {
     public boolean deleteSaleTransaction(
             @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer transactionId
     ) throws InvalidTransactionIdException, UnauthorizedException {
-        SaleTransactionImpl saleTransaction = openSaleTransactions.get(transactionId);
-        if (saleTransaction == null) {
-            return false;
-        }
-        for (TicketEntry entry : saleTransaction.getEntries()) {
-            ProductType product = productTypeRepository.findByBarcode(entry.getBarCode());
-            if (product == null) {
-                return false;
-            }
-            product.setQuantity(product.getQuantity() + entry.getAmount());
-            productTypeRepository.update(product);
-        }
-        openSaleTransactions.remove(transactionId);
-        return true;
+    	try {
+	        SaleTransaction saleTransaction = saleTransactionRepository.find(transactionId);
+	        if (saleTransaction == null) {
+	            return false;
+	        }
+	        for (TicketEntry entry : saleTransaction.getEntries()) {
+	            ProductType product = productTypeRepository.findByBarcode(entry.getBarCode());
+	            if (product == null) {
+	                return false;
+	            }
+	            product.setQuantity(product.getQuantity() + entry.getAmount());
+	            productTypeRepository.update(product);
+	        }
+	        
+        	openSaleTransactions.remove(transactionId);
+	        saleTransactionRepository.delete(saleTransaction);
+        	return true;
+    	}catch(JDBCConnectionException exception) {
+    		return false;
+    	}
     }
 
     @Override
@@ -652,7 +664,7 @@ public class EZShopControllerImpl implements EZShopController {
     public SaleTransaction getSaleTransaction(
             @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer transactionId
     ) throws InvalidTransactionIdException, UnauthorizedException {
-        return saleTransactionRepository.find(transactionId);
+        return openSaleTransactions.containsKey(transactionId) ? null : saleTransactionRepository.find(transactionId);
     }
 
     @Override
@@ -678,7 +690,7 @@ public class EZShopControllerImpl implements EZShopController {
     public boolean returnProduct(
             @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer returnId,
             @NotNull @NotEmpty @GtinBarcode @Throw(InvalidProductCodeException.class) String productCode,
-            @NotNull @Min(0) @Throw(InvalidQuantityException.class) int amount
+            @NotNull @Min(1) @Throw(InvalidQuantityException.class) int amount
     ) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
         ReturnTransactionImpl returnTransaction = openReturnTransactions.get(returnId);
         if (returnTransaction == null) {
