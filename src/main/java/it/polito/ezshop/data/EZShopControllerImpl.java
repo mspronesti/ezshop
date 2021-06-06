@@ -370,6 +370,17 @@ public class EZShopControllerImpl implements EZShopController {
         }
         return false;
     }
+    
+    @Override
+    @AcceptRoles({ Role.Administrator, Role.ShopManager })
+    @FallbackBooleanValue
+    public boolean recordOrderArrivalRFID(
+            @NotNull @Min(1) @Throw(InvalidOrderIdException.class) Integer orderId,
+    		@NotNull @Pattern(regexp = Product.RFIDPATTERN) @Throw(InvalidRFIDException.class)String RFIDfrom
+    ) throws InvalidOrderIdException, UnauthorizedException, InvalidLocationException, InvalidRFIDException {
+		// TODO: to be implemented
+    	return false;
+    }
 
     @Override
     @AcceptRoles({Role.Administrator, Role.ShopManager})
@@ -532,6 +543,17 @@ public class EZShopControllerImpl implements EZShopController {
         }
         return false;
     }
+    
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
+    @FallbackBooleanValue
+	public boolean addProductToSaleRFID(
+			@NotNull @Min(1) Integer transactionId,
+			@NotNull @Pattern(regexp = Product.RFIDPATTERN) String RFID
+	) throws InvalidTransactionIdException, InvalidRFIDException, InvalidQuantityException, UnauthorizedException {
+		// TODO: to be implemented
+    	return false;
+	}
 
     @Override
     @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
@@ -561,6 +583,18 @@ public class EZShopControllerImpl implements EZShopController {
         productTypeRepository.update(product);
         return true;
     }
+    
+	@Override
+	@AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
+    @FallbackBooleanValue
+	public boolean deleteProductFromSaleRFID(
+			@NotNull @Min(1) Integer transactionId,
+			@NotNull @Pattern(regexp = Product.RFIDPATTERN) String RFID
+	) throws InvalidTransactionIdException,
+			InvalidRFIDException, InvalidQuantityException, UnauthorizedException {
+		// TODO: to be implemented
+		return false;
+	}
 
     @Override
     @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
@@ -713,6 +747,17 @@ public class EZShopControllerImpl implements EZShopController {
         returnTransaction.updatePrice();
         return true;
     }
+    
+	@Override
+	@AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
+    @FallbackBooleanValue
+	public boolean returnProductRFID(
+			@NotNull @Min(1) Integer returnId,
+			@NotNull @Pattern(regexp = Product.RFIDPATTERN) String RFID
+	)throws InvalidTransactionIdException, InvalidRFIDException, UnauthorizedException {
+		// TODO: to be implemented
+		return false;
+	}
 
     @Override
     @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
@@ -1026,5 +1071,5 @@ public class EZShopControllerImpl implements EZShopController {
     private boolean isAssignedPosition(String location) {
         return productTypeRepository.findAll().stream().anyMatch(p -> p.getLocation().equals(location));
     }
-    
+
 }
