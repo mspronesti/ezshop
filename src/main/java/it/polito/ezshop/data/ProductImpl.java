@@ -1,5 +1,6 @@
 package it.polito.ezshop.data;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -8,6 +9,7 @@ import javax.persistence.ManyToOne;
 public class ProductImpl implements Product {
   public static final String RFIDPATTERN = "^\\d{10}$";
   @Id
+  @Column(unique = true)
   private String id;
   @ManyToOne
   private ProductTypeImpl productType;

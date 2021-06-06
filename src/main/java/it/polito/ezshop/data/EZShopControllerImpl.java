@@ -387,14 +387,6 @@ public class EZShopControllerImpl implements EZShopController {
             
             ProductType productType = productTypeRepository.findByBarcode(order.getProductCode());
             
-            // associating RFIDs
-            for (int i = 0; i < orderQuantity; ++i) {
-            	Product product = new ProductImpl();
-            	// increment RFID and left pad with 0s
-            	product.setId(String.format("%010d", (Integer.parseInt(RFIDfrom) + i)));
-            	product.setProductType((ProductTypeImpl)productType);
-            	productRepository.create(product);
-            }
             
             if(productType.getLocation().isEmpty())
 				throw new InvalidLocationException();
@@ -406,7 +398,16 @@ public class EZShopControllerImpl implements EZShopController {
                 // set COMPLETED
                 order.setStatus(OrderImpl.Status.COMPLETED.name());
                 orderRepository.update(order);
-
+                
+                // associating RFIDs
+                for (int i = 0; i < orderQuantity; ++i) {
+                	Product product = new ProductImpl();
+                	// increment RFID and left pad with 0s
+                	product.setId(String.format("%010d", Integer.parseInt(RFIDfrom) + i));
+                	product.setProductType((ProductTypeImpl)productType);
+                	productRepository.create(product);
+                }
+                
                 if (productType != null) {
                     // update quantity
                 	productType.setQuantity(productType.getQuantity() + orderQuantity);
