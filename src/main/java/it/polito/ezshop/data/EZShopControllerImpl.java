@@ -390,7 +390,8 @@ public class EZShopControllerImpl implements EZShopController {
             // associating RFIDs
             for (int i = 0; i < orderQuantity; ++i) {
             	Product product = new ProductImpl();
-            	product.setId(RFIDfrom + i);
+            	// increment RFID and left pad with 0s
+            	product.setId(String.format("%010d", (Integer.parseInt(RFIDfrom) + i)));
             	product.setProductType((ProductTypeImpl)productType);
             	productRepository.create(product);
             }
