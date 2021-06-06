@@ -25,6 +25,7 @@ public class EZShopTest {
 	private static SaleTransactionRepository saleTransactionRepository;
     private static CustomerRepository customerRepository;
     private static OrderRepository orderRepository ;
+    private static ProductRepository productRepository;
     private String admin = "Marco";
     private String cashier = "Franco";
     private String shopmanager = "Anna";
@@ -42,6 +43,7 @@ public class EZShopTest {
 		saleTransactionRepository = new SaleTransactionRepository();
         customerRepository  = new CustomerRepository();
         orderRepository = new OrderRepository();
+        productRepository = new ProductRepository();
     }
 
 	@Test
@@ -469,6 +471,48 @@ public class EZShopTest {
 		// correct register
 		assertTrue(ezshop.recordOrderArrival(7));
 		assertEquals(orderRepository.find(7).getStatus(), "COMPLETED");		
+	}
+	
+	@Test
+	public void testRecordOrderArrivalRFID() throws InvalidUsernameException, InvalidPasswordException, InvalidOrderIdException, UnauthorizedException, InvalidLocationException, InvalidRFIDException, InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException {
+		String RFID = "0000001000";
+		int quantity = 5;
+		double pricePerUnit = 1.87;
+		String productCode = "012345678912";
+
+		
+		// unauth
+		ezshop.login(cashier, passwd);
+		assertThrows(UnauthorizedException.class, () -> ezshop.recordOrderArrivalRFID(7, RFID));
+		
+		ezshop.login(admin, passwd);
+		
+		// wrong id
+		assertThrows(InvalidOrderIdException.class, () -> ezshop.recordOrderArrivalRFID(-1, RFID));
+		assertThrows(InvalidOrderIdException.class, () -> ezshop.recordOrderArrivalRFID(0, RFID));
+		assertThrows(InvalidOrderIdException.class, () -> ezshop.recordOrderArrivalRFID(null, RFID));
+		
+		 ezshop.recordBalanceUpdate(pricePerUnit*quantity);
+         int orderId = ezshop.issueOrder(productCode, quantity, pricePerUnit);
+         ezshop.payOrder(orderId);
+		
+		// invalid RFID
+		assertThrows(InvalidRFIDException.class, () -> ezshop.recordOrderArrivalRFID(orderId, "001897"));
+		
+		// order refers to product without given location
+		assertThrows(InvalidLocationException.class, () -> ezshop.recordOrderArrivalRFID(40, RFID));
+		
+		// order doesn't exist
+		assertFalse(ezshop.recordOrderArrivalRFID(50, RFID));
+				
+		// correct register
+		assertTrue(ezshop.recordOrderArrivalRFID(orderId, RFID));
+		assertEquals(orderRepository.find(orderId).getStatus(), "COMPLETED");
+		
+		for(int i = 0; i < quantity; ++i) {
+			assertNotNull(String.format("%010d", Integer.parseInt(RFID) + i));
+		}
+		
 	}
 	
 	@Test
