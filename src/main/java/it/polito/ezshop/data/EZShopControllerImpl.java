@@ -32,6 +32,7 @@ public class EZShopControllerImpl implements EZShopController {
     private final CustomerRepository customerRepository = new CustomerRepository();
     private final LoyaltyCardRepository loyaltyCardRepository = new LoyaltyCardRepository();
     private final OrderRepository orderRepository = new OrderRepository();
+    private final ProductRepository productRepository = new ProductRepository();
     private final ProductTypeRepository productTypeRepository = new ProductTypeRepository();
     private final ReturnTransactionRepository returnTransactionRepository = new ReturnTransactionRepository();
     private final SaleTransactionRepository saleTransactionRepository = new SaleTransactionRepository();
@@ -42,6 +43,7 @@ public class EZShopControllerImpl implements EZShopController {
     private final PaymentGateway paymentGateway = new PaymentGateway();
 
     public void reset() {
+        this.productRepository.findAll().forEach(productRepository::delete);
         this.productTypeRepository.findAll().forEach(productTypeRepository::delete);
         this.orderRepository.findAll().forEach(orderRepository::delete);
         this.returnTransactionRepository.findAll().forEach(returnTransactionRepository::delete);
@@ -376,8 +378,9 @@ public class EZShopControllerImpl implements EZShopController {
     @FallbackBooleanValue
     public boolean recordOrderArrivalRFID(
             @NotNull @Min(1) @Throw(InvalidOrderIdException.class) Integer orderId,
-    		@NotNull @Pattern(regexp = Product.RFIDPATTERN) @Throw(InvalidRFIDException.class)String RFIDfrom
+    		@NotNull @Pattern(regexp = ProductImpl.RFIDPATTERN) @Throw(InvalidRFIDException.class) String RFIDfrom
     ) throws InvalidOrderIdException, UnauthorizedException, InvalidLocationException, InvalidRFIDException {
+
 		// TODO: to be implemented
     	return false;
     }
@@ -549,7 +552,7 @@ public class EZShopControllerImpl implements EZShopController {
     @FallbackBooleanValue
 	public boolean addProductToSaleRFID(
 			@NotNull @Min(1) Integer transactionId,
-			@NotNull @Pattern(regexp = Product.RFIDPATTERN) String RFID
+			@NotNull @Pattern(regexp = ProductImpl.RFIDPATTERN) String RFID
 	) throws InvalidTransactionIdException, InvalidRFIDException, InvalidQuantityException, UnauthorizedException {
 		// TODO: to be implemented
     	return false;
@@ -589,7 +592,7 @@ public class EZShopControllerImpl implements EZShopController {
     @FallbackBooleanValue
 	public boolean deleteProductFromSaleRFID(
 			@NotNull @Min(1) Integer transactionId,
-			@NotNull @Pattern(regexp = Product.RFIDPATTERN) String RFID
+			@NotNull @Pattern(regexp = ProductImpl.RFIDPATTERN) String RFID
 	) throws InvalidTransactionIdException,
 			InvalidRFIDException, InvalidQuantityException, UnauthorizedException {
 		// TODO: to be implemented
@@ -753,7 +756,7 @@ public class EZShopControllerImpl implements EZShopController {
     @FallbackBooleanValue
 	public boolean returnProductRFID(
 			@NotNull @Min(1) Integer returnId,
-			@NotNull @Pattern(regexp = Product.RFIDPATTERN) String RFID
+			@NotNull @Pattern(regexp = ProductImpl.RFIDPATTERN) String RFID
 	)throws InvalidTransactionIdException, InvalidRFIDException, UnauthorizedException {
 		// TODO: to be implemented
 		return false;

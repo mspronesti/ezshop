@@ -128,7 +128,7 @@ public interface EZShopController {
     @FallbackBooleanValue
     public boolean recordOrderArrivalRFID(
             @NotNull @Min(1) @Throw(InvalidOrderIdException.class) Integer orderId,
-    		@NotNull @Pattern(regexp = Product.RFIDPATTERN) @Throw(InvalidRFIDException.class)String RFIDfrom
+    		@NotNull @Pattern(regexp = ProductImpl.RFIDPATTERN) @Throw(InvalidRFIDException.class)String RFIDfrom
     ) throws InvalidOrderIdException, UnauthorizedException, 
     InvalidLocationException, InvalidRFIDException;
     
@@ -196,7 +196,7 @@ public interface EZShopController {
     @FallbackBooleanValue
     public boolean addProductToSaleRFID(
     		@NotNull @Min(1) @Throw(InvalidTransactionIdException.class)  Integer transactionId, 
-    		@NotNull @Pattern(regexp = Product.RFIDPATTERN) @Throw(InvalidRFIDException.class) String RFID
+    		@NotNull @Pattern(regexp = ProductImpl.RFIDPATTERN) @Throw(InvalidRFIDException.class) String RFID
     ) throws InvalidTransactionIdException, InvalidRFIDException, InvalidQuantityException, UnauthorizedException;
     
     @AcceptRoles({ Role.Administrator, Role.ShopManager, Role.Cashier })
@@ -211,7 +211,7 @@ public interface EZShopController {
     @FallbackBooleanValue
     public boolean deleteProductFromSaleRFID(
     		 @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer transactionId, 
-    		 @NotNull @Pattern(regexp = Product.RFIDPATTERN) @Throw(InvalidRFIDException.class) String RFID
+    		 @NotNull @Pattern(regexp = ProductImpl.RFIDPATTERN) @Throw(InvalidRFIDException.class) String RFID
     ) throws InvalidTransactionIdException, InvalidRFIDException, InvalidQuantityException, UnauthorizedException;
 
     @AcceptRoles({ Role.Administrator, Role.ShopManager, Role.Cashier })
@@ -270,7 +270,7 @@ public interface EZShopController {
     @FallbackBooleanValue
     public boolean returnProductRFID(
     		@NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer returnId, 
-    		@NotNull @Pattern(regexp = Product.RFIDPATTERN) @Throw(InvalidRFIDException.class) String RFID
+    		@NotNull @Pattern(regexp = ProductImpl.RFIDPATTERN) @Throw(InvalidRFIDException.class) String RFID
     ) throws InvalidTransactionIdException, InvalidRFIDException, UnauthorizedException;
 
     @AcceptRoles({ Role.Administrator, Role.ShopManager, Role.Cashier })

@@ -1,6 +1,8 @@
 package it.polito.ezshop.data;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class ProductTypeImpl implements ProductType {
@@ -35,6 +37,8 @@ public class ProductTypeImpl implements ProductType {
     private Double pricePerUnit = 0d;
     @Embedded
     private Position position;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "productType")
+    private List<ProductImpl> products = new ArrayList<>();
 
     @Override
     public Integer getId() {

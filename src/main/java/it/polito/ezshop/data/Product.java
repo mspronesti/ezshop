@@ -1,6 +1,11 @@
 package it.polito.ezshop.data;
 
+public interface Product {
+    String getId();
 
-public class Product extends ProductTypeImpl {
-  public static final String RFIDPATTERN = "^\\d{10}$"; 
+    void setId(String id);
+
+    ProductType getProductType();
+
+    void setProductType(ProductTypeImpl productType);
 }
