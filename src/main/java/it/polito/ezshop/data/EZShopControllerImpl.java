@@ -554,9 +554,16 @@ public class EZShopControllerImpl implements EZShopController {
 			@NotNull @Min(1) Integer transactionId,
 			@NotNull @Pattern(regexp = ProductImpl.RFIDPATTERN) String RFID
 	) throws InvalidTransactionIdException, InvalidRFIDException, InvalidQuantityException, UnauthorizedException {
-		// TODO: to be implemented
-    	return false;
-	}
+        Product product = productRepository.find(RFID);
+        if (product == null) {
+    	    return false;
+        }
+        try {
+            return addProductToSale(transactionId, product.getProductType().getBarCode(), 1);
+        } catch (InvalidProductCodeException e) {
+            return false;
+        }
+    }
 
     @Override
     @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
@@ -595,8 +602,15 @@ public class EZShopControllerImpl implements EZShopController {
 			@NotNull @Pattern(regexp = ProductImpl.RFIDPATTERN) String RFID
 	) throws InvalidTransactionIdException,
 			InvalidRFIDException, InvalidQuantityException, UnauthorizedException {
-		// TODO: to be implemented
-		return false;
+        Product product = productRepository.find(RFID);
+        if (product == null) {
+            return false;
+        }
+        try {
+            return deleteProductFromSale(transactionId, product.getProductType().getBarCode(), 1);
+        } catch (InvalidProductCodeException e) {
+            return false;
+        }
 	}
 
     @Override
@@ -758,8 +772,15 @@ public class EZShopControllerImpl implements EZShopController {
 			@NotNull @Min(1) Integer returnId,
 			@NotNull @Pattern(regexp = ProductImpl.RFIDPATTERN) String RFID
 	)throws InvalidTransactionIdException, InvalidRFIDException, UnauthorizedException {
-		// TODO: to be implemented
-		return false;
+        Product product = productRepository.find(RFID);
+        if (product == null) {
+            return false;
+        }
+        try {
+            return returnProduct(returnId, product.getProductType().getBarCode(), 1);
+        } catch (InvalidProductCodeException | InvalidQuantityException e) {
+            return false;
+        }
 	}
 
     @Override
