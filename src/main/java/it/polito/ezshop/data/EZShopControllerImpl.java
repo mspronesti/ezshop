@@ -380,9 +380,41 @@ public class EZShopControllerImpl implements EZShopController {
             @NotNull @Min(1) @Throw(InvalidOrderIdException.class) Integer orderId,
     		@NotNull @Pattern(regexp = ProductImpl.RFIDPATTERN) @Throw(InvalidRFIDException.class) String RFIDfrom
     ) throws InvalidOrderIdException, UnauthorizedException, InvalidLocationException, InvalidRFIDException {
+        Order order = orderRepository.find(orderId);
+        if (order != null) {
+            String status = order.getStatus();
+            int orderQuantity = order.getQuantity();
+            
+            ProductType productType = productTypeRepository.findByBarcode(order.getProductCode());
+            
+            // associating RFIDs
+            for (int i = 0; i < orderQuantity; ++i) {
+            	Product product = new ProductImpl();
+            	product.setId(RFIDfrom + i);
+            	product.setProductType((ProductTypeImpl)productType);
+            	productRepository.create(product);
+            }
+            
+            if(productType.getLocation().isEmpty())
+				throw new InvalidLocationException();
+            
+            if (status.equals(OrderImpl.Status.COMPLETED.name()))
+                return true;
 
-		// TODO: to be implemented
-    	return false;
+            if (status.equals(OrderImpl.Status.PAYED.name())) {
+                // set COMPLETED
+                order.setStatus(OrderImpl.Status.COMPLETED.name());
+                orderRepository.update(order);
+
+                if (productType != null) {
+                    // update quantity
+                	productType.setQuantity(productType.getQuantity() + orderQuantity);
+                    productTypeRepository.update(productType);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @Override
