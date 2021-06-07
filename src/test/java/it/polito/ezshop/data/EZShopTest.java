@@ -33,6 +33,10 @@ public class EZShopTest {
     private String passwd = "1234";
     private String customerName = "Bob";
     private String customerToDelete = "Fabiana";
+    private String InvalidRFID = "01234";
+    private String RFID1 = "0000000001";
+    private String RFID2 = "0000001000";
+    private String RFIDnotUsed = "0000000123";
     
     @BeforeClass
     static public void init() {
@@ -475,7 +479,7 @@ public class EZShopTest {
 	
 	@Test
 	public void testRecordOrderArrivalRFID() throws InvalidUsernameException, InvalidPasswordException, InvalidOrderIdException, UnauthorizedException, InvalidLocationException, InvalidRFIDException, InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException {
-		String RFID = "0000001000";
+		String RFID = this.RFID2;
 		int quantity = 5;
 		double pricePerUnit = 1.87;
 		String productCode = "012345678912";
@@ -497,7 +501,7 @@ public class EZShopTest {
          ezshop.payOrder(orderId);
 		
 		// invalid RFID
-		assertThrows(InvalidRFIDException.class, () -> ezshop.recordOrderArrivalRFID(orderId, "001897"));
+		assertThrows(InvalidRFIDException.class, () -> ezshop.recordOrderArrivalRFID(orderId, InvalidRFID));
 		
 		// order refers to product without given location
 		assertThrows(InvalidLocationException.class, () -> ezshop.recordOrderArrivalRFID(40, RFID));
@@ -744,10 +748,41 @@ public class EZShopTest {
 		assertThrows(InvalidQuantityException.class, () -> ezshop.addProductToSale(transactionId, productCode, -10));
 		
 
-		int newId=ezshop.startSaleTransaction();
+		int newId = ezshop.startSaleTransaction();
 		assertTrue(ezshop.addProductToSale(newId, productCode, 1));
 		assertFalse(ezshop.addProductToSale(newId, productCode, 1000));
 		assertFalse(ezshop.addProductToSale(7, productCode, 1));
+	}
+	
+	@Test
+	public void testAddProductToSaleRFID() throws InvalidUsernameException, InvalidPasswordException, UnauthorizedException, InvalidTransactionIdException, InvalidRFIDException, InvalidQuantityException {
+		String RFID = this.RFID1;
+		String productCode = "012345678905";
+        
+		// unauth (nobody logged)
+		assertThrows(UnauthorizedException.class, () -> ezshop.addProductToSaleRFID(1, RFID));
+		
+		// cashier 
+		ezshop.login(cashier, passwd);
+        int transactionId = ezshop.startSaleTransaction();
+
+		// invalid transaction id
+		assertThrows(InvalidTransactionIdException.class, () -> ezshop.addProductToSaleRFID(0, RFID));
+		assertThrows(InvalidTransactionIdException.class, () -> ezshop.addProductToSaleRFID(0, RFID));
+		assertThrows(InvalidTransactionIdException.class, () -> ezshop.addProductToSaleRFID(null, RFID));
+		
+		// invalid RFID
+		assertThrows(InvalidRFIDException.class, () -> ezshop.addProductToSaleRFID(transactionId, InvalidRFID));
+		
+		// RFID doesn't exist
+		assertFalse(ezshop.addProductToSaleRFID(transactionId, RFIDnotUsed));
+		
+		Product product = new ProductImpl();
+		product.setId(RFID);
+		product.setProductType((ProductTypeImpl)productTypeRepository.findByBarcode(productCode));
+		productRepository.create(product);
+		// correct add 
+		assertTrue(ezshop.addProductToSaleRFID(transactionId, RFID));		
 	}
 	
 	@Test
