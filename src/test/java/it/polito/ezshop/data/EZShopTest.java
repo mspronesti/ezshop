@@ -510,7 +510,8 @@ public class EZShopTest {
 		assertEquals(orderRepository.find(orderId).getStatus(), "COMPLETED");
 		
 		for(int i = 0; i < quantity; ++i) {
-			assertNotNull(String.format("%010d", Integer.parseInt(RFID) + i));
+			String checkRFID = String.format("%010d", Integer.parseInt(RFID) + i);
+			assertNotNull(productRepository.find( checkRFID ));
 		}
 		
 	}
