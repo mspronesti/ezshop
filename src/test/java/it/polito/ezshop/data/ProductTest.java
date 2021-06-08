@@ -8,7 +8,7 @@ public class ProductTest {
 
     @Test
     public void testSetId() {
-        String productId = "10000";
+        String productId = "0000100000";
         ProductImpl product =  new ProductImpl();
         product.setId(productId);
 

@@ -12,7 +12,7 @@ public class ProductRepositoryTest {
     @Test
     public void find() {
         ProductImpl product = new ProductImpl();
-        String productId = "1001";
+        String productId = "0000002001";
 
         product.setId(productId);
         repo.create(product);
@@ -24,9 +24,9 @@ public class ProductRepositoryTest {
     public void findAll() {
 
         ProductImpl product = new ProductImpl();
-        String productId = "1002";
+        String productId = "0000002002";
         ProductImpl product2 = new ProductImpl();
-        String productId2 = "1003";
+        String productId2 = "0000002003";
 
         product.setId(productId);
         product2.setId(productId2);
@@ -41,7 +41,7 @@ public class ProductRepositoryTest {
     @Test
     public void create() {
         ProductImpl product = new ProductImpl();
-        String productId = "1000";
+        String productId = "0000002000";
 
         product.setId(productId);
         assertTrue(Integer.parseInt(repo.create(product)) > 0);
@@ -50,7 +50,7 @@ public class ProductRepositoryTest {
     @Test
     public void update() {
         ProductImpl product = new ProductImpl();
-        String productId = "1005";
+        String productId = "0000002005";
 
         ProductTypeRepository productTypeRepository = new ProductTypeRepository();
         ProductType productType=productTypeRepository.findByBarcode("012345678950");
@@ -69,7 +69,7 @@ public class ProductRepositoryTest {
     public void delete() {
         {
             ProductImpl product = new ProductImpl();
-            String productId = "1004";
+            String productId = "0000002004";
 
             product.setId(productId);
             repo.create(product);

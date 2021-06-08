@@ -756,7 +756,7 @@ public class EZShopTest {
 	
 	@Test
 	public void testAddProductToSaleRFID() throws InvalidUsernameException, InvalidPasswordException, UnauthorizedException, InvalidTransactionIdException, InvalidRFIDException, InvalidQuantityException {
-		String RFID = this.RFID1;
+		String RFID = "0000001111";
 		String productCode = "012345678905";
         
 		// unauth (nobody logged)
@@ -989,6 +989,45 @@ public class EZShopTest {
 		assertFalse(ezshop.endReturnTransaction(12,true));
 		int newId= ezshop.startReturnTransaction(27);
 		assertTrue(ezshop.endReturnTransaction(newId,false));
+	}
+
+	@Test
+	public void testReturnProductRFID() throws InvalidTransactionIdException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException, InvalidRFIDException, InvalidQuantityException {
+		String RFID ="0000111111";
+		String productCode="012345678905";
+
+    	//unauth (nobody logged)
+		assertThrows(UnauthorizedException.class, () -> ezshop.returnProductRFID(900, "0000011111"));
+
+		ezshop.login(cashier, passwd);
+		int saleTransactionId = ezshop.startSaleTransaction();
+		Product product = new ProductImpl();
+		product.setId(RFID);
+		product.setProductType((ProductTypeImpl)productTypeRepository.findByBarcode(productCode));
+		productRepository.create(product);
+		ezshop.addProductToSaleRFID(saleTransactionId, RFID);
+		ezshop.endSaleTransaction(saleTransactionId);
+		int transactionId = ezshop.startReturnTransaction(saleTransactionId);
+
+		// invalidTransactionId
+		assertThrows(InvalidTransactionIdException.class, ()-> ezshop.returnProductRFID(0, "0000011111"));
+		assertThrows(InvalidTransactionIdException.class, ()-> ezshop.returnProductRFID(-1, "0000011111"));
+		assertThrows(InvalidTransactionIdException.class, ()-> ezshop.returnProductRFID(null, "0000011111"));
+
+		// invalidRFID
+		assertThrows(InvalidRFIDException.class, ()-> ezshop.returnProductRFID(transactionId, ""));
+		assertThrows(InvalidRFIDException.class, ()-> ezshop.returnProductRFID(transactionId, "1243121"));
+		assertThrows(InvalidRFIDException.class, ()-> ezshop.returnProductRFID(transactionId, null));
+
+		// RFID product doesn't exist
+		assertFalse(ezshop.returnProductRFID(transactionId, RFIDnotUsed));
+		// RFID exists but is not used
+		assertFalse(ezshop.returnProductRFID(transactionId, RFID2));
+		// transactionId doesn't exist
+		assertFalse(ezshop.returnProductRFID(1231, RFIDnotUsed));
+
+
+		assertTrue(ezshop.returnProductRFID(transactionId,RFID));
 	}
 	
 	
