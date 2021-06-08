@@ -612,7 +612,7 @@ public class EZShopControllerImpl implements EZShopController {
             return false;
         }
         TicketEntry entry = saleTransaction.getEntryByBarcode(productCode);
-        ProductType product = productTypeRepository.find(productCode);
+        ProductType product = productTypeRepository.findByBarcode(productCode);
         if (product == null || entry == null || amount > entry.getAmount()) {
             return false;
         }

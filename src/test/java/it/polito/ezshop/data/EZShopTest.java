@@ -810,7 +810,40 @@ public class EZShopTest {
 		
 
 	}
-	
+
+	@Test
+	public void testDeleteProductFromSaleRFID() throws InvalidUsernameException, InvalidPasswordException, InvalidTransactionIdException, InvalidRFIDException, InvalidQuantityException, UnauthorizedException {
+		String productCode = "012345678905"; // forse meglio lavorare su un altro
+		String RFID = this.RFID1;
+
+		// unauth (nobody logged)
+		assertThrows(UnauthorizedException.class, () -> ezshop.deleteProductFromSaleRFID(1, RFID));
+		// cashier
+		ezshop.login(cashier, passwd);
+		int transactionId = ezshop.startSaleTransaction();
+
+		// invalid transaction id
+		assertThrows(InvalidTransactionIdException.class, () -> ezshop.deleteProductFromSaleRFID(0, RFID));
+		assertThrows(InvalidTransactionIdException.class, () -> ezshop.deleteProductFromSaleRFID(-1, RFID));
+		assertThrows(InvalidTransactionIdException.class, () -> ezshop.deleteProductFromSaleRFID(null, RFID));
+
+
+		assertThrows(InvalidRFIDException.class, () -> ezshop.deleteProductFromSaleRFID(transactionId, InvalidRFID));
+
+		// RFID doesn't exist
+		assertFalse(ezshop.deleteProductFromSaleRFID(transactionId, RFIDnotUsed));
+
+
+		Product product = new ProductImpl();
+		product.setId(RFID);
+		product.setProductType((ProductTypeImpl)productTypeRepository.findByBarcode(productCode));
+		productRepository.create(product);
+		ezshop.addProductToSaleRFID(transactionId,RFID);
+		assertTrue(ezshop.deleteProductFromSaleRFID(transactionId,RFID));
+
+	}
+
+
 	@Test
 	public void testApplyDiscountRateToProduct() throws InvalidTransactionIdException, InvalidProductCodeException, InvalidDiscountRateException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException, InvalidQuantityException {
 		String productCode = "012345678912";
