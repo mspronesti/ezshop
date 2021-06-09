@@ -403,7 +403,7 @@ public class EZShopControllerImpl implements EZShopController {
                 for (int i = 0; i < orderQuantity; ++i) {
                     Product product = new ProductImpl();
                     // increment RFID and left pad with 0s
-                    product.setId(String.format("%010d", Integer.parseInt(RFIDfrom) + i));
+                    product.setId(String.format("%012d", Integer.parseInt(RFIDfrom) + i));
                     product.setProductType((ProductTypeImpl) productType);
                     productRepository.create(product);
                 }
@@ -968,7 +968,6 @@ public class EZShopControllerImpl implements EZShopController {
         }
         double price = saleTransaction.getPrice();
         boolean b = paymentGateway.requestPayment(creditCard, price);
-        System.out.println("Paying " + price + " result " + b);
         if (b) {
             BalanceOperationImpl operation = new BalanceOperationImpl();
             operation.setDate(LocalDate.now());

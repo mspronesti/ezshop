@@ -35,9 +35,11 @@ public class EZShopTest {
     private String customerName = "Bob";
     private String customerToDelete = "Fabiana";
     private String InvalidRFID = "01234";
-    private String RFID1 = "0000000001";
-    private String RFID2 = "0000001000";
-    private String RFIDnotUsed = "0000000123";
+    private String RFID1 = "000000000001";
+    private String RFID2 = "000000001000";
+    private String RFID3 = "000000111111";
+    private String RFID4 = "000000011111";
+    private String RFIDnotUsed = "000000000123";
 
     @BeforeClass
     static public void init() {
@@ -515,7 +517,7 @@ public class EZShopTest {
         assertEquals(orderRepository.find(orderId).getStatus(), "COMPLETED");
 
         for (int i = 0; i < quantity; ++i) {
-            String checkRFID = String.format("%010d", Integer.parseInt(RFID) + i);
+            String checkRFID = String.format("%012d", Integer.parseInt(RFID) + i);
             assertNotNull(productRepository.find(checkRFID));
         }
 
@@ -757,7 +759,7 @@ public class EZShopTest {
 
     @Test
     public void testAddProductToSaleRFID() throws InvalidUsernameException, InvalidPasswordException, UnauthorizedException, InvalidTransactionIdException, InvalidRFIDException, InvalidQuantityException {
-        String RFID = "0000001111";
+        String RFID = this.RFID3;
         String productCode = "012345678905";
 
         // unauth (nobody logged)
@@ -996,11 +998,11 @@ public class EZShopTest {
 
     @Test
     public void testReturnProductRFID() throws InvalidTransactionIdException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException, InvalidRFIDException, InvalidQuantityException {
-        String RFID = "0000111111";
+        String RFID = this.RFID4;
         String productCode = "012345678905";
 
         //unauth (nobody logged)
-        assertThrows(UnauthorizedException.class, () -> ezshop.returnProductRFID(900, "0000011111"));
+        assertThrows(UnauthorizedException.class, () -> ezshop.returnProductRFID(900, RFID));
 
         ezshop.login(cashier, passwd);
         int saleTransactionId = ezshop.startSaleTransaction();
@@ -1013,9 +1015,9 @@ public class EZShopTest {
         int transactionId = ezshop.startReturnTransaction(saleTransactionId);
 
         // invalidTransactionId
-        assertThrows(InvalidTransactionIdException.class, () -> ezshop.returnProductRFID(0, "0000011111"));
-        assertThrows(InvalidTransactionIdException.class, () -> ezshop.returnProductRFID(-1, "0000011111"));
-        assertThrows(InvalidTransactionIdException.class, () -> ezshop.returnProductRFID(null, "0000011111"));
+        assertThrows(InvalidTransactionIdException.class, () -> ezshop.returnProductRFID(0, RFID));
+        assertThrows(InvalidTransactionIdException.class, () -> ezshop.returnProductRFID(-1, RFID));
+        assertThrows(InvalidTransactionIdException.class, () -> ezshop.returnProductRFID(null, RFID));
 
         // invalidRFID
         assertThrows(InvalidRFIDException.class, () -> ezshop.returnProductRFID(transactionId, ""));
@@ -1030,13 +1032,13 @@ public class EZShopTest {
         assertFalse(ezshop.returnProductRFID(1231, RFIDnotUsed));
 
         // Cannot return an unsold product
-        String unsoldRfid = "0123456732";
+        String unsoldRfid = "000123456732";
         Product unsold = new ProductImpl();
         unsold.setId(unsoldRfid);
         unsold.setProductType((ProductTypeImpl) productTypeRepository.findByBarcode(productCode));
         productRepository.create(unsold);
-        assertFalse(ezshop.returnProductRFID(transactionId, unsoldRfid));
 
+        assertFalse(ezshop.returnProductRFID(transactionId, unsoldRfid));
         assertTrue(ezshop.returnProductRFID(transactionId, RFID));
 
     }
@@ -1121,7 +1123,7 @@ public class EZShopTest {
     @Test
     public void testReturnCashPayment() throws InvalidTransactionIdException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
         // unauth (nobody logged)
-        Integer returnId = 29;
+        Integer returnId = 21;
         ReturnTransactionRepository repo = new ReturnTransactionRepository();
         ReturnTransactionImpl returnTransaction = new ReturnTransactionImpl();
         Integer fakeReturnId = repo.create(returnTransaction);
@@ -1132,9 +1134,10 @@ public class EZShopTest {
         //InvalidTransactionId
         assertThrows(InvalidTransactionIdException.class, () -> ezshop.returnCashPayment(0));
         assertThrows(InvalidTransactionIdException.class, () -> ezshop.returnCashPayment(-1));
-        double a = ezshop.returnCashPayment(returnId);
+         
+        double a = ezshop.returnCashPayment(returnId); 
+        // inexistent transaction id
         assert (ezshop.returnCashPayment(100) == -1);
-
     }
 
     @Test

@@ -7,7 +7,7 @@ import javax.persistence.ManyToOne;
 
 @Entity
 public class ProductImpl implements Product {
-  public static final String RFIDPATTERN = "^\\d{10}$";
+  public static final String RFIDPATTERN = "^\\d{12}$";
   public enum Status {
     AVAILABLE,
     SELLING,

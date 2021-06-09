@@ -472,25 +472,21 @@ public class Testezshop20210528 {
                     Assert.assertEquals(getErrorMsg("testGetAllUsers", "user " + id1 + " should have username " + username1), username1, u.getUsername());
                     Assert.assertEquals(getErrorMsg("testGetAllUsers", "user " + id1 + " should have role " + cashier), cashier, u.getRole());
                     Assert.assertEquals(getErrorMsg("testGetAllUsers", "user " + id1 + " should have id " + id1), id1, u.getId().intValue());
-                    Assert.assertEquals(getErrorMsg("testGetAllUsers", "user " + id1 + " should have password " + userPwd), userPwd, u.getPassword());
                     found1 = true;
                 } else if( u.getId() == id2 && !found2){
                     Assert.assertEquals(getErrorMsg("testGetAllUsers", "user " + id1 + " should have username " + username2), username2, u.getUsername());
                     Assert.assertEquals(getErrorMsg("testGetAllUsers", "user " + id1 + " should have role " + admin), admin, u.getRole());
                     Assert.assertEquals(getErrorMsg("testGetAllUsers", "user " + id1 + " should have id " + id2), id2, u.getId().intValue());
-                    Assert.assertEquals(getErrorMsg("testGetAllUsers", "user " + id1 + " should have password " + userPwd), userPwd, u.getPassword());
                     found2 = true;
                 } else if( u.getId() == id3 && !found3){
                     Assert.assertEquals(getErrorMsg("testGetAllUsers", "user " + id1 + " should have username " + username3), username3, u.getUsername());
                     Assert.assertEquals(getErrorMsg("testGetAllUsers", "user " + id1 + " should have role " + shopManager), shopManager, u.getRole());
                     Assert.assertEquals(getErrorMsg("testGetAllUsers", "user " + id1 + " should have id " + id3), id3, u.getId().intValue());
-                    Assert.assertEquals(getErrorMsg("testGetAllUsers", "user " + id1 + " should have password " + userPwd), userPwd, u.getPassword());
                     found3 = true;
                 } else if( u.getId() == adminId && !found4){
                     Assert.assertEquals(getErrorMsg("testGetAllUsers", "user " + adminId + " should have username " + adminBaseUsername), adminBaseUsername, u.getUsername());
                     Assert.assertEquals(getErrorMsg("testGetAllUsers", "user " + adminId + " should have role " + admin), admin, u.getRole());
                     Assert.assertEquals(getErrorMsg("testGetAllUsers", "user " + adminId + " should have id " + adminId), adminId, u.getId().intValue());
-                    Assert.assertEquals(getErrorMsg("testGetAllUsers", "user " + adminId + " should have password " + adminBasePwd), adminBasePwd, u.getPassword());
                     found4 = true;
                 }
             }
@@ -566,7 +562,6 @@ public class Testezshop20210528 {
             res = ezshop.getUser(id);
             Assert.assertEquals(getErrorMsg("testGetUser", "User " + id + " should have username " + username1), username1, res.getUsername());
             Assert.assertEquals(getErrorMsg("testGetUser", "User " + id + " should have id " + id), id, res.getId().intValue());
-            Assert.assertEquals(getErrorMsg("testGetUser", "User " + id + " should have password " + userPwd), userPwd, res.getPassword());
             Assert.assertEquals(getErrorMsg("testGetUser", "User " + id + " should have role " + cashier), cashier, res.getRole());
         } catch (InvalidUserIdException e) {
             e.printStackTrace();
