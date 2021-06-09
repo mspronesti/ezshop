@@ -4,7 +4,7 @@ Authors: Massimiliano Pronesti, Matteo Notarangelo, Davide Mammone, Umberto Pepa
 
 Date: 09/06/2021
 
-Version: 2.0
+Version: 3.0
 
 # Contents
 
