@@ -2,7 +2,7 @@
 
 Authors: Massimiliano Pronesti, Matteo Notarangelo, Davide Mammone, Umberto Pepato 
 
-Date: 19/05/2021
+Date: 09/06/2021
 
 Version: 2.0
 
@@ -81,6 +81,7 @@ package data {
         + Integer payOrderFor(String productCode, Integer quantity, double pricePerUnit)
         + boolean payOrder(Integer orderId)
         + boolean recordOrderArrival(Integer orderId)
+        + boolean recordOrderArrivalRFID(Integer orderId, String RFIDfrom)
         + List<Order> getAllOrders()
         + Integer defineCustomer(String customerName)
         + boolean modifyCustomer(Integer id, String newCustomerName, String newCustomerCard)
@@ -92,7 +93,9 @@ package data {
         + boolean modifyPointsOnCard(String customerCard, Integer pointsToBeAdded)
         + Integer startSaleTransaction()
         + boolean addProductToSale(Integer transactionId, String productCode, Integer amount)
+        + boolean addProductToSaleRFID(Integer transactionId, String RFID)
         + boolean deleteProductFromSale(Integer transactionId, String productCode, Integer amount)
+        + boolean deleteProductFromSaleRFID(Integer transactionId, String RFID)
         + boolean applyDiscountRateToProduct(Integer transactionId, String productCode, double discountRate)
         + boolean applyDiscountRateToSale(Integer transactionId, double discountRate)
         + Integer computePointsForSale(Integer transactionId)
@@ -101,6 +104,7 @@ package data {
         + SaleTransaction getSaleTransaction(Integer transactionId)
         + Integer startReturnTransaction(Integer transactionId)
         + boolean returnProduct(Integer returnId, String productCode, Integer amount)
+        + boolean returnProductRFID(Integer returnId, String RFID)
         + boolean endReturnTransaction(Integer returnId, boolean commit)
         + boolean deleteReturnTransaction(Integer returnId)
         + double receiveCashPayment(Integer transactionId, double cash)
@@ -115,17 +119,17 @@ package data {
     EZShop -- EZShopController
 
     interface Repository<T> {
-        Session getSession()
-        T _find(Class<? extends T> entityClass, Serializable id)
-        List<T> _findAll(Class<? extends T> entityClass)
-        Serializable _create(T entity)
-        T _update(T entity)
-        void _delete(T entity)
-        {abstract} T find(Serializable id)
-        {abstract} List<T> findAll()
-        {abstract} Serializable create(T entity)
-        {abstract} T update(T entity)
-        {abstract} void delete(T entity)
+        + Session getSession()
+        + T _find(Class<? extends T> entityClass, Serializable id)
+        + List<T> _findAll(Class<? extends T> entityClass)
+        + Serializable _create(T entity)
+        + T _update(T entity)
+        + void _delete(T entity)
+        + {abstract} T find(Serializable id)
+        + {abstract} List<T> findAll()
+        + {abstract} Serializable create(T entity)
+        + {abstract} T update(T entity)
+        + {abstract} void delete(T entity)
     }
 
     class User <<Persistent>> {
@@ -136,12 +140,12 @@ package data {
     }
 
     class UserRepository implements Repository {
-        +List<User> findAll()
-        +User find(Integer id)
-        +User findByUsername(String username)
-        +Integer create(User user)
-        +User update(User user)
-        +void delete(User user)
+        + List<User> findAll()
+        + User find(Integer id)
+        + User findByUsername(String username)
+        + Integer create(User user)
+        + User update(User user)
+        + void delete(User user)
     }
 
     User -- UserRepository
@@ -153,12 +157,12 @@ package data {
     }
 
     class CustomerRepository implements Repository {
-        +List<Customer> findAll()
-        +Customer find(Integer id)
-        +Customer findByName(String name)
-        +Integer create(Customer user)
-        +Customer update(Customer user)
-        +void delete(Customer user)
+        + List<Customer> findAll()
+        + Customer find(Integer id)
+        + Customer findByName(String name)
+        + Integer create(Customer user)
+        + Customer update(Customer user)
+        + void delete(Customer user)
     }
 
     Customer -- CustomerRepository
@@ -171,12 +175,12 @@ package data {
     }
 
     class BalanceOperationRepository implements Repository {
-        +List<BalanceOperation> findAll()
-        +List<BalanceOperation> findAllBetweenDates(LocalDate from, LocalDate to)
-        +BalanceOperation find(Integer id)
-        +Integer create(BalanceOperation user)
-        +BalanceOperation update(BalanceOperation user)
-        +void delete(BalanceOperation user)
+        + List<BalanceOperation> findAll()
+        + List<BalanceOperation> findAllBetweenDates(LocalDate from, LocalDate to)
+        + BalanceOperation find(Integer id)
+        + Integer create(BalanceOperation user)
+        + BalanceOperation update(BalanceOperation user)
+        + void delete(BalanceOperation user)
     }
 
     BalanceOperation -- BalanceOperationRepository
@@ -187,11 +191,11 @@ package data {
     }
 
     class LoyaltyCardRepository implements Repository {
-        +List<LoyaltyCard> findAll()
-        +LoyaltyCard find(Integer id)
-        +String create(LoyaltyCard user)
-        +LoyaltyCard update(LoyaltyCard user)
-        +void delete(LoyaltyCard user)
+        + List<LoyaltyCard> findAll()
+        + LoyaltyCard find(Integer id)
+        + String create(LoyaltyCard user)
+        + LoyaltyCard update(LoyaltyCard user)
+        + void delete(LoyaltyCard user)
     }
 
     LoyaltyCard -- LoyaltyCardRepository
@@ -206,34 +210,49 @@ package data {
     }
 
     class OrderRepository implements Repository {
-        +List<Order> findAll()
-        +Order find(Integer id)
-        +Integer create(Order user)
-        +Order update(Order user)
-        +void delete(Order user)
+        + List<Order> findAll()
+        + Order find(Integer id)
+        + Integer create(Order user)
+        + Order update(Order user)
+        + void delete(Order user)
     }
 
     Order -- OrderRepository
 
     class ProductType <<Persistent>> {
-        Integer id
-        Integer quantity
-        String note
-        String description
-        String barcode
-        Double pricePerUnit
-        Position position
+       Integer id
+       Integer quantity
+       String note
+       String description
+       String barcode
+       Double pricePerUnit
+       Position position
+    }
+
+    class Product <<Persistent>> {
+        String id
+       ProductTypeImpl productType
+       Status status
+    }
+
+    class ProductRepository implements Repository {
+        + Product find(Serializable id)
+        + List<Product> findAll() 
+        + String create(Product product)
+        + Product update(Product product)
+        + void delete(Product product)
     }
 
     class ProductTypeRepository implements Repository {
-        +List<ProductType> findAll()
-        +ProductType find(Integer id)
-        +ProductType findByBarcode(String barcode)
-        +Integer create(ProductType user)
-        +ProductType update(ProductType user)
-        +void delete(ProductType user)
+        + List<ProductType> findAll()
+        + ProductType find(Integer id)
+        + ProductType findByBarcode(String barcode)
+        + Integer create(ProductType user)
+        + ProductType update(ProductType user)
+        + void delete(ProductType user)
     }
-
+    Product -- ProductRepository
+    ProductType -- "*" Product
     ProductType -- ProductTypeRepository
 
     class Position {
@@ -243,11 +262,11 @@ package data {
     }
 
     class SaleTransactionRepository implements Repository {
-        +List<SaleTransaction> findAll()
-        +SaleTransaction find(Integer id)
-        +Integer create(SaleTransaction user)
-        +SaleTransaction update(SaleTransaction user)
-        +void delete(SaleTransaction user)
+        + List<SaleTransaction> findAll()
+        + SaleTransaction find(Integer id)
+        + Integer create(SaleTransaction user)
+        + SaleTransaction update(SaleTransaction user)
+        + void delete(SaleTransaction user)
     }
 
     class SaleTransaction {
@@ -262,13 +281,14 @@ package data {
     }
 
     SaleTransaction -- SaleTransactionRepository
+    SaleTransaction -- "*" Product
     
     class ReturnTransactionRepository implements Repository {
-        +List<ReturnTransaction> findAll()
-        +ReturnTransaction find(Integer id)
-        +Integer create(ReturnTransaction user)
-        +ReturnTransaction update(ReturnTransaction user)
-        +void delete(ReturnTransaction user)
+        + List<ReturnTransaction> findAll()
+        + ReturnTransaction find(Integer id)
+        + Integer create(ReturnTransaction user)
+        + ReturnTransaction update(ReturnTransaction user)
+        + void delete(ReturnTransaction user)
     }
     
     ReturnTransaction -- ReturnTransactionRepository
@@ -285,8 +305,6 @@ package data {
     ProductType - "0..1" Position
 
     ReturnTransaction "*" - SaleTransaction
-    ReturnTransaction "*" - ProductType
-    ReturnTransaction "*" - ProductType
 
     TicketEntry -- SaleTransaction
     TicketEntry -- ProductType
