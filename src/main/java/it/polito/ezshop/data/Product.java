@@ -8,4 +8,8 @@ public interface Product {
     ProductType getProductType();
 
     void setProductType(ProductTypeImpl productType);
+
+    ProductImpl.Status getStatus();
+
+    void setStatus(ProductImpl.Status status);
 }

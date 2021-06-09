@@ -18,6 +18,8 @@ public class SaleTransactionImpl implements SaleTransaction {
     private Double price = 0d;
     @OneToOne
     private BalanceOperationImpl payment;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<ProductImpl> products = new ArrayList<>();
 
     @Override
     public Integer getTicketNumber() {
@@ -82,5 +84,13 @@ public class SaleTransactionImpl implements SaleTransaction {
                 .stream()
                 .mapToDouble(e -> e.getAmount() * (1d - e.getDiscountRate()) * e.getPricePerUnit())
                 .sum() * (1d - discountRate);
+    }
+
+    public List<ProductImpl> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<ProductImpl> products) {
+        this.products = products;
     }
 }
