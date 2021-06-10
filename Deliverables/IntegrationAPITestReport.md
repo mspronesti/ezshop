@@ -2,9 +2,9 @@
 
 Authors: Massimiliano Pronesti, Matteo Notarangelo, Davide Mammone, Umberto Pepato
 
-Date: 22/05/2021
+Date: 10/06/2021
 
-Version: 1.0
+Version: 2.0
 
 # Contents
 
@@ -103,7 +103,7 @@ EZshopControllerImpl --|> ProductTypeRepository
 EZshopControllerImpl --|> ReturnTransactionRepository
 EZshopControllerImpl --|> SaleTransactionRepository
 EZshopControllerImpl --|>  UserRepository
-
+EZshopControllerImpl --|>  ProductRepository
 
 @enduml
 ```
