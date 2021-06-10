@@ -512,6 +512,13 @@ public class EZShopTest {
         // order doesn't exist
         assertFalse(ezshop.recordOrderArrivalRFID(50, RFID));
 
+        //invalid RFID (RFID in range already exists)
+        Product product = new ProductImpl();
+        product.setId("000000200002");
+        productRepository.create(product);
+        assertThrows(InvalidRFIDException.class, () -> ezshop.recordOrderArrivalRFID(orderId, "000000200000"));
+        productRepository.delete(product);
+
         // correct register
         assertTrue(ezshop.recordOrderArrivalRFID(orderId, RFID));
         assertEquals(orderRepository.find(orderId).getStatus(), "COMPLETED");
