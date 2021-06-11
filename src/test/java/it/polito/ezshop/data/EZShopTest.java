@@ -39,6 +39,7 @@ public class EZShopTest {
     private String RFID2 = "000000001000";
     private String RFID3 = "000000111111";
     private String RFID4 = "000000011111";
+    private String RFID5 = "000123450000";
     private String RFIDnotUsed = "000000000123";
 
     @BeforeClass
@@ -482,7 +483,7 @@ public class EZShopTest {
 
     @Test
     public void testRecordOrderArrivalRFID() throws InvalidUsernameException, InvalidPasswordException, InvalidOrderIdException, UnauthorizedException, InvalidLocationException, InvalidRFIDException, InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException {
-        String RFID = this.RFID2;
+        String RFID = RFID5;
         int quantity = 5;
         double pricePerUnit = 1.87;
         String productCode = "012345678912";
@@ -522,7 +523,8 @@ public class EZShopTest {
         // correct register
         assertTrue(ezshop.recordOrderArrivalRFID(orderId, RFID));
         assertEquals(orderRepository.find(orderId).getStatus(), "COMPLETED");
-
+        
+        // check RFID correctly stored 
         for (int i = 0; i < quantity; ++i) {
             String checkRFID = String.format("%012d", Integer.parseInt(RFID) + i);
             assertNotNull(productRepository.find(checkRFID));

@@ -395,29 +395,29 @@ public class EZShopControllerImpl implements EZShopController {
                 return true;
 
             if (status.equals(OrderImpl.Status.PAYED.name())) {
-                // set COMPLETED
-                order.setStatus(OrderImpl.Status.COMPLETED.name());
-                orderRepository.update(order);
-
+                
+                // validity check
                 for (int i = 0; i < orderQuantity; ++i) {
                     String RFID = String.format("%012d", Integer.parseInt(RFIDfrom) + i);
                     if ( productRepository.find(RFID) != null)
                         throw new InvalidRFIDException();
                 }
-                // associating RFIDs
-                for (int i = 0; i < orderQuantity; ++i) {
-                    Product product = new ProductImpl();
-                    // increment RFID and left pad with 0s
-
-                    String RFID = String.format("%012d", Integer.parseInt(RFIDfrom) + i);
-
-
-                    product.setId(RFID);
-                    product.setProductType((ProductTypeImpl)  productType);
-                    productRepository.create(product);
-                }
-
+                
+                // set COMPLETED
+                order.setStatus(OrderImpl.Status.COMPLETED.name());
+                orderRepository.update(order);
+                
                 if (productType != null) {
+                    // associating RFIDs
+                    for (int i = 0; i < orderQuantity; ++i) {
+                        Product product = new ProductImpl();
+                        
+                        // increment RFID and left pad with 0s
+                        product.setId(String.format("%012d", Integer.parseInt(RFIDfrom) + i));
+                        product.setProductType((ProductTypeImpl)productType);
+                        productRepository.create(product);
+                    }
+                    
                     // update quantity
                     productType.setQuantity(productType.getQuantity() + orderQuantity);
                     productTypeRepository.update(productType);
