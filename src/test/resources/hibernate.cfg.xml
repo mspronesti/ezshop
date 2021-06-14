@@ -24,10 +24,6 @@
         <!-- SQL dialect -->
         <property name="dialect">org.sqlite.hibernate.dialect.SQLiteDialect</property>
 
-        <!-- Echo all executed SQL to stdout -->
-        <property name="show_sql">true</property>
-        <property name="format_sql">true</property>
-
         <!-- Drop and re-create the database schema on startup -->
         <property name="hbm2ddl.auto">create</property>
 
@@ -37,6 +33,7 @@
         <mapping class="it.polito.ezshop.data.LoyaltyCardImpl"/>
         <mapping class="it.polito.ezshop.data.OrderImpl"/>
         <mapping class="it.polito.ezshop.data.ProductTypeImpl"/>
+        <mapping class="it.polito.ezshop.data.ProductImpl"/>
         <mapping class="it.polito.ezshop.data.ReturnTransactionImpl"/>
         <mapping class="it.polito.ezshop.data.SaleTransactionImpl"/>
         <mapping class="it.polito.ezshop.data.UserImpl"/>

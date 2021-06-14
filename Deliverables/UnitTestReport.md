@@ -1104,6 +1104,54 @@ Criteria for method **isValid**:
 
 
 
+## Class Product
+
+
+
+### Method setId
+
+**Criteria for method setId:**
+
+**Predicates for method setId:**
+
+| Criterion | Predicate |
+| --------- | --------- |
+
+
+**Boundaries for method setId**:
+
+| Criterion | Boundary values |
+| --------- | --------------- |
+
+
+ **Combination of predicates for method setId**
+
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                 |
+| --------- | ------------- | ---------------------------- | ----------------------------------------------- |
+| *         | **Valid**     | T1(3214)                     | it.polito.ezshop.data.ProductTypeTest.testSetId |
+
+
+
+### Method setProductType
+
+**Criteria for method setProductType:**
+
+**Predicates for method setProductType:**
+
+| Criterion | Predicate |
+| --------- | --------- |
+
+**Boundaries for method setProductType**:
+
+| Criterion | Boundary values |
+| --------- | --------------- |
+
+
+ **Combination of predicates for method setProductType**
+
+| Criterion | Valid/Invalid | Description of the test case | JUnit test case                                          |
+| --------- | ------------- | ---------------------------- | -------------------------------------------------------- |
+| *         | **Valid**     | T1({ProuctType1})            | it.polito.ezshop.data.ProductTypeTest.testsetProductType |
 
 # White Box Unit Tests
 
@@ -2123,3 +2171,58 @@ percentage, but many of said classes will be tested more thoroughly in the integ
 | --------- | --------- | -------------------- | --------------- |
 | -         | -         | -                    | -               |
 
+
+
+## Class Product
+
+
+
+### Method setId
+
+| Unit name | JUnit test case |
+| --------- | --------------- |
+| setId     | testSetId       |
+
+### Code coverage report
+
+![](assets/WhiteBoxTesting/id.png)
+
+
+
+| Test case  | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| ---------- | ------------- | ------------------------ | ------------- | ---- |
+| setId("1") | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |
+
+### Method setProductDescription
+
+| Unit name      | JUnit test case    |
+| -------------- | ------------------ |
+| setProductType | testSetProductType |
+
+### Code coverage report
+
+
+
+![](assets/WhiteBoxTesting/productType.png)
+
+
+
+| Test case                     | Node coverage | Node coverage cumulative | Edge coverage | Path |
+| ----------------------------- | ------------- | ------------------------ | ------------- | ---- |
+| setProductType({ProductType}) | 1             | 100%                     | -             | 1    |
+
+
+
+### Loop coverage analysis
+
+| Unit name | Loop rows | Number of iterations | JUnit test case |
+| --------- | --------- | -------------------- | --------------- |
+| -         | -         | -                    | -               |

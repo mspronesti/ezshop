@@ -32,6 +32,7 @@ public class EZShopControllerImpl implements EZShopController {
     private final CustomerRepository customerRepository = new CustomerRepository();
     private final LoyaltyCardRepository loyaltyCardRepository = new LoyaltyCardRepository();
     private final OrderRepository orderRepository = new OrderRepository();
+    private final ProductRepository productRepository = new ProductRepository();
     private final ProductTypeRepository productTypeRepository = new ProductTypeRepository();
     private final ReturnTransactionRepository returnTransactionRepository = new ReturnTransactionRepository();
     private final SaleTransactionRepository saleTransactionRepository = new SaleTransactionRepository();
@@ -42,6 +43,7 @@ public class EZShopControllerImpl implements EZShopController {
     private final PaymentGateway paymentGateway = new PaymentGateway();
 
     public void reset() {
+        this.productRepository.findAll().forEach(productRepository::delete);
         this.productTypeRepository.findAll().forEach(productTypeRepository::delete);
         this.orderRepository.findAll().forEach(orderRepository::delete);
         this.returnTransactionRepository.findAll().forEach(returnTransactionRepository::delete);
@@ -49,7 +51,7 @@ public class EZShopControllerImpl implements EZShopController {
         this.balanceOperationRepository.findAll().forEach(balanceOperationRepository::delete);
         this.customerRepository.findAll().forEach(customerRepository::delete);
         this.loyaltyCardRepository.findAll().forEach(loyaltyCardRepository::delete);
-        this.userRepository.findAll().forEach(userRepository::delete);        
+        this.userRepository.findAll().forEach(userRepository::delete);
     }
 
     @Override
@@ -170,16 +172,16 @@ public class EZShopControllerImpl implements EZShopController {
     ) throws InvalidProductIdException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException {
         ProductType product = productTypeRepository.find(id);
         if (product != null) {
-        	try {
-	            product.setProductDescription(newDescription);
-	            product.setBarCode(newCode);
-	            product.setPricePerUnit(newPrice);
-	            product.setNote(newNote);
-	            productTypeRepository.update(product);
-	            return true;
-        	}catch(Exception exception) {
-        		return false;
-        	}
+            try {
+                product.setProductDescription(newDescription);
+                product.setBarCode(newCode);
+                product.setPricePerUnit(newPrice);
+                product.setNote(newNote);
+                productTypeRepository.update(product);
+                return true;
+            } catch (Exception exception) {
+                return false;
+            }
         }
         return false;
     }
@@ -228,13 +230,13 @@ public class EZShopControllerImpl implements EZShopController {
             int toBeAdded
     ) throws InvalidProductIdException, UnauthorizedException {
         ProductType product = this.productTypeRepository.find(productId);
-        if(product != null) {
-	        int newQuantity = product.getQuantity() + toBeAdded;
-	        if (newQuantity >= 0 && !product.getLocation().isEmpty() ) {
-	            product.setQuantity(newQuantity);
-	            productTypeRepository.update(product);
-	            return true;
-	        }
+        if (product != null) {
+            int newQuantity = product.getQuantity() + toBeAdded;
+            if (newQuantity >= 0 && !product.getLocation().isEmpty()) {
+                product.setQuantity(newQuantity);
+                productTypeRepository.update(product);
+                return true;
+            }
         }
         return false;
     }
@@ -348,10 +350,10 @@ public class EZShopControllerImpl implements EZShopController {
         if (order != null) {
             String status = order.getStatus();
             ProductType product = productTypeRepository.findByBarcode(order.getProductCode());
-            
-            if(product.getLocation().isEmpty())
-				throw new InvalidLocationException();
-            
+
+            if (product.getLocation().isEmpty())
+                throw new InvalidLocationException();
+
             if (status.equals(OrderImpl.Status.COMPLETED.name()))
                 return true;
 
@@ -364,6 +366,61 @@ public class EZShopControllerImpl implements EZShopController {
                     // update quantity
                     product.setQuantity(product.getQuantity() + order.getQuantity());
                     productTypeRepository.update(product);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager})
+    @FallbackBooleanValue
+    public boolean recordOrderArrivalRFID(
+            @NotNull @Min(1) @Throw(InvalidOrderIdException.class) Integer orderId,
+            @NotNull @Pattern(regexp = ProductImpl.RFIDPATTERN) @Throw(InvalidRFIDException.class) String RFIDfrom
+    ) throws InvalidOrderIdException, UnauthorizedException, InvalidLocationException, InvalidRFIDException {
+        Order order = orderRepository.find(orderId);
+        if (order != null) {
+            String status = order.getStatus();
+            int orderQuantity = order.getQuantity();
+
+            ProductType productType = productTypeRepository.findByBarcode(order.getProductCode());
+
+
+            if (productType.getLocation().isEmpty())
+                throw new InvalidLocationException();
+
+            if (status.equals(OrderImpl.Status.COMPLETED.name()))
+                return true;
+
+            if (status.equals(OrderImpl.Status.PAYED.name())) {
+                
+                // validity check
+                for (int i = 0; i < orderQuantity; ++i) {
+                    String RFID = String.format("%012d", Integer.parseInt(RFIDfrom) + i);
+                    if ( productRepository.find(RFID) != null)
+                        throw new InvalidRFIDException();
+                }
+                
+                // set COMPLETED
+                order.setStatus(OrderImpl.Status.COMPLETED.name());
+                orderRepository.update(order);
+                
+                if (productType != null) {
+                    // associating RFIDs
+                    for (int i = 0; i < orderQuantity; ++i) {
+                        Product product = new ProductImpl();
+                        
+                        // increment RFID and left pad with 0s
+                        product.setId(String.format("%012d", Integer.parseInt(RFIDfrom) + i));
+                        product.setProductType((ProductTypeImpl)productType);
+                        productRepository.create(product);
+                    }
+                    
+                    // update quantity
+                    productType.setQuantity(productType.getQuantity() + orderQuantity);
+                    productTypeRepository.update(productType);
                     return true;
                 }
             }
@@ -474,10 +531,10 @@ public class EZShopControllerImpl implements EZShopController {
     ) throws InvalidCustomerCardException, UnauthorizedException {
         LoyaltyCard loyaltyCard = this.loyaltyCardRepository.find(customerCard);
         if (loyaltyCard != null) {
-        	int pointsToUpdate = loyaltyCard.getPoints() + pointsToBeAdded;
-        	if(pointsToUpdate < 0)
-        		return false;
-        	
+            int pointsToUpdate = loyaltyCard.getPoints() + pointsToBeAdded;
+            if (pointsToUpdate < 0)
+                return false;
+
             loyaltyCard.setPoints(pointsToUpdate);
             this.loyaltyCardRepository.update(loyaltyCard);
             return true;
@@ -536,6 +593,31 @@ public class EZShopControllerImpl implements EZShopController {
     @Override
     @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
     @FallbackBooleanValue
+    public boolean addProductToSaleRFID(
+            @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer transactionId,
+            @NotNull @Pattern(regexp = ProductImpl.RFIDPATTERN) @Throw(InvalidRFIDException.class) String RFID
+    ) throws InvalidTransactionIdException, InvalidRFIDException, InvalidQuantityException, UnauthorizedException {
+        ProductImpl product = (ProductImpl) productRepository.find(RFID);
+        if (product == null || product.getStatus() != ProductImpl.Status.AVAILABLE) {
+            return false;
+        }
+        SaleTransactionImpl saleTransaction = openSaleTransactions.get(transactionId);
+        if (saleTransaction == null) {
+            return false;
+        }
+        product.setStatus(ProductImpl.Status.SELLING);
+        productRepository.update(product);
+        saleTransaction.getProducts().add(product);
+        try {
+            return addProductToSale(transactionId, product.getProductType().getBarCode(), 1);
+        } catch (InvalidProductCodeException e) {
+            return false;
+        }
+    }
+
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
+    @FallbackBooleanValue
     public boolean deleteProductFromSale(
             @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer transactionId,
             @NotNull @NotEmpty @GtinBarcode @Throw(InvalidProductCodeException.class) String productCode,
@@ -546,7 +628,7 @@ public class EZShopControllerImpl implements EZShopController {
             return false;
         }
         TicketEntry entry = saleTransaction.getEntryByBarcode(productCode);
-        ProductType product = productTypeRepository.find(productCode);
+        ProductType product = productTypeRepository.findByBarcode(productCode);
         if (product == null || entry == null || amount > entry.getAmount()) {
             return false;
         }
@@ -560,6 +642,37 @@ public class EZShopControllerImpl implements EZShopController {
         saleTransaction.updatePrice();
         productTypeRepository.update(product);
         return true;
+    }
+
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
+    @FallbackBooleanValue
+    public boolean deleteProductFromSaleRFID(
+            @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer transactionId,
+            @NotNull @Pattern(regexp = ProductImpl.RFIDPATTERN) @Throw(InvalidRFIDException.class) String RFID
+    ) throws InvalidTransactionIdException,
+            InvalidRFIDException, InvalidQuantityException, UnauthorizedException {
+        Product product = productRepository.find(RFID);
+        if (product == null || product.getStatus() != ProductImpl.Status.SELLING) {
+            return false;
+        }
+        SaleTransactionImpl saleTransaction = openSaleTransactions.get(transactionId);
+        if (saleTransaction == null) {
+            return false;
+        }
+        saleTransaction.getProducts().removeIf(p -> {
+            if (p.getId().equals(product.getId())) {
+                p.setStatus(ProductImpl.Status.AVAILABLE);
+                productRepository.update(p);
+                return true;
+            }
+            return false;
+        });
+        try {
+            return deleteProductFromSale(transactionId, product.getProductType().getBarCode(), 1);
+        } catch (InvalidProductCodeException e) {
+            return false;
+        }
     }
 
     @Override
@@ -625,7 +738,10 @@ public class EZShopControllerImpl implements EZShopController {
         if (saleTransaction == null) {
             return false;
         }
-
+        saleTransaction.getProducts().forEach(p -> {
+            p.setStatus(ProductImpl.Status.SOLD);
+            productRepository.update(p);
+        });
         openSaleTransactions.remove(transactionId);
         saleTransactionRepository.update(saleTransaction);
         return true;
@@ -637,26 +753,25 @@ public class EZShopControllerImpl implements EZShopController {
     public boolean deleteSaleTransaction(
             @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer transactionId
     ) throws InvalidTransactionIdException, UnauthorizedException {
-    	try {
-	        SaleTransaction saleTransaction = saleTransactionRepository.find(transactionId);
-	        if (saleTransaction == null) {
-	            return false;
-	        }
-	        for (TicketEntry entry : saleTransaction.getEntries()) {
-	            ProductType product = productTypeRepository.findByBarcode(entry.getBarCode());
-	            if (product == null) {
-	                return false;
-	            }
-	            product.setQuantity(product.getQuantity() + entry.getAmount());
-	            productTypeRepository.update(product);
-	        }
-	        
-        	openSaleTransactions.remove(transactionId);
-	        saleTransactionRepository.delete(saleTransaction);
-        	return true;
-    	}catch(JDBCConnectionException exception) {
-    		return false;
-    	}
+        SaleTransactionImpl saleTransaction = (SaleTransactionImpl) saleTransactionRepository.find(transactionId);
+        if (saleTransaction == null) {
+            return false;
+        }
+        for (TicketEntry entry : saleTransaction.getEntries()) {
+            ProductType product = productTypeRepository.findByBarcode(entry.getBarCode());
+            if (product == null) {
+                return false;
+            }
+            product.setQuantity(product.getQuantity() + entry.getAmount());
+            productTypeRepository.update(product);
+        }
+        saleTransaction.getProducts().forEach(p -> {
+            p.setStatus(ProductImpl.Status.AVAILABLE);
+            productRepository.update(p);
+        });
+        openSaleTransactions.remove(transactionId);
+        saleTransactionRepository.delete(saleTransaction);
+        return true;
     }
 
     @Override
@@ -717,6 +832,29 @@ public class EZShopControllerImpl implements EZShopController {
     @Override
     @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
     @FallbackBooleanValue
+    public boolean returnProductRFID(
+            @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer returnId,
+            @NotNull @Pattern(regexp = ProductImpl.RFIDPATTERN) @Throw(InvalidRFIDException.class) String RFID
+    ) throws InvalidTransactionIdException, InvalidRFIDException, UnauthorizedException {
+        ProductImpl product = (ProductImpl) productRepository.find(RFID);
+        if (product == null || product.getStatus() != ProductImpl.Status.SOLD) {
+            return false;
+        }
+        ReturnTransactionImpl returnTransaction = openReturnTransactions.get(returnId);
+        if (returnTransaction == null) {
+            return false;
+        }
+        returnTransaction.getProducts().add(product);
+        try {
+            return returnProduct(returnId, product.getProductType().getBarCode(), 1);
+        } catch (InvalidProductCodeException | InvalidQuantityException e) {
+            return false;
+        }
+    }
+
+    @Override
+    @AcceptRoles({Role.Administrator, Role.ShopManager, Role.Cashier})
+    @FallbackBooleanValue
     public boolean endReturnTransaction(
             @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer returnId,
             boolean commit
@@ -748,6 +886,10 @@ public class EZShopControllerImpl implements EZShopController {
             product.setQuantity(product.getQuantity() + returnEntry.getAmount());
             productTypeRepository.update(product);
         }
+        returnTransaction.getProducts().forEach(p -> {
+            p.setStatus(ProductImpl.Status.AVAILABLE);
+            productRepository.update(p);
+        });
         saleTransaction.updatePrice();
         saleTransactionRepository.update(saleTransaction);
         returnTransactionRepository.update(returnTransaction);
@@ -787,6 +929,10 @@ public class EZShopControllerImpl implements EZShopController {
             product.setQuantity(product.getQuantity() + returnEntry.getAmount());
             productTypeRepository.update(product);
         }
+        returnTransaction.getProducts().forEach(p -> {
+            p.setStatus(ProductImpl.Status.SOLD);
+            productRepository.update(p);
+        });
         saleTransaction.updatePrice();
         saleTransactionRepository.update(saleTransaction);
         returnTransactionRepository.delete(returnTransaction);
@@ -831,7 +977,6 @@ public class EZShopControllerImpl implements EZShopController {
         }
         double price = saleTransaction.getPrice();
         boolean b = paymentGateway.requestPayment(creditCard, price);
-        System.out.println("Paying " + price + " result " + b);
         if (b) {
             BalanceOperationImpl operation = new BalanceOperationImpl();
             operation.setDate(LocalDate.now());
@@ -991,13 +1136,13 @@ public class EZShopControllerImpl implements EZShopController {
                         }
                     }
                 }
-       
+
                 try {
                     return method.invoke(target, args);
                 } catch (InvocationTargetException e) {
                     throw e.getCause();
                 }
-                
+
             } catch (JDBCConnectionException exception) {
                 FallbackStringValue fallbackStringAnnotation = method.getAnnotation(FallbackStringValue.class);
                 if (fallbackStringAnnotation != null) {
@@ -1026,5 +1171,5 @@ public class EZShopControllerImpl implements EZShopController {
     private boolean isAssignedPosition(String location) {
         return productTypeRepository.findAll().stream().anyMatch(p -> p.getLocation().equals(location));
     }
-    
+
 }

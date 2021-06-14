@@ -35,6 +35,7 @@
         <mapping class="it.polito.ezshop.data.LoyaltyCardImpl"/>
         <mapping class="it.polito.ezshop.data.OrderImpl"/>
         <mapping class="it.polito.ezshop.data.ProductTypeImpl"/>
+        <mapping class="it.polito.ezshop.data.ProductImpl"/>
         <mapping class="it.polito.ezshop.data.ReturnTransactionImpl"/>
         <mapping class="it.polito.ezshop.data.SaleTransactionImpl"/>
         <mapping class="it.polito.ezshop.data.UserImpl"/>

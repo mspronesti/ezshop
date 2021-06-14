@@ -123,7 +123,15 @@ public interface EZShopController {
     public boolean recordOrderArrival(
             @NotNull @Min(1) @Throw(InvalidOrderIdException.class) Integer orderId
     ) throws InvalidOrderIdException, UnauthorizedException, InvalidLocationException;
-
+    
+    @AcceptRoles({ Role.Administrator, Role.ShopManager })
+    @FallbackBooleanValue
+    public boolean recordOrderArrivalRFID(
+            @NotNull @Min(1) @Throw(InvalidOrderIdException.class) Integer orderId,
+    		@NotNull @Pattern(regexp = ProductImpl.RFIDPATTERN) @Throw(InvalidRFIDException.class)String RFIDfrom
+    ) throws InvalidOrderIdException, UnauthorizedException, 
+    InvalidLocationException, InvalidRFIDException;
+    
     @AcceptRoles({ Role.Administrator, Role.ShopManager })
     public List<Order> getAllOrders() throws UnauthorizedException;
 
@@ -183,7 +191,14 @@ public interface EZShopController {
             @NotNull @NotEmpty @GtinBarcode @Throw(InvalidProductCodeException.class) String productCode,
             @NotNull @Min(0) @Throw(InvalidQuantityException.class) int amount
     ) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException;
-
+    
+    @AcceptRoles({ Role.Administrator, Role.ShopManager, Role.Cashier })
+    @FallbackBooleanValue
+    public boolean addProductToSaleRFID(
+    		@NotNull @Min(1) @Throw(InvalidTransactionIdException.class)  Integer transactionId, 
+    		@NotNull @Pattern(regexp = ProductImpl.RFIDPATTERN) @Throw(InvalidRFIDException.class) String RFID
+    ) throws InvalidTransactionIdException, InvalidRFIDException, InvalidQuantityException, UnauthorizedException;
+    
     @AcceptRoles({ Role.Administrator, Role.ShopManager, Role.Cashier })
     @FallbackBooleanValue
     public boolean deleteProductFromSale(
@@ -191,6 +206,13 @@ public interface EZShopController {
             @NotNull @NotEmpty @GtinBarcode @Throw(InvalidProductCodeException.class) String productCode,
             @NotNull @Min(0) @Throw(InvalidQuantityException.class) int amount
     ) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException;
+    
+    @AcceptRoles({ Role.Administrator, Role.ShopManager, Role.Cashier })
+    @FallbackBooleanValue
+    public boolean deleteProductFromSaleRFID(
+    		 @NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer transactionId, 
+    		 @NotNull @Pattern(regexp = ProductImpl.RFIDPATTERN) @Throw(InvalidRFIDException.class) String RFID
+    ) throws InvalidTransactionIdException, InvalidRFIDException, InvalidQuantityException, UnauthorizedException;
 
     @AcceptRoles({ Role.Administrator, Role.ShopManager, Role.Cashier })
     @FallbackBooleanValue
@@ -243,6 +265,13 @@ public interface EZShopController {
             @NotNull @NotEmpty @GtinBarcode @Throw(InvalidProductCodeException.class) String productCode,
             @NotNull @Min(1) @Throw(InvalidQuantityException.class) int amount
     ) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException;
+    
+    @AcceptRoles({ Role.Administrator, Role.ShopManager, Role.Cashier })
+    @FallbackBooleanValue
+    public boolean returnProductRFID(
+    		@NotNull @Min(1) @Throw(InvalidTransactionIdException.class) Integer returnId, 
+    		@NotNull @Pattern(regexp = ProductImpl.RFIDPATTERN) @Throw(InvalidRFIDException.class) String RFID
+    ) throws InvalidTransactionIdException, InvalidRFIDException, UnauthorizedException;
 
     @AcceptRoles({ Role.Administrator, Role.ShopManager, Role.Cashier })
     @FallbackBooleanValue

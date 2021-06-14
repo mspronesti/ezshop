@@ -2,9 +2,9 @@
 
 Authors: Massimiliano Pronesti, Matteo Notarangelo, Davide Mammone, Umberto Pepato
 
-Date: 22/05/2021
+Date: 10/06/2021
 
-Version: 1.0
+Version: 2.0
 
 # Contents
 
@@ -56,6 +56,10 @@ class OrderImpl{}
 
 class OrderRepository{}
 
+class ProductImpl{}
+
+class ProductRepository{}
+
 class ProductTypeImpl{}
 
 class ProductTypeRepository{}
@@ -80,12 +84,14 @@ ProductTypeRepository --|> ProductTypeImpl
 ReturnTransactionRepository --|> ReturnTransactionImpl
 SaleTransactionRepository --|> SaleTransactionImpl
 UserRepository --|> UserImpl
+ProductRepository --|> ProductImpl
 
 CustomerImpl --|> LoyaltyCardImpl
 LoyaltyCardImpl --|> CustomerImpl
 ReturnTransactionImpl --|> SaleTransactionImpl
 SaleTransactionImpl --|> BalanceOperationImpl
 SaleTransactionImpl --|> TicketEntryImpl
+ProductImpl --|> ProductTypeImpl
 
 EZshopControllerFactory --|> EZshopControllerImpl
 EZshop --|> EZshopControllerFactory
@@ -97,7 +103,7 @@ EZshopControllerImpl --|> ProductTypeRepository
 EZshopControllerImpl --|> ReturnTransactionRepository
 EZshopControllerImpl --|> SaleTransactionRepository
 EZshopControllerImpl --|>  UserRepository
-
+EZshopControllerImpl --|>  ProductRepository
 
 @enduml
 ```
@@ -109,9 +115,9 @@ A bottom-up approach was adopted. To solve the circular dependency involving ```
 |Step#|Classes|
 |-----|-------|
 |Step1|LoyaltyCardImpl+BalanceOperationImpl+OrderImpl+ProductTypeImpl+TicketEntryImpl+UserImpl|
-|Step2|CustomerImpl+SaleTransactionImpl|
+|Step2|CustomerImpl+SaleTransactionImpl+ProductImpl|
 |Step3|ReturnTransactionImpl|
-|Step4|BalanceOperationRepository+CustomerRepository+LoyaltyCardRepository+OrderRepository+ProductTypeRepository+ReturnTransactionRepository+SaleTransactionRepository+UserRepository|
+|Step4|BalanceOperationRepository+CustomerRepository+LoyaltyCardRepository+OrderRepository+ProductTypeRepository+ReturnTransactionRepository+SaleTransactionRepository+UserRepository+ProductRepository|
 |Step5|EZShopControllerImpl|
 |Step6|EZShopControllerFactory|
 |Step7|EZshop|
@@ -135,6 +141,7 @@ A bottom-up approach was adopted. To solve the circular dependency involving ```
 | ------------- |:-------------:|
 |CustomerImpl|it.polito.ezshop.data.CustomerTest|
 |SaleTransactionImpl|it.polito.ezshop.data.SaleTransactionTest|
+|ProductImpl|it.polito.ezshop.data.ProductTest|
 
 
 ## Step 3
@@ -154,6 +161,7 @@ A bottom-up approach was adopted. To solve the circular dependency involving ```
 |ReturnTransactionRepository|it.polito.ezshop.data.ReturnTransactionRepositoryTest|
 |SaleTransactionRepository|it.polito.ezshop.data.SaleTransactionRepositoryTest|
 |UserRepository|it.polito.ezshop.data.UserRepositoryTest|
+|ProductRepository|it.polito.ezshop.data.ProductRepositoryTest|
 
 
 ## Step 5
